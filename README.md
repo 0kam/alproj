@@ -1,2 +1,2 @@
 # alproj
-Georectification toolset for Alpine Landscape Photographs
+Georectification toolset for Alpine Landscape Photographs, written in Python.
