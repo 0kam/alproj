@@ -18,13 +18,14 @@ def read_requirements():
     return requirements
 
 setup(
-    name='alpmap',
+    name='alproj',
     version='0.1.0',
-    description='A Python package for georectification of alpine landscape photographs',
+    description='A georectification tool for alpine landscape photographs, written in Python',
     long_description=readme,
     author='OKAMOTO, Ryotaro',
     author_email='okamoto@pe.ska.life.tsukuba.ac.jp',
-    url='https://github.com/0kam/alpmap',
+    url='https://github.com/0kam/alproj
+    ',
     license=license,
     packages=find_packages(exclude=('tests', 'docs'))
     install_requires=read_requirements()
