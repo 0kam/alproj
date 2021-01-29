@@ -1,0 +1,6 @@
+nose
+sphinx
+moderngl
+pyrr
+numpy
+opencv-python-headless
