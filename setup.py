@@ -1,33 +1,32 @@
 # -*- coding: utf-8 -*-
 
-# Learn more: https://github.com/kennethreitz/setup.py
 import os, sys
 from setuptools import setup, find_packages
 
-with open('README.rst') as f:
+with open('README.md') as f:
     readme = f.read()
 
 with open('LICENSE') as f:
     license = f.read()
 
-def read_requirements():
-    """Parse requirements from requirements.txt."""
-    reqs_path = os.path.join('.', 'requirements.txt')
-    with open(reqs_path, 'r') as f:
-        requirements = [line.rstrip() for line in f]
-    return requirements
+def _requires_from_file(filename):
+    return open(filename).read().splitlines()
+
 
 setup(
-    name='alproj',
-    version='0.1.0',
-    description='A georectification tool for alpine landscape photographs, written in Python',
-    long_description=readme,
-    author='OKAMOTO, Ryotaro',
-    author_email='okamoto@pe.ska.life.tsukuba.ac.jp',
-    url='https://github.com/0kam/alproj
-    ',
+    name="alproj",
+    version="0.1.0",
     license=license,
-    packages=find_packages(exclude=('tests', 'docs'))
-    install_requires=read_requirements()
+    description="A georectification tool for alpine landscape photographs, written in Python",
+    author="Ryotaro Okamoto",
+    url="https://github.com/0kam/alproj",
+    packages=find_packages("src"),
+    package_dir={"": "src"},
+    py_modules=[splitext(basename(path))[0] for path in glob('src/*.py')],
+    include_package_data=True,
+    zip_safe=False,
+    install_requires=_requires_from_file('requirements.txt'),
+    setup_requires=["pytest-runner"],
+    tests_require=["pytest", "pytest-cov"]
 )
 
