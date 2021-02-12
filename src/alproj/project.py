@@ -6,6 +6,26 @@ import cv2
 import pandas as pd
 
 def projection_mat(fov_x_deg, w, h, near=-1, far=1, cx=None, cy=None):
+    """
+    Makes a projection matrix from Field of View, width, and height of an image.
+    See https://learnopengl.com/Getting-started/Coordinate-Systems .
+    Parameters
+    ----------
+    fov_x_deg : float
+        Field of View in degrees.
+    w : int
+        Width in pixels
+    h : int
+        Height in pixels
+    near : float default -1
+        Z-axis coordinate of near plane.
+    far : float default 1 
+        Z-axis coordinate of far plane.
+    cx : float default None
+        X-axis coordinate of principal point. If None, w/2. 
+    cy : float default None
+        Y-axis coordinate of prinsipal point. If None, h/2.
+    """
     if cx == None:
         cx = w/2
     if cy == None:
@@ -23,6 +43,25 @@ def projection_mat(fov_x_deg, w, h, near=-1, far=1, cx=None, cy=None):
     return mat
 
 def modelview_mat(pan_deg, tilt_deg, roll_deg, t_x, t_y, t_z):
+    """
+    Makes a modelview matrix from euler angles and camera location in world coordinate system.
+    See https://learnopengl.com/Getting-started/Coordinate-Systems .
+
+    Parameters
+    ----------
+    pan_deg : float
+        Pan angle in degrees
+    tilt_deg : float
+        Tilt angle n degrees
+    roll_deg : float
+        Roll angle in degrees
+    t_x : float
+        X-axis (latitudinal) coordinate of the cameralocation in a (planer) geographical coordinate system.
+    t_y : float
+        Y-axis (longitudinal) coordinate of the cameralocation in a (planer) geographical coordinate system.
+    t_x : float
+        Z-axis (elevational) coordinate of the cameralocation in a (planer) geographical coordinate system.
+    """
     pan = (360-pan_deg) * math.pi / 180
     tilt = tilt_deg * math.pi / 180
     roll = roll_deg * math.pi / 180
@@ -55,6 +94,14 @@ def modelview_mat(pan_deg, tilt_deg, roll_deg, t_x, t_y, t_z):
 
 
 def persp_proj(vert, value, ind, params):
+    """
+    Perspective projection of vertices, with given camera parameters.
+
+    Parameters
+    ----------
+    vert : np.array
+        
+    """
     ctx = gl.create_standalone_context()
     ctx.enable(gl.DEPTH_TEST) # enable depth testing
     #ctx.enable(gl.CULL_FACE)

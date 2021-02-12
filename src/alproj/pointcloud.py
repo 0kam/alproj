@@ -11,6 +11,23 @@ import math
 # write sqlite3 vertices database
 
 def create_db(aerial, dsm, out_path, res=1.0, chunksize=10000):
+    """
+    Creates a pointcloud database from a Digital Surface Model and an ortho-rectificated aerial photograph.
+
+    Parameters
+    ----------
+    aerial : rasterio.DatasetReader
+        An aerial photograph opend by rasterio.open()
+    dsm : rasterio.DatasetReader
+        A Digital SurfaceModel opend by rasterio.open()
+    out_path : str
+        Path for output SQLite3 file.
+    res : float
+        Mesh resolution for generated pointcloud in m.
+    chunksize : int
+        Specify the number of rows in each batch to be written at a time. By default, all rows will be written at once.
+        See https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.to_sql.html
+    """
     if os.path.exists(out_path):
         os.remove(out_path)
     t = min([aerial.bounds.top, dsm.bounds.top])
@@ -68,6 +85,9 @@ def create_db(aerial, dsm, out_path, res=1.0, chunksize=10000):
 
 
 def crop(conn, params, distance=3000, chunksize = 1000000):
+    """
+    
+    """
     # filter and collect vertices
     roll = params["roll"] * math.pi / 180
     fov = params["fov"]*(params["w"]*params["h"]*math.sin(roll))/params["w"]

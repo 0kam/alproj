@@ -1,3 +1,2 @@
 devel_data/
-tests/
-docs/
+src/alproj/run.py
