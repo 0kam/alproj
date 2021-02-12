@@ -1,10 +1,9 @@
-# -*- coding: utf-8 -*-
+from glob import glob
+from os.path import basename
+from os.path import splitext
 
-import os, sys
-from setuptools import setup, find_packages
-
-with open('README.md') as f:
-    readme = f.read()
+from setuptools import setup
+from setuptools import find_packages
 
 with open('LICENSE') as f:
     license = f.read()
