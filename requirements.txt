@@ -1,6 +1,7 @@
 numpy
 pandas
 datatable
+rasterio
 opencv-python
 pillow
 moderngl
