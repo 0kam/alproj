@@ -1,0 +1,391 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>alproj.project &#8212; alproj v0.1.0 documentation</title>
+    <link rel="stylesheet" href="../../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">alproj v0.1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for alproj.project</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">moderngl</span> <span class="k">as</span> <span class="nn">gl</span>
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span>
+<span class="kn">import</span> <span class="nn">cv2</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<div class="viewcode-block" id="projection_mat"><a class="viewcode-back" href="../../alproj.project.html#alproj.project.projection_mat">[docs]</a><span class="k">def</span> <span class="nf">projection_mat</span><span class="p">(</span><span class="n">fov_x_deg</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">near</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">far</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">cx</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cy</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Makes an OpenGL-style projection matrix from Field of View, width, and height of an image.</span>
+<span class="sd">    See https://learnopengl.com/Getting-started/Coordinate-Systems .</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    fov_x_deg : float</span>
+<span class="sd">        Field of View in degrees.</span>
+<span class="sd">    w : int</span>
+<span class="sd">        Width in pixels</span>
+<span class="sd">    h : int</span>
+<span class="sd">        Height in pixels</span>
+<span class="sd">    near : float default -1</span>
+<span class="sd">        Z-axis coordinate of near plane.</span>
+<span class="sd">    far : float default 1 </span>
+<span class="sd">        Z-axis coordinate of far plane.</span>
+<span class="sd">    cx : float default None</span>
+<span class="sd">        X-axis coordinate of principal point. If None, w/2. </span>
+<span class="sd">    cy : float default None</span>
+<span class="sd">        Y-axis coordinate of prinsipal point. If None, h/2.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    projection_mat : numpy.ndarray</span>
+<span class="sd">        A projection matrix.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">cx</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">cx</span> <span class="o">=</span> <span class="n">w</span><span class="o">/</span><span class="mi">2</span>
+    <span class="k">if</span> <span class="n">cy</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">cy</span> <span class="o">=</span> <span class="n">h</span><span class="o">/</span><span class="mi">2</span>
+    <span class="n">fov_x</span> <span class="o">=</span> <span class="n">fov_x_deg</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">180</span>
+    <span class="n">fov_y</span> <span class="o">=</span> <span class="n">fov_x</span> <span class="o">*</span> <span class="n">h</span> <span class="o">/</span> <span class="n">w</span>
+    <span class="n">fx</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">math</span><span class="o">.</span><span class="n">tan</span><span class="p">(</span><span class="n">fov_x</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">fy</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">math</span><span class="o">.</span><span class="n">tan</span><span class="p">(</span><span class="n">fov_y</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">mat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
+        <span class="n">fx</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">(</span><span class="n">w</span><span class="o">-</span><span class="mi">2</span><span class="o">*</span><span class="n">cx</span><span class="p">)</span><span class="o">/</span><span class="n">w</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="mi">0</span><span class="p">,</span> <span class="n">fy</span><span class="p">,</span> <span class="o">-</span><span class="p">(</span><span class="n">h</span><span class="o">-</span><span class="mi">2</span><span class="o">*</span><span class="n">cy</span><span class="p">)</span><span class="o">/</span><span class="n">h</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="p">(</span><span class="n">far</span><span class="o">+</span><span class="n">near</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">far</span><span class="o">-</span><span class="n">near</span><span class="p">),</span> <span class="o">-</span><span class="mi">2</span><span class="o">*</span><span class="n">far</span><span class="o">*</span><span class="n">near</span><span class="o">/</span><span class="p">(</span><span class="n">far</span><span class="o">-</span><span class="n">near</span><span class="p">),</span>
+        <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span>
+    <span class="p">])</span>
+    <span class="k">return</span> <span class="n">mat</span></div>
+
+<div class="viewcode-block" id="modelview_mat"><a class="viewcode-back" href="../../alproj.project.html#alproj.project.modelview_mat">[docs]</a><span class="k">def</span> <span class="nf">modelview_mat</span><span class="p">(</span><span class="n">pan_deg</span><span class="p">,</span> <span class="n">tilt_deg</span><span class="p">,</span> <span class="n">roll_deg</span><span class="p">,</span> <span class="n">t_x</span><span class="p">,</span> <span class="n">t_y</span><span class="p">,</span> <span class="n">t_z</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Makes an OpenGL-style modelview matrix from euler angles and camera location in world coordinate system.</span>
+<span class="sd">    See https://learnopengl.com/Getting-started/Coordinate-Systems .</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    pan_deg : float</span>
+<span class="sd">        Pan angle in degrees</span>
+<span class="sd">    tilt_deg : float</span>
+<span class="sd">        Tilt angle n degrees</span>
+<span class="sd">    roll_deg : float</span>
+<span class="sd">        Roll angle in degrees</span>
+<span class="sd">    t_x : float</span>
+<span class="sd">        X-axis (latitudinal) coordinate of the cameralocation in a (planer) giographic coordinate system.</span>
+<span class="sd">    t_y : float</span>
+<span class="sd">        Y-axis (longitudinal) coordinate of the cameralocation in a (planer) giographic coordinate system.</span>
+<span class="sd">    t_x : float</span>
+<span class="sd">        Z-axis (elevational) coordinate of the cameralocation in a (planer) giographic coordinate system.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    modelview_mat : numpy.ndarray</span>
+<span class="sd">        A modelview matrix.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">pan</span> <span class="o">=</span> <span class="p">(</span><span class="mi">360</span><span class="o">-</span><span class="n">pan_deg</span><span class="p">)</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">180</span>
+    <span class="n">tilt</span> <span class="o">=</span> <span class="n">tilt_deg</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">180</span>
+    <span class="n">roll</span> <span class="o">=</span> <span class="n">roll_deg</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">180</span>
+    <span class="n">rmat_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
+        <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">tilt</span><span class="p">),</span> <span class="o">-</span><span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">tilt</span><span class="p">),</span> <span class="mi">0</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">tilt</span><span class="p">),</span> <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">tilt</span><span class="p">),</span> <span class="mi">0</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+    <span class="p">])</span>
+    <span class="n">rmat_y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
+        <span class="p">[</span><span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">pan</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">pan</span><span class="p">),</span> <span class="mi">0</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+        <span class="p">[</span><span class="o">-</span><span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">pan</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">pan</span><span class="p">),</span> <span class="mi">0</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+    <span class="p">])</span>
+    <span class="n">rmat_z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
+        <span class="p">[</span><span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">roll</span><span class="p">),</span> <span class="o">-</span><span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">roll</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+        <span class="p">[</span><span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">roll</span><span class="p">),</span> <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">roll</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+    <span class="p">])</span>
+    <span class="n">rmat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">rmat_z</span><span class="p">,</span> <span class="n">rmat_x</span><span class="p">),</span> <span class="n">rmat_y</span><span class="p">)</span>
+    <span class="n">tmat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
+        <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="n">t_x</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="n">t_z</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="n">t_y</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+    <span class="p">])</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">rmat</span><span class="p">,</span> <span class="n">tmat</span><span class="p">)</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="persp_proj"><a class="viewcode-back" href="../../alproj.project.html#alproj.project.persp_proj">[docs]</a><span class="k">def</span> <span class="nf">persp_proj</span><span class="p">(</span><span class="n">vert</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">ind</span><span class="p">,</span> <span class="n">params</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    3D to 2D perspective projection of vertices, with given camera parameters.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    vert : numpy.ndarray</span>
+<span class="sd">        Coordinates of vertices, in X(latitudial), Z(vertical), Y(longitudial) order.</span>
+<span class="sd">    value : numpy.ndarray</span>
+<span class="sd">        Values of vertices. e.g. colors, giographic coordinates.</span>
+<span class="sd">    ind : numpy.ndarray</span>
+<span class="sd">        Index data of vertices. See http://www.opengl-tutorial.org/intermediate-tutorials/tutorial-9-vbo-indexing/ .</span>
+<span class="sd">    paramas : dict</span>
+<span class="sd">        Camera parameters.</span>
+<span class="sd">        - x : The latitudial coordinate of the shooting point in planaer (e.g. UTM) coordinate reference systems.</span>
+<span class="sd">        - y : The longitudial coordinate of the shooting point.</span>
+<span class="sd">        - z : The vertical coordinate of the shooting point, the unit of z must be the same as x and y (e.g. m).</span>
+<span class="sd">        - fov : Field of View in degree.</span>
+<span class="sd">        - pan : Pan angle in degree. North is 0 degree and East is 90 degree. The rotation angles (pan, tilt, roll) follows the OpenCV&#39;s left-handed coordinate system.</span>
+<span class="sd">        - tilt : Tilt angle in degree. 0 indecates that the camera is horizontal. A positive value indicates that the camera looks up.</span>
+<span class="sd">        - roll : Roll angle in degree. A positive value indicates that camera leans to the right.</span>
+<span class="sd">        - a1 : Distortion coefficients that calibrates non-equal aspect ratio of each pixels.</span>
+<span class="sd">        - a2 : Distortion coefficients that calibrates non-equal aspect ratio of each pixels.</span>
+<span class="sd">        - k1, k2, k3, k4, k5, k6 : Radial distortion coefficients.</span>
+<span class="sd">        - pa, p2 : Tangental distortion coefficients.</span>
+<span class="sd">        - s1, s2, s3, s4 : Prism distortion coefficients.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    raw : numpy.ndarray</span>
+<span class="sd">        Projected result.</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">ctx</span> <span class="o">=</span> <span class="n">gl</span><span class="o">.</span><span class="n">create_standalone_context</span><span class="p">()</span>
+    <span class="n">ctx</span><span class="o">.</span><span class="n">enable</span><span class="p">(</span><span class="n">gl</span><span class="o">.</span><span class="n">DEPTH_TEST</span><span class="p">)</span> <span class="c1"># enable depth testing</span>
+    <span class="c1">#ctx.enable(gl.CULL_FACE)</span>
+    <span class="n">vbo</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">buffer</span><span class="p">(</span><span class="n">vert</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;f4&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">tobytes</span><span class="p">())</span>
+    <span class="n">cbo</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">buffer</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;f4&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">tobytes</span><span class="p">())</span>
+    <span class="n">ibo</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">buffer</span><span class="p">(</span><span class="n">ind</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;i4&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">tobytes</span><span class="p">())</span> <span class="c1">#vertex indecies of each triangles</span>
+    <span class="n">prog</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">program</span><span class="p">(</span>
+     <span class="n">vertex_shader</span><span class="o">=</span><span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">         #version 330</span>
+<span class="s1">         in vec3 in_vert;</span>
+<span class="s1">         in vec3 in_color;</span>
+<span class="s1">         out vec3 v_color;  </span>
+<span class="s1">         // decrare some values used inside GPU by &quot;uniform&quot;</span>
+<span class="s1">         // the real values will be later set by CPU</span>
+<span class="s1">         uniform mat4 proj; // projection matrix</span>
+<span class="s1">         uniform mat4 view; // model view matrix</span>
+<span class="s1">         uniform float dist_coeffs[14]; // distortion coefficients </span>
+<span class="s1">         // distortion coefficients of customized OpenCV model a1, a2, k1~k6, p1, p2, s1~s4</span>
+<span class="s1">        </span>
+<span class="s1">         vec4 distort(vec4 view_pos){</span>
+<span class="s1">          // normalize</span>
+<span class="s1">          float z =  view_pos[2];</span>
+<span class="s1">          float z_inv = 1 / z;</span>
+<span class="s1">          float x1 = view_pos[0] * z_inv;</span>
+<span class="s1">          float y1 = view_pos[1] * z_inv;</span>
+<span class="s1">          </span>
+<span class="s1">          // precalculations</span>
+<span class="s1">          float x1_2 = x1*x1;</span>
+<span class="s1">          float y1_2 = y1*y1;</span>
+<span class="s1">          float x1_y1 = x1*y1;</span>
+<span class="s1">          float r2 = x1_2 + y1_2;</span>
+<span class="s1">          float r4 = r2*r2;</span>
+<span class="s1">          float r6 = r4*r2;</span>
+<span class="s1">          </span>
+<span class="s1">          // radial distortion factor</span>
+<span class="s1">          float r_dist_x = (1+dist_coeffs[2]*r2+dist_coeffs[3]*r4+dist_coeffs[4]*r6) </span>
+<span class="s1">                           /(1+dist_coeffs[5]*r2+dist_coeffs[6]*r4+dist_coeffs[7]*r6); </span>
+<span class="s1">          float r_dist_y = (1+dist_coeffs[0]+dist_coeffs[2]*r2+dist_coeffs[3]*r4+dist_coeffs[4]*r6) //dist_coeffs[0] = a1</span>
+<span class="s1">                           /(1+dist_coeffs[1]+dist_coeffs[5]*r2+dist_coeffs[6]*r4+dist_coeffs[7]*r6);//dist_coefs[1] = a2</span>
+<span class="s1">                          </span>
+<span class="s1">          // full (radial + tangential + skew) distortion</span>
+<span class="s1">          float x2 = x1*r_dist_x + 2*dist_coeffs[8]*x1_y1 + dist_coeffs[9]*(r2 + 2*x1_2) + dist_coeffs[10]*r2 + dist_coeffs[11]*r4;</span>
+<span class="s1">          float y2 = y1*r_dist_y + 2*dist_coeffs[9]*x1_y1 + dist_coeffs[8]*(r2 + 2*y1_2) + dist_coeffs[12]*r2 + dist_coeffs[13]*r4;</span>
+<span class="s1">          </span>
+<span class="s1">          // denormalize for projection (which is a linear operation)</span>
+<span class="s1">          return vec4(x2*z, y2*z, z, view_pos[3]);</span>
+<span class="s1">          }</span>
+<span class="s1">         </span>
+<span class="s1">         void main() {</span>
+<span class="s1">             vec4 local_pos = vec4(in_vert, 1.0);</span>
+<span class="s1">             vec4 view_pos = vec4(view * local_pos);</span>
+<span class="s1">             vec4 dist_pos = distort(view_pos);</span>
+<span class="s1">             v_color = in_color;</span>
+<span class="s1">             gl_Position = vec4(proj * dist_pos);</span>
+<span class="s1">         }</span>
+<span class="s1">     &#39;&#39;&#39;</span><span class="p">,</span>
+     <span class="n">fragment_shader</span><span class="o">=</span><span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">         #version 330</span>
+<span class="s1">         in vec3 v_color;</span>
+<span class="s1">         layout(location=0)out vec4 f_color;</span>
+<span class="s1">         void main() {</span>
+<span class="s1">             f_color = vec4(v_color, 1.0); // 1,0 added is alpha</span>
+<span class="s1">         }</span>
+<span class="s1">     &#39;&#39;&#39;</span>
+    <span class="p">)</span>
+    
+    <span class="c1"># set some &quot;uniform&quot; values in prog</span>
+    <span class="n">proj_mat</span> <span class="o">=</span> <span class="n">projection_mat</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;fov&quot;</span><span class="p">],</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;w&quot;</span><span class="p">],</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;h&quot;</span><span class="p">])</span>
+    <span class="n">view_mat</span> <span class="o">=</span> <span class="n">modelview_mat</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;pan&quot;</span><span class="p">],</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;tilt&quot;</span><span class="p">],</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;roll&quot;</span><span class="p">],</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">],</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;y&quot;</span><span class="p">],</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;z&quot;</span><span class="p">])</span>
+    <span class="n">dist_coeff</span> <span class="o">=</span> <span class="p">[</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;a1&quot;</span><span class="p">],</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;a2&quot;</span><span class="p">],</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;k1&quot;</span><span class="p">],</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;k2&quot;</span><span class="p">],</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;k3&quot;</span><span class="p">],</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;k4&quot;</span><span class="p">],</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;k5&quot;</span><span class="p">],</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;k6&quot;</span><span class="p">],</span> \
+        <span class="n">params</span><span class="p">[</span><span class="s2">&quot;p1&quot;</span><span class="p">],</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;p2&quot;</span><span class="p">],</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;s1&quot;</span><span class="p">],</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;s2&quot;</span><span class="p">],</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;s3&quot;</span><span class="p">],</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;s4&quot;</span><span class="p">]]</span>
+    <span class="n">prog</span><span class="p">[</span><span class="s1">&#39;proj&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">proj_mat</span><span class="p">)</span>
+    <span class="n">prog</span><span class="p">[</span><span class="s1">&#39;view&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">view_mat</span><span class="p">)</span>
+    <span class="n">prog</span><span class="p">[</span><span class="s1">&#39;dist_coeffs&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">dist_coeff</span>
+    <span class="c1">#  pass the vertex, color, index info to the shader</span>
+    <span class="n">vao_content</span> <span class="o">=</span> <span class="p">[(</span><span class="n">vbo</span><span class="p">,</span> <span class="s2">&quot;3f&quot;</span><span class="p">,</span> <span class="s2">&quot;in_vert&quot;</span><span class="p">),</span> <span class="p">(</span><span class="n">cbo</span><span class="p">,</span> <span class="s2">&quot;3f&quot;</span><span class="p">,</span> <span class="s2">&quot;in_color&quot;</span><span class="p">)]</span>
+    <span class="n">vao</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">vertex_array</span><span class="p">(</span><span class="n">program</span> <span class="o">=</span> <span class="n">prog</span><span class="p">,</span> <span class="n">content</span> <span class="o">=</span> <span class="n">vao_content</span><span class="p">,</span> <span class="n">index_buffer</span> <span class="o">=</span> <span class="n">ibo</span><span class="p">)</span>
+    <span class="c1"># create 2D frame</span>
+    <span class="n">rbo</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">renderbuffer</span><span class="p">((</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;w&quot;</span><span class="p">],</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;h&quot;</span><span class="p">]),</span> <span class="n">dtype</span> <span class="o">=</span> <span class="s2">&quot;f4&quot;</span><span class="p">)</span>
+    <span class="n">drbo</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">depth_renderbuffer</span><span class="p">((</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;w&quot;</span><span class="p">],</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;h&quot;</span><span class="p">]))</span>
+    <span class="n">fbo</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">framebuffer</span><span class="p">(</span><span class="n">rbo</span><span class="p">,</span> <span class="n">drbo</span><span class="p">)</span>
+    
+    <span class="n">fbo</span><span class="o">.</span><span class="n">use</span><span class="p">()</span>
+    <span class="n">fbo</span><span class="o">.</span><span class="n">clear</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+    <span class="c1"># render the rgb image</span>
+    <span class="n">vao</span><span class="o">.</span><span class="n">render</span><span class="p">()</span>
+    <span class="n">img</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">frombytes</span><span class="p">(</span><span class="s1">&#39;RGB&#39;</span><span class="p">,</span> <span class="n">fbo</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="n">fbo</span><span class="o">.</span><span class="n">read</span><span class="p">(),</span> <span class="s1">&#39;raw&#39;</span><span class="p">,</span> <span class="s1">&#39;RGB&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="c1"># convert RAW image to ndarray, raw is a 1-dimentional array (rgbrgbrgbrgb......) </span>
+    <span class="c1"># array starts from right-bottom of the image, you should flip it in l-r and u-b side</span>
+    <span class="n">raw</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">frombuffer</span><span class="p">((</span><span class="n">fbo</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;f4&quot;</span><span class="p">)),</span> <span class="n">dtype</span> <span class="o">=</span> <span class="s2">&quot;float32&quot;</span><span class="p">)</span>
+    <span class="n">raw</span> <span class="o">=</span> <span class="n">raw</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;h&quot;</span><span class="p">],</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;w&quot;</span><span class="p">],</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="n">raw</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">flipud</span><span class="p">(</span><span class="n">raw</span><span class="p">)</span>
+    <span class="n">vao</span><span class="o">.</span><span class="n">release</span><span class="p">()</span>
+    <span class="n">rbo</span><span class="o">.</span><span class="n">release</span><span class="p">()</span>
+    <span class="n">drbo</span><span class="o">.</span><span class="n">release</span><span class="p">()</span>
+    <span class="n">fbo</span><span class="o">.</span><span class="n">release</span><span class="p">()</span>
+    <span class="n">ctx</span><span class="o">.</span><span class="n">release</span><span class="p">()</span>
+    <span class="n">vbo</span><span class="o">.</span><span class="n">release</span><span class="p">()</span>
+    <span class="n">cbo</span><span class="o">.</span><span class="n">release</span><span class="p">()</span>
+    <span class="n">ibo</span><span class="o">.</span><span class="n">release</span><span class="p">()</span>
+    <span class="n">prog</span><span class="o">.</span><span class="n">release</span><span class="p">()</span>
+    <span class="k">del</span><span class="p">(</span><span class="n">vao_content</span><span class="p">,</span> <span class="n">vert</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">ind</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">raw</span></div>
+
+<div class="viewcode-block" id="sim_image"><a class="viewcode-back" href="../../alproj.project.html#alproj.project.sim_image">[docs]</a><span class="k">def</span> <span class="nf">sim_image</span><span class="p">(</span><span class="n">vert</span><span class="p">,</span> <span class="n">color</span><span class="p">,</span> <span class="n">ind</span><span class="p">,</span> <span class="n">params</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Renders a simulated image of landscape with given surface and camera parameters.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    vert : numpy.ndarray</span>
+<span class="sd">        Vertex coordinates of the surface returned by alproj.surface.crop(). </span>
+<span class="sd">    color : numpy.ndarray</span>
+<span class="sd">        Vertex colors in RGB, returned by alproj.surface.crop()</span>
+<span class="sd">    ind : numpy.ndarray</span>
+<span class="sd">        Index data of vertices, returned by alproj.surface.crop().</span>
+<span class="sd">    params : dict</span>
+<span class="sd">        Camera parameters. See alproj.project.persp_proj().</span>
+<span class="sd">    </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    img : numpy.ndarray</span>
+<span class="sd">        Rendered image in OpenCV&#39;s image format.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">raw</span> <span class="o">=</span> <span class="n">persp_proj</span><span class="p">(</span><span class="n">vert</span><span class="p">,</span> <span class="n">color</span><span class="p">,</span> <span class="n">ind</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span> <span class="o">*</span> <span class="mi">255</span>
+    <span class="n">raw</span> <span class="o">=</span> <span class="n">raw</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span>
+    <span class="n">img</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">cvtColor</span><span class="p">(</span><span class="n">raw</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">COLOR_RGB2BGR</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">img</span></div>
+
+
+<div class="viewcode-block" id="reverse_proj"><a class="viewcode-back" href="../../alproj.project.html#alproj.project.reverse_proj">[docs]</a><span class="k">def</span> <span class="nf">reverse_proj</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">vert</span><span class="p">,</span> <span class="n">ind</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">chnames</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;B&quot;</span><span class="p">,</span> <span class="s2">&quot;G&quot;</span><span class="p">,</span> <span class="s2">&quot;R&quot;</span><span class="p">]):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    2D to 3D reverse-projection (geo-rectification) of given array, onto given surface, with given camera parameters.</span>
+<span class="sd">    Reverse-projected array will be returned as pandas.DataFrame with channel names, coordinates in the original array, </span>
+<span class="sd">    and coordinates in the giographic coordinate system.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    array : numpy.ndarray</span>
+<span class="sd">        Target array, such as landscape photograph. The shape of the array must be (height, width, channels).</span>
+<span class="sd">    vert : numpy.ndarray</span>
+<span class="sd">        Vertex coordinates of the surface.</span>
+<span class="sd">    ind : numpy.ndarray</span>
+<span class="sd">        Index array that shows which three poits shape a triangle. See http://www.opengl-tutorial.org/intermediate-tutorials/tutorial-9-vbo-indexing/ .</span>
+<span class="sd">    params : dict</span>
+<span class="sd">        Camera parameters. See alproj.project.persp_proj</span>
+<span class="sd">    chnames : list of str default [&quot;B&quot;, &quot;G&quot;, &quot;R&quot;]</span>
+<span class="sd">        Channel names of the target array. Default value is [&quot;B&quot;,&quot;G&quot;,&quot;R&quot;] because channel order is BGR in OpenCV.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    df : pandas.DataFrame</span>
+<span class="sd">        Reverse-projected result with column</span>
+<span class="sd">        - u , v : The x and y axis coordinates in the original array.</span>
+<span class="sd">        - x, y, z : The latitudial, longitudial, and vertical coordinates in the reverse-projected coordinate system. </span>
+<span class="sd">        - [chnames] : The channel names passed by chnames, such as B, G, R.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">coord</span> <span class="o">=</span> <span class="n">persp_proj</span><span class="p">(</span><span class="n">vert</span><span class="p">,</span> <span class="n">vert</span><span class="p">,</span> <span class="n">ind</span><span class="p">,</span> <span class="n">params</span><span class="p">)[:,</span> <span class="p">:,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">]]</span> <span class="c1"># channel: x, z, y</span>
+    <span class="n">uv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">array</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">array</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+    <span class="n">uv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">uv</span><span class="p">,</span> <span class="n">axis</span> <span class="o">=</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">concat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">uv</span><span class="p">,</span> <span class="n">coord</span><span class="p">,</span> <span class="n">array</span><span class="p">],</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span>
+    <span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;u&quot;</span><span class="p">,</span> <span class="s2">&quot;v&quot;</span><span class="p">,</span> <span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="s2">&quot;z&quot;</span><span class="p">]</span>
+    <span class="n">columns</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">chnames</span><span class="p">)</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">concat</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">columns</span><span class="p">)</span>
+    <span class="n">df</span><span class="p">[[</span><span class="s2">&quot;u&quot;</span><span class="p">,</span> <span class="s2">&quot;v&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[[</span><span class="s2">&quot;u&quot;</span><span class="p">,</span> <span class="s2">&quot;v&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;int16&quot;</span><span class="p">)</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">df</span></div>
+
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">alproj v0.1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2021, Ryotaro Okamoto.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.5.
+    </div>
+  </body>
+</html>

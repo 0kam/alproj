@@ -28,6 +28,9 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
           <a href="alproj.gcp.html" title="alproj.gcp module"
              accesskey="N">next</a> |</li>
         <li class="right" >
@@ -42,8 +45,163 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="alproj-project-module">
-<h1>alproj.project module<a class="headerlink" href="#alproj-project-module" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="module-alproj.project">
+<span id="alproj-project-module"></span><h1>alproj.project module<a class="headerlink" href="#module-alproj.project" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="alproj.project.modelview_mat">
+<code class="descclassname">alproj.project.</code><code class="descname">modelview_mat</code><span class="sig-paren">(</span><em>pan_deg</em>, <em>tilt_deg</em>, <em>roll_deg</em>, <em>t_x</em>, <em>t_y</em>, <em>t_z</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/alproj/project.html#modelview_mat"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#alproj.project.modelview_mat" title="Permalink to this definition">¶</a></dt>
+<dd><p>Makes an OpenGL-style modelview matrix from euler angles and camera location in world coordinate system.
+See <a class="reference external" href="https://learnopengl.com/Getting-started/Coordinate-Systems">https://learnopengl.com/Getting-started/Coordinate-Systems</a> .</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>pan_deg</strong> (<em>float</em>) – Pan angle in degrees</li>
+<li><strong>tilt_deg</strong> (<em>float</em>) – Tilt angle n degrees</li>
+<li><strong>roll_deg</strong> (<em>float</em>) – Roll angle in degrees</li>
+<li><strong>t_x</strong> (<em>float</em>) – X-axis (latitudinal) coordinate of the cameralocation in a (planer) giographic coordinate system.</li>
+<li><strong>t_y</strong> (<em>float</em>) – Y-axis (longitudinal) coordinate of the cameralocation in a (planer) giographic coordinate system.</li>
+<li><strong>t_x</strong> – Z-axis (elevational) coordinate of the cameralocation in a (planer) giographic coordinate system.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>modelview_mat</strong> – A modelview matrix.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">numpy.ndarray</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="alproj.project.persp_proj">
+<code class="descclassname">alproj.project.</code><code class="descname">persp_proj</code><span class="sig-paren">(</span><em>vert</em>, <em>value</em>, <em>ind</em>, <em>params</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/alproj/project.html#persp_proj"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#alproj.project.persp_proj" title="Permalink to this definition">¶</a></dt>
+<dd><p>3D to 2D perspective projection of vertices, with given camera parameters.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>vert</strong> (<em>numpy.ndarray</em>) – Coordinates of vertices, in X(latitudial), Z(vertical), Y(longitudial) order.</li>
+<li><strong>value</strong> (<em>numpy.ndarray</em>) – Values of vertices. e.g. colors, giographic coordinates.</li>
+<li><strong>ind</strong> (<em>numpy.ndarray</em>) – Index data of vertices. See <a class="reference external" href="http://www.opengl-tutorial.org/intermediate-tutorials/tutorial-9-vbo-indexing/">http://www.opengl-tutorial.org/intermediate-tutorials/tutorial-9-vbo-indexing/</a> .</li>
+<li><strong>paramas</strong> (<em>dict</em>) – Camera parameters.
+- x : The latitudial coordinate of the shooting point in planaer (e.g. UTM) coordinate reference systems.
+- y : The longitudial coordinate of the shooting point.
+- z : The vertical coordinate of the shooting point, the unit of z must be the same as x and y (e.g. m).
+- fov : Field of View in degree.
+- pan : Pan angle in degree. North is 0 degree and East is 90 degree. The rotation angles (pan, tilt, roll) follows the OpenCV’s left-handed coordinate system.
+- tilt : Tilt angle in degree. 0 indecates that the camera is horizontal. A positive value indicates that the camera looks up.
+- roll : Roll angle in degree. A positive value indicates that camera leans to the right.
+- a1 : Distortion coefficients that calibrates non-equal aspect ratio of each pixels.
+- a2 : Distortion coefficients that calibrates non-equal aspect ratio of each pixels.
+- k1, k2, k3, k4, k5, k6 : Radial distortion coefficients.
+- pa, p2 : Tangental distortion coefficients.
+- s1, s2, s3, s4 : Prism distortion coefficients.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>raw</strong> – Projected result.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">numpy.ndarray</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="alproj.project.projection_mat">
+<code class="descclassname">alproj.project.</code><code class="descname">projection_mat</code><span class="sig-paren">(</span><em>fov_x_deg</em>, <em>w</em>, <em>h</em>, <em>near=-1</em>, <em>far=1</em>, <em>cx=None</em>, <em>cy=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/alproj/project.html#projection_mat"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#alproj.project.projection_mat" title="Permalink to this definition">¶</a></dt>
+<dd><p>Makes an OpenGL-style projection matrix from Field of View, width, and height of an image.
+See <a class="reference external" href="https://learnopengl.com/Getting-started/Coordinate-Systems">https://learnopengl.com/Getting-started/Coordinate-Systems</a> .</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>fov_x_deg</strong> (<em>float</em>) – Field of View in degrees.</li>
+<li><strong>w</strong> (<em>int</em>) – Width in pixels</li>
+<li><strong>h</strong> (<em>int</em>) – Height in pixels</li>
+<li><strong>near</strong> (<em>float default -1</em>) – Z-axis coordinate of near plane.</li>
+<li><strong>far</strong> (<em>float default 1</em>) – Z-axis coordinate of far plane.</li>
+<li><strong>cx</strong> (<em>float default None</em>) – X-axis coordinate of principal point. If None, w/2.</li>
+<li><strong>cy</strong> (<em>float default None</em>) – Y-axis coordinate of prinsipal point. If None, h/2.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>projection_mat</strong> – A projection matrix.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">numpy.ndarray</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="alproj.project.reverse_proj">
+<code class="descclassname">alproj.project.</code><code class="descname">reverse_proj</code><span class="sig-paren">(</span><em>array, vert, ind, params, chnames=['B', 'G', 'R']</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/alproj/project.html#reverse_proj"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#alproj.project.reverse_proj" title="Permalink to this definition">¶</a></dt>
+<dd><p>2D to 3D reverse-projection (geo-rectification) of given array, onto given surface, with given camera parameters.
+Reverse-projected array will be returned as pandas.DataFrame with channel names, coordinates in the original array,
+and coordinates in the giographic coordinate system.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>array</strong> (<em>numpy.ndarray</em>) – Target array, such as landscape photograph. The shape of the array must be (height, width, channels).</li>
+<li><strong>vert</strong> (<em>numpy.ndarray</em>) – Vertex coordinates of the surface.</li>
+<li><strong>ind</strong> (<em>numpy.ndarray</em>) – Index array that shows which three poits shape a triangle. See <a class="reference external" href="http://www.opengl-tutorial.org/intermediate-tutorials/tutorial-9-vbo-indexing/">http://www.opengl-tutorial.org/intermediate-tutorials/tutorial-9-vbo-indexing/</a> .</li>
+<li><strong>params</strong> (<em>dict</em>) – Camera parameters. See alproj.project.persp_proj</li>
+<li><strong>chnames</strong> (<em>list of str default</em><em> [</em><em>&quot;B&quot;</em><em>, </em><em>&quot;G&quot;</em><em>, </em><em>&quot;R&quot;</em><em>]</em>) – Channel names of the target array. Default value is [“B”,”G”,”R”] because channel order is BGR in OpenCV.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>df</strong> – Reverse-projected result with column
+- u , v : The x and y axis coordinates in the original array.
+- x, y, z : The latitudial, longitudial, and vertical coordinates in the reverse-projected coordinate system.
+- [chnames] : The channel names passed by chnames, such as B, G, R.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">pandas.DataFrame</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="alproj.project.sim_image">
+<code class="descclassname">alproj.project.</code><code class="descname">sim_image</code><span class="sig-paren">(</span><em>vert</em>, <em>color</em>, <em>ind</em>, <em>params</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/alproj/project.html#sim_image"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#alproj.project.sim_image" title="Permalink to this definition">¶</a></dt>
+<dd><p>Renders a simulated image of landscape with given surface and camera parameters.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>vert</strong> (<em>numpy.ndarray</em>) – Vertex coordinates of the surface returned by alproj.surface.crop().</li>
+<li><strong>color</strong> (<em>numpy.ndarray</em>) – Vertex colors in RGB, returned by alproj.surface.crop()</li>
+<li><strong>ind</strong> (<em>numpy.ndarray</em>) – Index data of vertices, returned by alproj.surface.crop().</li>
+<li><strong>params</strong> (<em>dict</em>) – Camera parameters. See alproj.project.persp_proj().</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>img</strong> – Rendered image in OpenCV’s image format.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">numpy.ndarray</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 </div>
 
 
@@ -87,6 +245,9 @@
         <li class="right" style="margin-right: 10px">
           <a href="genindex.html" title="General Index"
              >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
         <li class="right" >
           <a href="alproj.gcp.html" title="alproj.gcp module"
              >next</a> |</li>

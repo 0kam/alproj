@@ -28,6 +28,9 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
           <a href="alproj.optimize.html" title="alproj.optimize module"
              accesskey="N">next</a> |</li>
         <li class="right" >
@@ -42,8 +45,70 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="alproj-gcp-module">
-<h1>alproj.gcp module<a class="headerlink" href="#alproj-gcp-module" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="module-alproj.gcp">
+<span id="alproj-gcp-module"></span><h1>alproj.gcp module<a class="headerlink" href="#module-alproj.gcp" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="alproj.gcp.akaze_match">
+<code class="descclassname">alproj.gcp.</code><code class="descname">akaze_match</code><span class="sig-paren">(</span><em>path_org</em>, <em>path_sim</em>, <em>ransac_th=100</em>, <em>plot_result=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/alproj/gcp.html#akaze_match"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#alproj.gcp.akaze_match" title="Permalink to this definition">¶</a></dt>
+<dd><p>AKAZE matching between the original (real) photograph and a simulated landscape image
+The work flow is shown below.
+- AKAZE local feature detection
+- FLANN matching
+- Find and remove outliers by homography transformation with RANSAC</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>path_org</strong> (<em>str</em>) – Path for original photograph</li>
+<li><strong>path_sim</strong> (<em>str</em>) – Path for simulated landscape image</li>
+<li><strong>ransac_th</strong> (<em>int default 100</em>) – If the error (pixel) of homography transformation on a point pair is larger than this value, it will be removed as an outlier.</li>
+<li><strong>plot_result</strong> (<em>boolean default False</em>) – Whether return a result plot</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
+<li><strong>points</strong> (<em>pd.DataFrame</em>) – The coordinates of matched points. (Left-Top origin)</li>
+<li><strong>plot</strong> (<em>np.array</em>) – An OpenCV image of result plot.</li>
+</ul>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="alproj.gcp.set_gcp">
+<code class="descclassname">alproj.gcp.</code><code class="descname">set_gcp</code><span class="sig-paren">(</span><em>match</em>, <em>rev_proj</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/alproj/gcp.html#set_gcp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#alproj.gcp.set_gcp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds giographic coordinates to the matched point pairs.
+The result of this function will be used as the Ground Control Points (GCPs)
+during camera parameter estimation</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>match</strong> (<em>pd.DataFrame</em>) – Result of alproj.gcp.akaze_match()</li>
+<li><strong>rev_proj</strong> (<em>pd.DataFrame</em>) – Result of alproj.project.rverse_proj</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>gcp</strong> – A dataframe with 4 columns
+- u : x_axis coordinates of the Ground Control Points on the original photograph. Left-Top origin.
+- v : y_axis coordinates of the GCPs.
+- x : X coordinates of GCPs in a (planer) giographic coordinate system.
+- y : Y coordinates of GCPs.
+- z : Z coordinates of GCPs.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">pd.DataFrame</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 </div>
 
 
@@ -87,6 +152,9 @@
         <li class="right" style="margin-right: 10px">
           <a href="genindex.html" title="General Index"
              >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
         <li class="right" >
           <a href="alproj.optimize.html" title="alproj.optimize module"
              >next</a> |</li>

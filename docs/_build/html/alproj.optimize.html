@@ -27,6 +27,9 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
           <a href="alproj.gcp.html" title="alproj.gcp module"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">alproj v0.1.0 documentation</a> &#187;</li> 
@@ -38,8 +41,194 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="alproj-optimize-module">
-<h1>alproj.optimize module<a class="headerlink" href="#alproj-optimize-module" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="module-alproj.optimize">
+<span id="alproj-optimize-module"></span><h1>alproj.optimize module<a class="headerlink" href="#module-alproj.optimize" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="alproj.optimize.CMAOptimizer">
+<em class="property">class </em><code class="descclassname">alproj.optimize.</code><code class="descname">CMAOptimizer</code><span class="sig-paren">(</span><em>obj_points</em>, <em>img_points</em>, <em>params_init</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/alproj/optimize.html#CMAOptimizer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#alproj.optimize.CMAOptimizer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Camera parameter optimizer using Covariance Matrix Adaptation Evolution Strategy (CMA-ES).
+See <a class="reference external" href="https://pypi.org/project/cmaes/">https://pypi.org/project/cmaes/</a> .
+You can select which parameters to be optimized.
+The camera location (x, y, z) must be fixed (not optimizable).</p>
+<dl class="attribute">
+<dt id="alproj.optimize.CMAOptimizer.obj_points">
+<code class="descname">obj_points</code><a class="headerlink" href="#alproj.optimize.CMAOptimizer.obj_points" title="Permalink to this definition">¶</a></dt>
+<dd><p>Geographic coordinates of the Ground Control Points.
+The column names must be x,y,z. See alproj.gcp.set_gcp()</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">pandas.DataFrame</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="alproj.optimize.CMAOptimizer.img_points">
+<code class="descname">img_points</code><a class="headerlink" href="#alproj.optimize.CMAOptimizer.img_points" title="Permalink to this definition">¶</a></dt>
+<dd><p>Image coordinates of the Ground Control Points.
+The column names must be u, v. See alproj.gcp.set_gcp()</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">pandas.DataFrame</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="alproj.optimize.CMAOptimizer.params_init">
+<code class="descname">params_init</code><a class="headerlink" href="#alproj.optimize.CMAOptimizer.params_init" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initial values of camera parameters.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="alproj.optimize.CMAOptimizer.optimize">
+<code class="descname">optimize</code><span class="sig-paren">(</span><em>sigma=1.0</em>, <em>bounds=None</em>, <em>generation=500</em>, <em>population_size=50</em>, <em>n_max_resampling=100</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/alproj/optimize.html#CMAOptimizer.optimize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#alproj.optimize.CMAOptimizer.optimize" title="Permalink to this definition">¶</a></dt>
+<dd><p>CMA-optimization of camera parameters.
+See <a class="reference external" href="https://github.com/CyberAgent/cmaes/blob/main/cmaes/_cma.py">https://github.com/CyberAgent/cmaes/blob/main/cmaes/_cma.py</a> .</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>sigma</strong> (<em>float default 1.0</em>) – Initial standard deviation of covariance matrix.</li>
+<li><strong>bounds</strong> (<em>numpy.ndarray default None</em>) – Lower and upper domain boundaries for each parameter (optional).</li>
+<li><strong>generation</strong> (<em>int</em>) – Generation numbers to run.</li>
+<li><strong>pupulation_size</strong> (<em>int</em>) – Population size.</li>
+<li><strong>n_max_resampling</strong> (<em>int default 100</em>) – A maximum number of resampling parameters (default: 100).
+If all sampled parameters are infeasible, the last sampled one
+will be clipped with lower and upper bounds.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="alproj.optimize.CMAOptimizer.set_target">
+<code class="descname">set_target</code><span class="sig-paren">(</span><em>target_params=['fov', 'pan', 'tilt', 'roll', 'a1', 'a2', 'k1', 'k2', 'k3', 'k4', 'k5', 'k6', 'p1', 'p2', 's1', 's2', 's3', 's4']</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/alproj/optimize.html#CMAOptimizer.set_target"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#alproj.optimize.CMAOptimizer.set_target" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set which parameters to be optimized.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>target_params</strong> (<em>dict default</em><em> [</em><em>&quot;fov&quot;</em><em>, </em><em>&quot;pan&quot;</em><em>, </em><em>&quot;tilt&quot;</em><em>, </em><em>&quot;roll&quot;</em><em>, </em><em>&quot;a1&quot;</em><em>, </em><em>&quot;a2&quot;</em><em>, </em><em>&quot;k1&quot;</em><em>, </em><em>&quot;k2&quot;</em><em>, </em><em>&quot;k3&quot;</em><em>, </em><em>&quot;k4&quot;</em><em>, </em><em>&quot;k5&quot;</em><em>, </em><em>&quot;k6&quot;</em><em>, </em><em>&quot;p1&quot;</em><em>, </em><em>&quot;p2&quot;</em><em>, </em><em>&quot;s1&quot;</em><em>, </em><em>&quot;s2&quot;</em><em>, </em><em>&quot;s3&quot;</em><em>, </em><em>&quot;s4&quot;</em><em>]</em>) – Parameters to be optimized. You can not select x, y, and z.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="alproj.optimize.distort">
+<code class="descclassname">alproj.optimize.</code><code class="descname">distort</code><span class="sig-paren">(</span><em>points</em>, <em>a1</em>, <em>a2</em>, <em>k1</em>, <em>k2</em>, <em>k3</em>, <em>k4</em>, <em>k5</em>, <em>k6</em>, <em>p1</em>, <em>p2</em>, <em>s1</em>, <em>s2</em>, <em>s3</em>, <em>s4</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/alproj/optimize.html#distort"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#alproj.optimize.distort" title="Permalink to this definition">¶</a></dt>
+<dd><p>Distorts an image by given parameters. See alproj.project.persp_proj().</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="alproj.optimize.extrinsic_mat">
+<code class="descclassname">alproj.optimize.</code><code class="descname">extrinsic_mat</code><span class="sig-paren">(</span><em>pan_deg</em>, <em>tilt_deg</em>, <em>roll_deg</em>, <em>t_x</em>, <em>t_y</em>, <em>t_z</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/alproj/optimize.html#extrinsic_mat"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#alproj.optimize.extrinsic_mat" title="Permalink to this definition">¶</a></dt>
+<dd><p>Makes an extrinsic camera matrix from given parameters.
+See <a class="reference external" href="https://learnopencv.com/geometry-of-image-formation/">https://learnopencv.com/geometry-of-image-formation/</a> .</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>pan_deg</strong> (<em>float</em>) – Pan angle in degree.</li>
+<li><strong>tilt_deg</strong> (<em>float</em>) – Tilt angle in degree.</li>
+<li><strong>roll_deg</strong> (<em>float</em>) – Roll angle in degree.</li>
+<li><strong>t_x</strong> (<em>float</em>) – X-axis coordinate of the camera location.</li>
+<li><strong>t_y</strong> (<em>float</em>) – Y-axis coordinate of the camera location.</li>
+<li><strong>t_z</strong> (<em>float</em>) – Z-axis coordinate of the camera location.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>mat</strong> – Extrinsic camera matrix.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">numpy.ndarray</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="alproj.optimize.intrinsic_mat">
+<code class="descclassname">alproj.optimize.</code><code class="descname">intrinsic_mat</code><span class="sig-paren">(</span><em>fov_x_deg</em>, <em>w</em>, <em>h</em>, <em>cx=None</em>, <em>cy=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/alproj/optimize.html#intrinsic_mat"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#alproj.optimize.intrinsic_mat" title="Permalink to this definition">¶</a></dt>
+<dd><p>Makes an intrinsic camera matrix (in OpenCV style) from given parameters.
+See <a class="reference external" href="https://learnopencv.com/geometry-of-image-formation/">https://learnopencv.com/geometry-of-image-formation/</a> .</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>fov_x_deg</strong> (<em>float</em>) – Field of View in degree.</li>
+<li><strong>w</strong> (<em>int</em>) – Width of the image</li>
+<li><strong>h</strong> (<em>int</em>) – Height of the image</li>
+<li><strong>cx</strong> (<em>float default None</em>) – X-coordinate of the principal point. If None, cx = w/2.</li>
+<li><strong>cy</strong> (<em>float default None</em>) – Y-coordinate of the principal point. If None, y = h/2.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>mat</strong> – Intrinsic matrix.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">numpy.ndarray</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="alproj.optimize.project">
+<code class="descclassname">alproj.optimize.</code><code class="descname">project</code><span class="sig-paren">(</span><em>obj_points</em>, <em>params</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/alproj/optimize.html#project"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#alproj.optimize.project" title="Permalink to this definition">¶</a></dt>
+<dd><p>3D to 2D Perspective projection of given points with given camera parameters.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>obj_points</strong> (<em>pandas.DataFrame</em>) – Coordinates of the points (usually GCPs) in 3D giographic coordinate system.
+The column names must be x,y,z.</li>
+<li><strong>params</strong> (<em>dict</em>) – Camera parameters. See alproj.project.persp_proj()</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>uv</strong> – 2D projected coordinates.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">pandas.DataFrame</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="alproj.optimize.rmse">
+<code class="descclassname">alproj.optimize.</code><code class="descname">rmse</code><span class="sig-paren">(</span><em>img_points</em>, <em>projected</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/alproj/optimize.html#rmse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#alproj.optimize.rmse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate Root Mean Square Error of the projection.</p>
+</dd></dl>
+
 </div>
 
 
@@ -80,6 +269,9 @@
         <li class="right" style="margin-right: 10px">
           <a href="genindex.html" title="General Index"
              >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
         <li class="right" >
           <a href="alproj.gcp.html" title="alproj.gcp module"
              >previous</a> |</li>
