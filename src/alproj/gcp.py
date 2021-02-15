@@ -62,7 +62,7 @@ def akaze_match(path_org, path_sim, ransac_th=100, plot_result=False):
 
 def set_gcp(match, rev_proj):
     """
-    Adds geographical coordinates to the matched point pairs.
+    Adds giographic coordinates to the matched point pairs.
     The result of this function will be used as the Ground Control Points (GCPs) 
     during camera parameter estimation
 
@@ -79,7 +79,7 @@ def set_gcp(match, rev_proj):
         A dataframe with 4 columns
         - u : x_axis coordinates of the Ground Control Points on the original photograph. Left-Top origin.
         - v : y_axis coordinates of the GCPs.
-        - x : X coordinates of GCPs in a (planer) geographical coordinate system.
+        - x : X coordinates of GCPs in a (planer) giographic coordinate system.
         - y : Y coordinates of GCPs.
         - z : Z coordinates of GCPs. 
     """

@@ -6,12 +6,24 @@
 Welcome to alproj's documentation!
 ==================================
 
+
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
-
-
-
+   
+   installation
+   overview
+   usage
+   
+.. toctree::
+   :maxdepth: 2
+   :caption: Package Reference:
+   
+   alproj.surface
+   alproj.project
+   alproj.gcp
+   alproj.optimize
+   
 Indices and tables
 ==================
 

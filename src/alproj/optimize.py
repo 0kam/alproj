@@ -5,6 +5,28 @@ from cmaes import CMA
 from tqdm import tqdm
 
 def intrinsic_mat(fov_x_deg, w, h, cx=None, cy=None):
+    """ 
+    Makes an intrinsic camera matrix (in OpenCV style) from given parameters.
+    See https://learnopencv.com/geometry-of-image-formation/ .
+
+    Parameters
+    ----------
+    fov_x_deg : float
+        Field of View in degree.
+    w : int
+        Width of the image
+    h : int
+        Height of the image
+    cx : float default None
+        X-coordinate of the principal point. If None, cx = w/2.
+    cy : float default None
+        Y-coordinate of the principal point. If None, y = h/2.
+    
+    Returns
+    -------
+    mat : numpy.ndarray
+        Intrinsic matrix.
+    """
     if cx == None:
         cx = w/2
     if cy == None:
@@ -21,6 +43,30 @@ def intrinsic_mat(fov_x_deg, w, h, cx=None, cy=None):
     return mat
 
 def extrinsic_mat(pan_deg, tilt_deg, roll_deg, t_x, t_y, t_z):
+    """
+    Makes an extrinsic camera matrix from given parameters.
+    See https://learnopencv.com/geometry-of-image-formation/ .
+
+    Parameters
+    ----------
+    pan_deg : float
+        Pan angle in degree.
+    tilt_deg : float
+        Tilt angle in degree.
+    roll_deg : float
+        Roll angle in degree.
+    t_x : float
+        X-axis coordinate of the camera location.
+    t_y : float
+        Y-axis coordinate of the camera location.
+    t_z : float
+        Z-axis coordinate of the camera location.
+    
+    Returns
+    -------
+    mat : numpy.ndarray
+        Extrinsic camera matrix.
+    """
     pan = pan_deg * pi / 180
     tilt = -(tilt_deg + 90) * pi / 180
     roll = -roll_deg * pi / 180
@@ -49,6 +95,9 @@ def extrinsic_mat(pan_deg, tilt_deg, roll_deg, t_x, t_y, t_z):
     return np.vstack((np.hstack((rmat, tmat)), np.array([0,0,0,1])))
 
 def distort(points, a1, a2, k1, k2, k3, k4, k5, k6, p1, p2, s1, s2, s3, s4):
+    """
+    Distorts an image by given parameters. See alproj.project.persp_proj().
+    """
     x_norm = points[0,]/points[2,]
     y_norm = points[1,]/points[2,]
     r2 = (x_norm**2 + y_norm**2)
@@ -62,6 +111,23 @@ def distort(points, a1, a2, k1, k2, k3, k4, k5, k6, p1, p2, s1, s2, s3, s4):
     return points_distort
 
 def project(obj_points, params):
+    """
+    3D to 2D Perspective projection of given points with given camera parameters.
+
+    Parameters
+    ----------
+    obj_points : pandas.DataFrame
+        Coordinates of the points (usually GCPs) in 3D giographic coordinate system.
+        The column names must be x,y,z. 
+    params : dict
+        Camera parameters. See alproj.project.persp_proj()
+    
+    Returns
+    -------
+    uv : pandas.DataFrame
+        2D projected coordinates.
+    """
+    obj_points = obj_points[["x", "y", "z"]]
     op = np.vstack((obj_points.to_numpy().T, np.ones([1,len(obj_points)])))
     imat = intrinsic_mat(params["fov"], params["w"], params["h"], params["cx"], params["cy"])
     emat = extrinsic_mat(params["pan"], params["tilt"], params["roll"], params["x"], params["y"], params["z"])
@@ -77,6 +143,10 @@ def project(obj_points, params):
     return uv
 
 def rmse(img_points, projected):
+    """
+    Calculate Root Mean Square Error of the projection.
+    """
+    img_points = img_points[["u", "v"]]
     img_points = img_points.to_numpy()
     projected = projected.to_numpy()
     dist = ((img_points[:,0] - projected[:,0])**2 + (img_points[:,1] - projected[:,1])**2)**0.5
@@ -84,6 +154,23 @@ def rmse(img_points, projected):
     return rmse
 
 class CMAOptimizer():
+    """
+    Camera parameter optimizer using Covariance Matrix Adaptation Evolution Strategy (CMA-ES).
+    See https://pypi.org/project/cmaes/ .
+    You can select which parameters to be optimized.
+    The camera location (x, y, z) must be fixed (not optimizable).
+
+    Attributes
+    ----------
+    obj_points : pandas.DataFrame
+        Geographic coordinates of the Ground Control Points.
+        The column names must be x,y,z. See alproj.gcp.set_gcp()
+    img_points : pandas.DataFrame
+        Image coordinates of the Ground Control Points.
+        The column names must be u, v. See alproj.gcp.set_gcp()
+    params_init : dict
+        Initial values of camera parameters.
+    """
     def __init__(self, obj_points, img_points, params_init):
         self.obj_points = obj_points
         self.img_points = img_points
@@ -91,6 +178,14 @@ class CMAOptimizer():
 
     def set_target(self, target_params = ["fov", "pan", "tilt", "roll", "a1", "a2", "k1", "k2", "k3", \
             "k4", "k5", "k6", "p1", "p2", "s1", "s2", "s3", "s4"]):
+        """
+        Set which parameters to be optimized.
+
+        Parameters
+        ----------
+        target_params : dict default ["fov", "pan", "tilt", "roll", "a1", "a2", "k1", "k2", "k3", "k4", "k5", "k6", "p1", "p2", "s1", "s2", "s3", "s4"]
+            Parameters to be optimized. You can not select x, y, and z.
+        """
         p = self.params_init
         t = target_params
         self.target_params = target_params
@@ -108,6 +203,25 @@ class CMAOptimizer():
         return _proj_error
     
     def optimize(self, sigma=1.0, bounds=None, generation=500, population_size=50, n_max_resampling = 100):
+        """
+        CMA-optimization of camera parameters.
+        See https://github.com/CyberAgent/cmaes/blob/main/cmaes/_cma.py .
+
+        Parameters
+        ----------
+        sigma : float default 1.0
+            Initial standard deviation of covariance matrix.
+        bounds : numpy.ndarray default None
+            Lower and upper domain boundaries for each parameter (optional).
+        generation : int
+            Generation numbers to run.
+        pupulation_size : int
+            Population size.
+        n_max_resampling : int default 100
+            A maximum number of resampling parameters (default: 100).
+            If all sampled parameters are infeasible, the last sampled one
+            will be clipped with lower and upper bounds. 
+        """
         loss_function = self._loss_function()
         optimizer = CMA(mean=self.target_params_init.astype("float64"), sigma=float(sigma), bounds=bounds, population_size=population_size, n_max_resampling=n_max_resampling)
         for _ in tqdm(range(generation)):

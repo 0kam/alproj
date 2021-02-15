@@ -9,11 +9,12 @@ import sqlite3
 import math
 from alproj.optimize import extrinsic_mat, distort
 
-# write sqlite3 vertices database
 
 def create_db(aerial, dsm, out_path, res=1.0, chunksize=10000):
     """
-    Creates a pointcloud database from a Digital Surface Model and an ortho-rectificated aerial photograph.
+    Creates a SQLite3 database of a colored surface from a Digital Surface Model and an ortho-rectificated aerial/satellite photograph.
+    The result database contains coordinates, colors, and index data of created surface. The given DSM and aerial/satellite photograph must be 
+    transformed in the same planer coordinate reference system (such as UTM). You can not apply these with long-lat CRS.
 
     Parameters
     ----------
@@ -24,10 +25,14 @@ def create_db(aerial, dsm, out_path, res=1.0, chunksize=10000):
     out_path : str
         Path for output SQLite3 file.
     res : float
-        Mesh resolution for generated pointcloud in m.
+        Mesh resolution for generated surface in m.
     chunksize : int
         Specify the number of rows in each batch to be written at a time. By default, all rows will be written at once.
         See https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.to_sql.html
+
+    Returns
+    -------
+
     """
     if os.path.exists(out_path):
         os.remove(out_path)
@@ -84,9 +89,28 @@ def create_db(aerial, dsm, out_path, res=1.0, chunksize=10000):
     del(df)
     conn.close()
 
-def crop(conn, params, distance=3000, chunksize = 1000000):
+def crop(conn, params, distance=3000, chunksize=100000):
     """
+    Crops the given surface in fan shape.
     
+    Parameters
+    ----------
+    params : dict
+        Camera parameters.
+    distance : float default 3000
+        Radius of the fan shape.
+    chunksize : int default 100000
+        Specify the number of rows in each batch to be written at a time. By default, all rows will be written at once.
+        See https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.to_sql.html
+    
+    Returns
+    -------
+    vert : numpy.ndarray
+        Coordinates of vetices (X, Z, Y).
+    col : numpy.ndarray
+        Colors of vertices (R, G, B).
+    ind : numpy.ndarray
+        Index array that shows which three poits shape a triangle. See http://www.opengl-tutorial.org/intermediate-tutorials/tutorial-9-vbo-indexing/ .
     """
     # filter and collect vertices
     corners = np.array([

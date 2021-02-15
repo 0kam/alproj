@@ -7,8 +7,9 @@ import pandas as pd
 
 def projection_mat(fov_x_deg, w, h, near=-1, far=1, cx=None, cy=None):
     """
-    Makes a projection matrix from Field of View, width, and height of an image.
+    Makes an OpenGL-style projection matrix from Field of View, width, and height of an image.
     See https://learnopengl.com/Getting-started/Coordinate-Systems .
+
     Parameters
     ----------
     fov_x_deg : float
@@ -25,6 +26,11 @@ def projection_mat(fov_x_deg, w, h, near=-1, far=1, cx=None, cy=None):
         X-axis coordinate of principal point. If None, w/2. 
     cy : float default None
         Y-axis coordinate of prinsipal point. If None, h/2.
+    
+    Returns
+    -------
+    projection_mat : numpy.ndarray
+        A projection matrix.
     """
     if cx == None:
         cx = w/2
@@ -44,7 +50,7 @@ def projection_mat(fov_x_deg, w, h, near=-1, far=1, cx=None, cy=None):
 
 def modelview_mat(pan_deg, tilt_deg, roll_deg, t_x, t_y, t_z):
     """
-    Makes a modelview matrix from euler angles and camera location in world coordinate system.
+    Makes an OpenGL-style modelview matrix from euler angles and camera location in world coordinate system.
     See https://learnopengl.com/Getting-started/Coordinate-Systems .
 
     Parameters
@@ -56,11 +62,16 @@ def modelview_mat(pan_deg, tilt_deg, roll_deg, t_x, t_y, t_z):
     roll_deg : float
         Roll angle in degrees
     t_x : float
-        X-axis (latitudinal) coordinate of the cameralocation in a (planer) geographical coordinate system.
+        X-axis (latitudinal) coordinate of the cameralocation in a (planer) giographic coordinate system.
     t_y : float
-        Y-axis (longitudinal) coordinate of the cameralocation in a (planer) geographical coordinate system.
+        Y-axis (longitudinal) coordinate of the cameralocation in a (planer) giographic coordinate system.
     t_x : float
-        Z-axis (elevational) coordinate of the cameralocation in a (planer) geographical coordinate system.
+        Z-axis (elevational) coordinate of the cameralocation in a (planer) giographic coordinate system.
+    
+    Returns
+    -------
+    modelview_mat : numpy.ndarray
+        A modelview matrix.
     """
     pan = (360-pan_deg) * math.pi / 180
     tilt = tilt_deg * math.pi / 180
@@ -95,12 +106,36 @@ def modelview_mat(pan_deg, tilt_deg, roll_deg, t_x, t_y, t_z):
 
 def persp_proj(vert, value, ind, params):
     """
-    Perspective projection of vertices, with given camera parameters.
+    3D to 2D perspective projection of vertices, with given camera parameters.
 
     Parameters
     ----------
-    vert : np.array
-        
+    vert : numpy.ndarray
+        Coordinates of vertices, in X(latitudial), Z(vertical), Y(longitudial) order.
+    value : numpy.ndarray
+        Values of vertices. e.g. colors, giographic coordinates.
+    ind : numpy.ndarray
+        Index data of vertices. See http://www.opengl-tutorial.org/intermediate-tutorials/tutorial-9-vbo-indexing/ .
+    paramas : dict
+        Camera parameters.
+        - x : The latitudial coordinate of the shooting point in planaer (e.g. UTM) coordinate reference systems.
+        - y : The longitudial coordinate of the shooting point.
+        - z : The vertical coordinate of the shooting point, the unit of z must be the same as x and y (e.g. m).
+        - fov : Field of View in degree.
+        - pan : Pan angle in degree. North is 0 degree and East is 90 degree. The rotation angles (pan, tilt, roll) follows the OpenCV's left-handed coordinate system.
+        - tilt : Tilt angle in degree. 0 indecates that the camera is horizontal. A positive value indicates that the camera looks up.
+        - roll : Roll angle in degree. A positive value indicates that camera leans to the right.
+        - a1 : Distortion coefficients that calibrates non-equal aspect ratio of each pixels.
+        - a2 : Distortion coefficients that calibrates non-equal aspect ratio of each pixels.
+        - k1, k2, k3, k4, k5, k6 : Radial distortion coefficients.
+        - pa, p2 : Tangental distortion coefficients.
+        - s1, s2, s3, s4 : Prism distortion coefficients.
+
+    Returns
+    -------
+    raw : numpy.ndarray
+        Projected result.
+    
     """
     ctx = gl.create_standalone_context()
     ctx.enable(gl.DEPTH_TEST) # enable depth testing
@@ -207,13 +242,59 @@ def persp_proj(vert, value, ind, params):
     return raw
 
 def sim_image(vert, color, ind, params):
+    """
+    Renders a simulated image of landscape with given surface and camera parameters.
+
+    Parameters
+    ----------
+    vert : numpy.ndarray
+        Vertex coordinates of the surface returned by alproj.surface.crop(). 
+    color : numpy.ndarray
+        Vertex colors in RGB, returned by alproj.surface.crop()
+    ind : numpy.ndarray
+        Index data of vertices, returned by alproj.surface.crop().
+    params : dict
+        Camera parameters. See alproj.project.persp_proj().
+    
+    Returns
+    -------
+    img : numpy.ndarray
+        Rendered image in OpenCV's image format.
+    """
     raw = persp_proj(vert, color, ind, params) * 255
     raw = raw.astype(np.uint8)
     img = cv2.cvtColor(raw, cv2.COLOR_RGB2BGR)
     return img
 
-# The shape of array should be (height, width, channel)
+
 def reverse_proj(array, vert, ind, params, chnames=["B", "G", "R"]):
+    """
+    2D to 3D reverse-projection (geo-rectification) of given array, onto given surface, with given camera parameters.
+    Reverse-projected array will be returned as pandas.DataFrame with channel names, coordinates in the original array, 
+    and coordinates in the giographic coordinate system.
+
+    Parameters
+    ----------
+    array : numpy.ndarray
+        Target array, such as landscape photograph. The shape of the array must be (height, width, channels).
+    vert : numpy.ndarray
+        Vertex coordinates of the surface.
+    ind : numpy.ndarray
+        Index array that shows which three poits shape a triangle. See http://www.opengl-tutorial.org/intermediate-tutorials/tutorial-9-vbo-indexing/ .
+    params : dict
+        Camera parameters. See alproj.project.persp_proj
+    chnames : list of str default ["B", "G", "R"]
+        Channel names of the target array. Default value is ["B","G","R"] because channel order is BGR in OpenCV.
+    
+    Returns
+    -------
+    df : pandas.DataFrame
+        Reverse-projected result with column
+        - u , v : The x and y axis coordinates in the original array.
+        - x, y, z : The latitudial, longitudial, and vertical coordinates in the reverse-projected coordinate system. 
+        - [chnames] : The channel names passed by chnames, such as B, G, R.
+
+    """
     coord = persp_proj(vert, vert, ind, params)[:, :, [0,2,1]] # channel: x, z, y
     uv = np.meshgrid(np.arange(0,array.shape[1]), np.arange(0,array.shape[0]))
     uv = np.stack(uv, axis = 2)
