@@ -118,18 +118,39 @@ def persp_proj(vert, value, ind, params):
         Index data of vertices. See http://www.opengl-tutorial.org/intermediate-tutorials/tutorial-9-vbo-indexing/ .
     paramas : dict
         Camera parameters.
-        - x : The latitudial coordinate of the shooting point in planaer (e.g. UTM) coordinate reference systems.
-        - y : The longitudial coordinate of the shooting point.
-        - z : The vertical coordinate of the shooting point, the unit of z must be the same as x and y (e.g. m).
-        - fov : Field of View in degree.
-        - pan : Pan angle in degree. North is 0 degree and East is 90 degree. The rotation angles (pan, tilt, roll) follows the OpenCV's left-handed coordinate system.
-        - tilt : Tilt angle in degree. 0 indecates that the camera is horizontal. A positive value indicates that the camera looks up.
-        - roll : Roll angle in degree. A positive value indicates that camera leans to the right.
-        - a1 : Distortion coefficients that calibrates non-equal aspect ratio of each pixels.
-        - a2 : Distortion coefficients that calibrates non-equal aspect ratio of each pixels.
-        - k1, k2, k3, k4, k5, k6 : Radial distortion coefficients.
-        - pa, p2 : Tangental distortion coefficients.
-        - s1, s2, s3, s4 : Prism distortion coefficients.
+        
+        x : float
+            The latitudial coordinate of the shooting point in planaer (e.g. UTM) coordinate reference systems.
+        y : float 
+            The longitudial coordinate of the shooting point.
+        z : float
+            The vertical coordinate of the shooting point, the unit of z must be the same as x and y (e.g. m).
+        fov : float
+            Field of View in degree.
+        pan : float
+            Pan angle in degree. North is 0 degree and East is 90 degree. The rotation angles (pan, tilt, roll) follows the OpenCV's left-handed coordinate system.
+        tilt : float
+            Tilt angle in degree. 0 indecates that the camera is horizontal. A positive value indicates that the camera looks up.
+        roll : float
+            Roll angle in degree. A positive value indicates that camera leans to the right.
+        w : int
+            Image width in pixel.
+        h : int
+            Image height in pixel
+        cx : float
+            X coordinate of the principle point
+        cy : float 
+            Y coordinate of the principle point
+        a1 : float
+            Distortion coefficients that calibrates non-equal aspect ratio of each pixels.
+        a2 : float
+            Distortion coefficients that calibrates non-equal aspect ratio of each pixels.
+        k1, k2, k3, k4, k5, k6 : float
+            Radial distortion coefficients.
+        p1, p2 : float
+            Tangental distortion coefficients.
+        s1, s2, s3, s4 : float
+            Prism distortion coefficients.
 
     Returns
     -------

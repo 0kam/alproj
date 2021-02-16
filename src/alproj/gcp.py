@@ -76,12 +76,18 @@ def set_gcp(match, rev_proj):
     Returns
     -------
     gcp : pd.DataFrame
-        A dataframe with 4 columns
-        - u : x_axis coordinates of the Ground Control Points on the original photograph. Left-Top origin.
-        - v : y_axis coordinates of the GCPs.
-        - x : X coordinates of GCPs in a (planer) giographic coordinate system.
-        - y : Y coordinates of GCPs.
-        - z : Z coordinates of GCPs. 
+        A dataframe with 5 columns
+        
+        u : int
+            x_axis coordinates of the Ground Control Points on the original photograph. Left-Top origin.
+        v : int
+            y_axis coordinates of the GCPs.
+        x : float
+            X coordinates of GCPs in a (planer) giographic coordinate system.
+        y : float
+            Y coordinates of GCPs.
+        z : float
+            Z coordinates of GCPs. 
     """
     gcp = pd.merge(match, rev_proj, how="left",\
          left_on=["u_sim", "v_sim"], right_on=["u", "v"]) \
