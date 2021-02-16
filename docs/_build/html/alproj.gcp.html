@@ -94,12 +94,25 @@ during camera parameter estimation</p>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>gcp</strong> – A dataframe with 4 columns
-- u : x_axis coordinates of the Ground Control Points on the original photograph. Left-Top origin.
-- v : y_axis coordinates of the GCPs.
-- x : X coordinates of GCPs in a (planer) giographic coordinate system.
-- y : Y coordinates of GCPs.
-- z : Z coordinates of GCPs.</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><p><strong>gcp</strong> – A dataframe with 4 columns</p>
+<dl class="docutils">
+<dt>u <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
+<dd><p class="first last">x_axis coordinates of the Ground Control Points on the original photograph. Left-Top origin.</p>
+</dd>
+<dt>v <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
+<dd><p class="first last">y_axis coordinates of the GCPs.</p>
+</dd>
+<dt>x <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
+<dd><p class="first last">X coordinates of GCPs in a (planer) giographic coordinate system.</p>
+</dd>
+<dt>y <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
+<dd><p class="first last">Y coordinates of GCPs.</p>
+</dd>
+<dt>z <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
+<dd><p class="first last">Z coordinates of GCPs.</p>
+</dd>
+</dl>
+</p>
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">pd.DataFrame</p>

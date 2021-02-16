@@ -88,19 +88,42 @@ See <a class="reference external" href="https://learnopengl.com/Getting-started/
 <li><strong>vert</strong> (<em>numpy.ndarray</em>) – Coordinates of vertices, in X(latitudial), Z(vertical), Y(longitudial) order.</li>
 <li><strong>value</strong> (<em>numpy.ndarray</em>) – Values of vertices. e.g. colors, giographic coordinates.</li>
 <li><strong>ind</strong> (<em>numpy.ndarray</em>) – Index data of vertices. See <a class="reference external" href="http://www.opengl-tutorial.org/intermediate-tutorials/tutorial-9-vbo-indexing/">http://www.opengl-tutorial.org/intermediate-tutorials/tutorial-9-vbo-indexing/</a> .</li>
-<li><strong>paramas</strong> (<em>dict</em>) – Camera parameters.
-- x : The latitudial coordinate of the shooting point in planaer (e.g. UTM) coordinate reference systems.
-- y : The longitudial coordinate of the shooting point.
-- z : The vertical coordinate of the shooting point, the unit of z must be the same as x and y (e.g. m).
-- fov : Field of View in degree.
-- pan : Pan angle in degree. North is 0 degree and East is 90 degree. The rotation angles (pan, tilt, roll) follows the OpenCV’s left-handed coordinate system.
-- tilt : Tilt angle in degree. 0 indecates that the camera is horizontal. A positive value indicates that the camera looks up.
-- roll : Roll angle in degree. A positive value indicates that camera leans to the right.
-- a1 : Distortion coefficients that calibrates non-equal aspect ratio of each pixels.
-- a2 : Distortion coefficients that calibrates non-equal aspect ratio of each pixels.
-- k1, k2, k3, k4, k5, k6 : Radial distortion coefficients.
-- pa, p2 : Tangental distortion coefficients.
-- s1, s2, s3, s4 : Prism distortion coefficients.</li>
+<li><strong>paramas</strong> (<em>dict</em>) – <p>Camera parameters.</p>
+<dl class="docutils">
+<dt>x <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
+<dd>The latitudial coordinate of the shooting point in planaer (e.g. UTM) coordinate reference systems.</dd>
+<dt>y <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
+<dd>The longitudial coordinate of the shooting point.</dd>
+<dt>z <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
+<dd>The vertical coordinate of the shooting point, the unit of z must be the same as x and y (e.g. m).</dd>
+<dt>fov <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
+<dd>Field of View in degree.</dd>
+<dt>pan <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
+<dd>Pan angle in degree. North is 0 degree and East is 90 degree. The rotation angles (pan, tilt, roll) follows the OpenCV’s left-handed coordinate system.</dd>
+<dt>tilt <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
+<dd>Tilt angle in degree. 0 indecates that the camera is horizontal. A positive value indicates that the camera looks up.</dd>
+<dt>roll <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
+<dd>Roll angle in degree. A positive value indicates that camera leans to the right.</dd>
+<dt>w <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
+<dd>Image width in pixel.</dd>
+<dt>h <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
+<dd>Image height in pixel</dd>
+<dt>cx <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
+<dd>X coordinate of the principle point</dd>
+<dt>cy <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
+<dd>Y coordinate of the principle point</dd>
+<dt>a1 <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
+<dd>Distortion coefficients that calibrates non-equal aspect ratio of each pixels.</dd>
+<dt>a2 <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
+<dd>Distortion coefficients that calibrates non-equal aspect ratio of each pixels.</dd>
+<dt>k1, k2, k3, k4, k5, k6 <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
+<dd>Radial distortion coefficients.</dd>
+<dt>p1, p2 <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
+<dd>Tangental distortion coefficients.</dd>
+<dt>s1, s2, s3, s4 <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
+<dd>Prism distortion coefficients.</dd>
+</dl>
+</li>
 </ul>
 </td>
 </tr>

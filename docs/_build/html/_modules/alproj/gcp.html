@@ -118,11 +118,17 @@
 <span class="sd">    -------</span>
 <span class="sd">    gcp : pd.DataFrame</span>
 <span class="sd">        A dataframe with 4 columns</span>
-<span class="sd">        - u : x_axis coordinates of the Ground Control Points on the original photograph. Left-Top origin.</span>
-<span class="sd">        - v : y_axis coordinates of the GCPs.</span>
-<span class="sd">        - x : X coordinates of GCPs in a (planer) giographic coordinate system.</span>
-<span class="sd">        - y : Y coordinates of GCPs.</span>
-<span class="sd">        - z : Z coordinates of GCPs. </span>
+<span class="sd">        </span>
+<span class="sd">        u : int</span>
+<span class="sd">            x_axis coordinates of the Ground Control Points on the original photograph. Left-Top origin.</span>
+<span class="sd">        v : int</span>
+<span class="sd">            y_axis coordinates of the GCPs.</span>
+<span class="sd">        x : float</span>
+<span class="sd">            X coordinates of GCPs in a (planer) giographic coordinate system.</span>
+<span class="sd">        y : float</span>
+<span class="sd">            Y coordinates of GCPs.</span>
+<span class="sd">        z : float</span>
+<span class="sd">            Z coordinates of GCPs. </span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">gcp</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">match</span><span class="p">,</span> <span class="n">rev_proj</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s2">&quot;left&quot;</span><span class="p">,</span>\
          <span class="n">left_on</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;u_sim&quot;</span><span class="p">,</span> <span class="s2">&quot;v_sim&quot;</span><span class="p">],</span> <span class="n">right_on</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;u&quot;</span><span class="p">,</span> <span class="s2">&quot;v&quot;</span><span class="p">])</span> \
