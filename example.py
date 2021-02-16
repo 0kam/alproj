@@ -14,7 +14,7 @@ out_path = "devel_data/pc.db"
 create_db(aerial, dsm, out_path)
 
 # crop_surface
-conn = sqlite3.connect("/home/okamoto/lpmap/devel_data/pc.db")
+conn = sqlite3.connect("devel_data/pc.db")
 params = {"x":732731,"y":4051171, "z":2458, "fov":70, "pan":100, "tilt":0, "roll":0,\
      "a1":1, "a2":1, "k1":0, "k2":0, "k3":0, "k4":0, "k5":0, "k6":0, \
          "p1":0, "p2":0, "s1":0, "s2":0, "s3":0, "s4":0, \
@@ -22,20 +22,20 @@ params = {"x":732731,"y":4051171, "z":2458, "fov":70, "pan":100, "tilt":0, "roll
 distance = 3000
 chunksize = 1000000
 
-vert, col, ind = crop(conn, params)
+vert, col, ind = crop(conn, params) # This takes some minites.
 
 # make sim
 import cv2
 sim = sim_image(vert, col, ind, params)
-cv2.imwrite("../devel_data/test.png", sim)
+cv2.imwrite("devel_data/test.png", sim)
 
 df = reverse_proj(sim, vert, ind, params)
-del(vert, col, ind)
+del(vert, col, ind) # Release memories
 
 
 # Setting GCPs
-path_org = "../devel_data/ttym_2016.jpg"
-path_sim = "../devel_data/test.png"
+path_org = "devel_data/ttym_2016.jpg"
+path_sim = "devel_data/test.png"
 
 match, plot = akaze_match(path_org, path_sim, ransac_th=200, plot_result=True)
 cv2.imwrite("../devel_data/matched.png", plot)

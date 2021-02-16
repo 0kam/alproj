@@ -55,9 +55,9 @@ def akaze_match(path_org, path_sim, ransac_th=100, plot_result=False):
             im_org = cv2.arrowedLine(im_org, tuple(pts1[i,:]), tuple(pts2[i,:]), color = [180,105,255], thickness=20, tipLength=0.3)
         im_org = cv2.putText(im_org, "simulated image <- original image", (int(im_org.shape[1]*0.15), int(im_org.shape[0]*0.05)),\
              cv2.FONT_HERSHEY_TRIPLEX, 5, (0,0,0), 5, cv2.LINE_AA)
-        return {"points":pts, "plot":im_org}
+        return pts, im_org
     else:
-        return {"points":pts, "plot":None}
+        return pts, None
 
 
 def set_gcp(match, rev_proj):

@@ -221,6 +221,13 @@ class CMAOptimizer():
             A maximum number of resampling parameters (default: 100).
             If all sampled parameters are infeasible, the last sampled one
             will be clipped with lower and upper bounds. 
+        
+        Returns
+        -------
+        params : dict
+            Optimized camera parameters.
+        error : float
+            A reprojection error in pixel. 
         """
         loss_function = self._loss_function()
         optimizer = CMA(mean=self.target_params_init.astype("float64"), sigma=float(sigma), bounds=bounds, population_size=population_size, n_max_resampling=n_max_resampling)

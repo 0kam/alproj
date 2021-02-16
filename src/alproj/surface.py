@@ -14,7 +14,7 @@ def create_db(aerial, dsm, out_path, res=1.0, chunksize=10000):
     """
     Creates a SQLite3 database of a colored surface from a Digital Surface Model and an ortho-rectificated aerial/satellite photograph.
     The result database contains coordinates, colors, and index data of created surface. The given DSM and aerial/satellite photograph must be 
-    transformed in the same planer coordinate reference system (such as UTM). You can not apply these with long-lat CRS.
+    transformed to the same planar coordinate reference system (such as UTM). The unit of these must be m.
 
     Parameters
     ----------
@@ -98,7 +98,7 @@ def crop(conn, params, distance=3000, chunksize=100000):
     params : dict
         Camera parameters.
     distance : float default 3000
-        Radius of the fan shape.
+        Radius of the fan shape in m.
     chunksize : int default 100000
         Specify the number of rows in each batch to be written at a time. By default, all rows will be written at once.
         See https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.to_sql.html
