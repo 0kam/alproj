@@ -126,24 +126,22 @@ def persp_proj(vert, value, ind, params):
         z : float
             The vertical coordinate of the shooting point, the unit of z must be the same as x and y (e.g. m).
         fov : float
-            Field of View in degree.
+            A Field of View in degree.
         pan : float
-            Pan angle in degree. North is 0 degree and East is 90 degree. The rotation angles (pan, tilt, roll) follows the OpenCV's left-handed coordinate system.
+            A pan angle in degree. North is 0 degree and East is 90 degree. The rotation angles (pan, tilt, roll) follows the OpenCV's left-handed coordinate system.
         tilt : float
-            Tilt angle in degree. 0 indecates that the camera is horizontal. A positive value indicates that the camera looks up.
+            A tilt angle in degree. 0 indecates that the camera is horizontal. A positive value indicates that the camera looks up.
         roll : float
-            Roll angle in degree. A positive value indicates that camera leans to the right.
+            A roll angle in degree. A positive value indicates that camera leans to the right.
         w : int
-            Image width in pixel.
+            An image width in pixel.
         h : int
-            Image height in pixel
+            An image height in pixel
         cx : float
-            X coordinate of the principle point
+            The X coordinate of the principle point
         cy : float 
-            Y coordinate of the principle point
-        a1 : float
-            Distortion coefficients that calibrates non-equal aspect ratio of each pixels.
-        a2 : float
+            The Y coordinate of the principle point
+        a1, a2 : float
             Distortion coefficients that calibrates non-equal aspect ratio of each pixels.
         k1, k2, k3, k4, k5, k6 : float
             Radial distortion coefficients.
