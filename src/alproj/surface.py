@@ -131,7 +131,7 @@ def crop(conn, params, distance=3000, chunksize=100000):
     corners = distort(corners, p["a1"], p["a2"], p["k1"], p["k2"], p["k3"], p["k4"], p["k5"], p["k6"], p["p1"], p["p2"], p["s1"], p["s2"], p["s3"], p["s4"])
     x = corners[0, :] * centre[1]
     fov = params["fov"] * params["w"] / (max(x) - min(x))
-    fov = fov * 1.1
+    fov = fov * 1.05
     pan = params["pan"] + math.atan2(( (max(x) + min(x)) / 2 ) / centre[0], 1) * 180 / math.pi
 
     params = {"x":str(params["x"]),"y":str(params["y"]),"pan":str(pan), "fov":str(fov)}

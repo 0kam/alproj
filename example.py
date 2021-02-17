@@ -19,10 +19,11 @@ params = {"x":732731,"y":4051171, "z":2458, "fov":70, "pan":100, "tilt":0, "roll
      "a1":1, "a2":1, "k1":0, "k2":0, "k3":0, "k4":0, "k5":0, "k6":0, \
          "p1":0, "p2":0, "s1":0, "s2":0, "s3":0, "s4":0, \
          "w":5616, "h":3744, "cx":5616/2, "cy":3744/2}
+
 distance = 3000
 chunksize = 1000000
 
-vert, col, ind = crop(conn, params) # This takes some minites.
+vert, col, ind = crop(conn, params, distance, chunksize) # This takes some minites.
 
 # make sim
 import cv2
@@ -47,7 +48,7 @@ del(df, sim)
 obj_points = gcps[["x","y","z"]]
 img_points = gcps[["u","v"]]
 params_init = params
-target_params = ["fov", "pan", "tilt", "roll", "a1", "a2", "k1", "k2", "k3"]#, "k4", "k5", "k6", "p1", "p2", "s1", "s2", "s3", "s4"]
+target_params = ["fov", "pan", "tilt", "roll", "a1", "a2", "k1", "k2", "k3", "k4", "k5", "k6", "p1", "p2", "s1", "s2", "s3", "s4"]
 
 cma_optimizer = CMAOptimizer(obj_points, img_points, params_init)
 cma_optimizer.set_target(target_params)
