@@ -38,8 +38,10 @@ path_org = "devel_data/ttym_2016.jpg"
 path_sim = "devel_data/test.png"
 
 match, plot = akaze_match(path_org, path_sim, ransac_th=200, plot_result=True)
-cv2.imwrite("../devel_data/matched.png", plot)
+cv2.imwrite("devel_data/matched.png", plot)
 gcps = set_gcp(match, df)
+
+del(df, sim)
 
 # Optimize camera parameters
 obj_points = gcps[["x","y","z"]]
@@ -54,4 +56,14 @@ params_optim, error = cma_optimizer.optimize(generation = 1000, bounds = None, s
 # Use optimized parameters
 vert, col, ind = crop(conn, params_optim)
 sim2 = sim_image(vert, col, ind, params_optim)
-cv2.imwrite("../devel_data/optimized.png", sim2)
+cv2.imwrite("devel_data/optimized.png", sim2)
+
+# Reverse projection
+original = cv2.imread("devel_data/ttym_2016.jpg")
+georectificated = reverse_proj(original, vert, ind, params_optim)
+
+del(vert, col, ind, sim2)
+
+import geopandas as geopandas
+georectificated[["R", "G", "B"]] = georectificated[["R", "G", "B"]].astype(int)
+
