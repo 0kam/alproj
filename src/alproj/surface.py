@@ -89,6 +89,7 @@ def create_db(aerial, dsm, out_path, res=1.0, chunksize=10000):
     del(df)
     conn.close()
 
+
 def crop(conn, params, distance=3000, chunksize=100000):
     """
     Crops the given surface in fan shape.

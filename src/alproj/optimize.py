@@ -161,7 +161,7 @@ def default_bounds(params_init, target_params) :
         if key in {"fov","pan","tilt","roll"}:
             bounds[i,:] = np.array([value-45, value+45])
         else:
-            bounds[i,:] = np.array([-1, 1])
+            bounds[i,:] = np.array([-0.2,0.2])
         i += 1
     return bounds
         
@@ -189,13 +189,14 @@ class CMAOptimizer():
         self.params_init = params_init
 
     def set_target(self, target_params = ["fov", "pan", "tilt", "roll", "a1", "a2", "k1", "k2", "k3", \
-            "k4", "k5", "k6", "p1", "p2", "s1", "s2", "s3", "s4"]):
+            "p1", "p2", "s1", "s2", "s3", "s4"]):
         """
         Set which parameters to be optimized.
+        Note: Using k4, k5, k6 sometimes cause broken projection. Not recommended.
 
         Parameters
         ----------
-        target_params : list default ["fov", "pan", "tilt", "roll", "a1", "a2", "k1", "k2", "k3", "k4", "k5", "k6", "p1", "p2", "s1", "s2", "s3", "s4"]
+        target_params : list default ["fov", "pan", "tilt", "roll", "a1", "a2", "k1", "k2", "k3", "p1", "p2", "s1", "s2", "s3", "s4"]
             Parameters to be optimized. You can not select x, y, and z.
         """
         p = self.params_init
@@ -214,20 +215,20 @@ class CMAOptimizer():
             return loss
         return _proj_error
     
-    def optimize(self, sigma=1.0, bounds=None, generation=500, population_size=50, n_max_resampling = 100):
+    def optimize(self, sigma=0.1, bounds=None, generation=500, population_size=50, n_max_resampling = 100):
         """
         CMA-optimization of camera parameters.
         See https://github.com/CyberAgent/cmaes/blob/main/cmaes/_cma.py .
 
         Parameters
         ----------
-        sigma : float default 1.0
+        sigma : float default 0.1
             Initial standard deviation of covariance matrix.
         bounds : numpy.ndarray default None
             Lower and upper domain boundaries for each parameter (optional).
             The shape must be (len(target_params), 2).
-            If None, bounds will be automatically set +-45 degree for fov, pan, tilt, roll and -1 to 1 for distortion coefficients.
-            Note that distortion coefficients must take values between -1 and 1.
+            If None, bounds will be automatically set +-45 degree for fov, pan, tilt, roll and -1 to 1 for radial distortion coefficients, -0.1 to 0.1 for other distortion coefficients.
+            Note that large absolute values of distortion coefficients may cause broken projection.
         generation : int
             Generation numbers to run.
         pupulation_size : int

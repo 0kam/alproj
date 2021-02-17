@@ -52,7 +52,7 @@ target_params = ["fov", "pan", "tilt", "roll", "a1", "a2", "k1", "k2", "k3", "k4
 
 cma_optimizer = CMAOptimizer(obj_points, img_points, params_init)
 cma_optimizer.set_target(target_params)
-params_optim, error = cma_optimizer.optimize(generation = 1000, bounds = None, sigma = 1.0, population_size=50)
+params_optim, error = cma_optimizer.optimize(generation = 500, bounds = None, sigma = 0.05, population_size=100)
 
 # Use optimized parameters
 vert, col, ind = crop(conn, params_optim, 3000, 1000000)
