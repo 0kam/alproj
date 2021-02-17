@@ -21,7 +21,7 @@ params = {"x":732731,"y":4051171, "z":2458, "fov":70, "pan":100, "tilt":0, "roll
          "w":5616, "h":3744, "cx":5616/2, "cy":3744/2}
 
 distance = 3000
-chunksize = 100000
+chunksize = 1000000
 
 vert, col, ind = crop(conn, params, distance, chunksize) # This takes some minites.
 
