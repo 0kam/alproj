@@ -55,7 +55,7 @@ cma_optimizer.set_target(target_params)
 params_optim, error = cma_optimizer.optimize(generation = 1000, bounds = None, sigma = 1.0, population_size=50)
 
 # Use optimized parameters
-vert, col, ind = crop(conn, params_optim)
+vert, col, ind = crop(conn, params_optim, 3000, 1000000)
 sim2 = sim_image(vert, col, ind, params_optim)
 cv2.imwrite("devel_data/optimized.png", sim2)
 
