@@ -158,7 +158,7 @@ def persp_proj(vert, value, ind, params):
     """
     ctx = gl.create_standalone_context()
     ctx.enable(gl.DEPTH_TEST) # enable depth testing
-    #ctx.enable(gl.CULL_FACE)
+    ctx.enable(gl.CULL_FACE)
     vbo = ctx.buffer(vert.astype("f4").tobytes())
     cbo = ctx.buffer(value.astype("f4").tobytes())
     ibo = ctx.buffer(ind.astype("i4").tobytes()) #vertex indecies of each triangles
