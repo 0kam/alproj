@@ -153,6 +153,18 @@ def rmse(img_points, projected):
     rmse = np.mean(dist)
     return rmse
 
+def default_bounds(params_init, target_params) :
+    bounds = np.zeros((len(target_params), 2))
+    i = 0
+    for key in target_params:
+        value = params_init[key]
+        if key in {"fov","pan","tilt","roll"}:
+            bounds[i,:] = np.array([value-45, value+45])
+        else:
+            bounds[i,:] = np.array([-1, 1])
+        i += 1
+    return bounds
+        
 class CMAOptimizer():
     """
     Camera parameter optimizer using Covariance Matrix Adaptation Evolution Strategy (CMA-ES).
@@ -183,7 +195,7 @@ class CMAOptimizer():
 
         Parameters
         ----------
-        target_params : dict default ["fov", "pan", "tilt", "roll", "a1", "a2", "k1", "k2", "k3", "k4", "k5", "k6", "p1", "p2", "s1", "s2", "s3", "s4"]
+        target_params : list default ["fov", "pan", "tilt", "roll", "a1", "a2", "k1", "k2", "k3", "k4", "k5", "k6", "p1", "p2", "s1", "s2", "s3", "s4"]
             Parameters to be optimized. You can not select x, y, and z.
         """
         p = self.params_init
@@ -213,6 +225,9 @@ class CMAOptimizer():
             Initial standard deviation of covariance matrix.
         bounds : numpy.ndarray default None
             Lower and upper domain boundaries for each parameter (optional).
+            The shape must be (len(target_params), 2).
+            If None, bounds will be automatically set +-45 degree for fov, pan, tilt, roll and -1 to 1 for distortion coefficients.
+            Note that distortion coefficients must take values between -1 and 1.
         generation : int
             Generation numbers to run.
         pupulation_size : int
@@ -230,6 +245,8 @@ class CMAOptimizer():
             A reprojection error in pixel. 
         """
         loss_function = self._loss_function()
+        if bounds is None:
+            bounds = default_bounds(self.params_init, self.target_params)
         optimizer = CMA(mean=self.target_params_init.astype("float64"), sigma=float(sigma), bounds=bounds, population_size=population_size, n_max_resampling=n_max_resampling)
         for _ in tqdm(range(generation)):
             solutions = []
