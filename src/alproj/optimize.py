@@ -189,14 +189,13 @@ class CMAOptimizer():
         self.params_init = params_init
 
     def set_target(self, target_params = ["fov", "pan", "tilt", "roll", "a1", "a2", "k1", "k2", "k3", \
-            "p1", "p2", "s1", "s2", "s3", "s4"]):
+            "k4", "k5", "k6", "p1", "p2", "s1", "s2", "s3", "s4"]):
         """
         Set which parameters to be optimized.
-        Note: Using k4, k5, k6 sometimes cause broken projection. Not recommended.
 
         Parameters
         ----------
-        target_params : list default ["fov", "pan", "tilt", "roll", "a1", "a2", "k1", "k2", "k3", "p1", "p2", "s1", "s2", "s3", "s4"]
+        target_params : list default ["fov", "pan", "tilt", "roll", "a1", "a2", "k1", "k2", "k3", "k4", "k5", "k6", "p1", "p2", "s1", "s2", "s3", "s4"]
             Parameters to be optimized. You can not select x, y, and z.
         """
         p = self.params_init
@@ -215,14 +214,14 @@ class CMAOptimizer():
             return loss
         return _proj_error
     
-    def optimize(self, sigma=0.1, bounds=None, generation=500, population_size=50, n_max_resampling = 100):
+    def optimize(self, sigma=1.0, bounds=None, generation=500, population_size=50, n_max_resampling = 100):
         """
         CMA-optimization of camera parameters.
         See https://github.com/CyberAgent/cmaes/blob/main/cmaes/_cma.py .
 
         Parameters
         ----------
-        sigma : float default 0.1
+        sigma : float default 1.0
             Initial standard deviation of covariance matrix.
         bounds : numpy.ndarray default None
             Lower and upper domain boundaries for each parameter (optional).
