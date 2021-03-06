@@ -52,8 +52,12 @@ target_params = ["fov", "pan", "tilt", "roll", "a1", "a2", "k1", "k2", "k3", "k4
 
 cma_optimizer = CMAOptimizer(obj_points, img_points, params_init)
 cma_optimizer.set_target(target_params)
-b = default_bounds(params_init, target_params)
-params_optim, error = cma_optimizer.optimize(generation = 10, bounds = None, sigma = 0.01, population_size=100)
+params_optim, error = cma_optimizer.optimize(generation = 500, bounds = None, sigma = 1.0, population_size=50)
+
+params_optim["error"] = error
+import json
+with open('devel_data/params_optim.json', 'w') as f:
+    json.dump(params_optim, f, indent=4)
 
 # Use optimized parameters
 vert, col, ind = crop(conn, params_optim, 3000, 1000000)
@@ -63,9 +67,4 @@ cv2.imwrite("devel_data/optimized.png", sim2)
 # Reverse projection
 original = cv2.imread("devel_data/ttym_2016.jpg")
 georectificated = reverse_proj(original, vert, ind, params_optim)
-
-del(vert, col, ind, sim2)
-
-import geopandas as geopandas
-georectificated[["R", "G", "B"]] = georectificated[["R", "G", "B"]].astype(int)
 
