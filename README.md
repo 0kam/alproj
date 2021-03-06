@@ -1,7 +1,7 @@
 # alproj
 Georectification tool for alpine landscape photographs
 
-[English Document](https://alproj.readthedocs.io/en/latest/index.html)
+[Documentation](https://alproj.readthedocs.io/en/latest/index.html)
 ## Overview
 `alproj` is a simple python package for geo-rectification of alpine landscape photographs. 
 `alproj` has 4 steps.
