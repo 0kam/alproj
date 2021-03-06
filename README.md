@@ -1,5 +1,5 @@
 # alproj
-Georectification tool for alpine landscape photographs
+A simple georectification tool for alpine landscape photographs.
 
 [Documentation](https://alproj.readthedocs.io/en/latest/index.html)
 ## Overview
