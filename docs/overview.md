@@ -5,7 +5,7 @@
 1. Setting Ground Control Points (GCPs) in a target photograph, using a simulated landscape image rendered with Digital Surface Model and airborne photographs.
 ![](_static/setting_up_gcps.jpg)
 2. Heuristic estimation of camera parameters including the camera angle, field of view, and lens distortions (shooting point of the photograph is required).
-![](../devel_data/estimation_of_camera_parameters.jpg)
+![](_static/estimation_of_camera_parameters.jpg)
 3. Reverse perspective projection of the target photograph on Digital Surface Model, with estimated camera parameters, using OpenGL.
 ![](_static/georectification.jpg)
 
@@ -59,9 +59,13 @@ ggplot() +
 # Saving raster data as a GeoTiff file.
 write_stars(raster, "ortholike.tif")
 ```
+
 Result Plot
+
 ![](_static/ortholike.png)
+
 You can open the created geotiff file with GIS softwares such as QGIS and ArcGIS.
+
 ![](_static/ortholike_qgis.png)
 
 ## Future applications in alpine ecology, geology and glaciology
