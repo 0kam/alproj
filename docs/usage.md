@@ -219,7 +219,7 @@ sim2 = sim_image(vert, col, ind, params_optim)
 cv2.imwrite("optimized.png", sim2)
 ```
 ![](_static/optimized.png)
-![](_static/target.jpg)
+![](_static/ttym_2016.jpg)
 
 You can get geographic coordinates of each pixel of the target image.
 ```python
