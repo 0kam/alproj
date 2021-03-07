@@ -1,0 +1,21 @@
+{
+    "grammarly.overrides": [
+        {
+            "files": [
+                "**/docs/usage.md"
+            ],
+            "config": {
+                "audience": "knowledgeable",
+                "dialect": "american",
+                "domain": "academic",
+                "emotions": [
+                    "confident",
+                    "analytical"
+                ],
+                "goals": [
+                    "describe"
+                ]
+            }
+        }
+    ]
+}

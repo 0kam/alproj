@@ -1,7 +1,8 @@
 # Overview
 ## Algorithm
-`alproj` is a simple python package for geo-rectification of alpine landscape photographs. 
-`alproj` has 3 steps to geo-rectificate an lanscape photograph..
+`alproj` is a simple python package for geo-rectification of alpine landscape photographs.   
+`alproj` has 3 steps for geo-rectification of a lanscape photograph.
+
 1. Setting Ground Control Points (GCPs) in a target photograph, using a simulated landscape image rendered with Digital Surface Model and airborne photographs.
 ![](_static/setting_up_gcps.jpg)
 2. Heuristic estimation of camera parameters including the camera angle, field of view, and lens distortions (shooting point of the photograph is required).
