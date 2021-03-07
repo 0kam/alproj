@@ -1,5 +1,5 @@
 # Usage
-Here I show an example of geo-rectification process using a photograph of [NIES' long-term monitoring]((https://db.cger.nies.go.jp/gem/ja/mountain/station.html?id=2)) taken at Tateyama Murodo-sanso, Toyama prefecture, Japan.
+Here I show an example of the geo-rectification process using a photograph of [NIES' long-term monitoring]((https://db.cger.nies.go.jp/gem/ja/mountain/station.html?id=2)) taken at Tateyama Murodo-Sanso, Toyama prefecture, Japan.
 
 ```python
 # Loading requirements
@@ -21,7 +21,7 @@ You should prepare below before starting.
 ![](_static/dem.png)
 
 Both the airborne photograph and the DSM must cover hole the area where the target photograph covers. 
-And both of them must be in a same planar Coordinate Reference System, e.g. Universal Transverse Mercator Coordinate System (UTM).
+Both of them must be in the same planar Coordinate Reference System, e.g. Universal Transverse Mercator Coordinate System (UTM).
 
 ## Setting up Pointcloud Database
 First, you should prepare a pointcloud database using the airborne photograph and the DSM.
@@ -33,7 +33,7 @@ out_path = "pointcloud.db" # Output database
 
 create_db(aerial, dsm, out_path) # This takes some minutes
 ```
-Then, an SQLite database that has two components like below
+An SQLite database that has two components like below will be created
 - vertices
 ```
 # x, y and z stands for geographic coordinates of each point.
@@ -54,14 +54,14 @@ v1       v2       v2
 ```
 
 ## Define Initial Camera Parameters
-Setting initial camera parameters for optmization.
+Setting initial camera parameters for optimization.
 Note that `alproj` does NOT support the estimation of camera location now.
 - x, y, z  
-A shooting point coordinate in the CRS of pointcloud database.
+A shooting point coordinate in the CRS of the point cloud database.
 - fov  
   A Field of View in degree.
 - pan, tilt, roll  
-  A set of euler angle of the camera in degree.
+  A set of Euler angles of the camera in degree.
 - a1 ~ s4  
   Distortion coefficients. See [Algorithm](https://alproj.readthedocs.io/en/latest/overview.html#algorithm) for detail.
 - w, h  
@@ -77,7 +77,7 @@ params = {"x":732731,"y":4051171, "z":2458, "fov":70, "pan":100, "tilt":0, "roll
 ```
 
 ## Rendering a Simulated Landscape Image
-To find a set of Ground Control Points, render a simulated landscape image with the pointcloud database and the initial camera parameters.
+To find a set of Ground Control Points, render a simulated landscape image with the point cloud database and the initial camera parameters.
 
 First, crop the pointcroud in fan shape
 ```python
@@ -86,10 +86,11 @@ conn = sqlite3.connect("pointcloud.db")
 distance = 3000 # The radius of the fan shape
 chunksize = 1000000
 
-vert, col, ind = crop(conn, params, distance, chunksize) # This takes some minites.
+vert, col, ind = crop(conn, params, distance, chunksize) # This takes some minutes.
 ```
 Then you'll get three `np.array`s looks like below.
 - vert  
+  
   Vertex coordinates of each point. In x, z, y order.
   ```
   >>> vert
@@ -102,6 +103,7 @@ Then you'll get three `np.array`s looks like below.
        [7.34176032e+05, 2.15609204e+03, 4.04854197e+06]])
   ```
 - col  
+  
   Vertex colors in 0 to 1.
   ```
   >>> col
@@ -113,8 +115,9 @@ Then you'll get three `np.array`s looks like below.
        [0.        , 0.        , 0.        ],
        [0.        , 0.        , 0.        ]])
   ```
-- ind  
-  The index that shows which three points form a triangle.
+- ind
+  
+  The index shows which three points form a triangle.
   ```
   >>> ind
   array([[      0,       3,       4],
@@ -160,7 +163,7 @@ Then, you can add some Ground Contorol Points (GCPs) in the target image by matc
 [AKAZE](https://docs.opencv.org/3.4/d0/de3/citelist.html#CITEREF_ANB13) local features and [FLANN](https://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_feature2d/py_matcher/py_matcher.html#flann-based-matcher) matcher is available.
 
 ```python
-path_org = "ttym_2016.jpg"
+path_org = "target.jpg"
 path_sim = "init.png"
 
 match, plot = akaze_match(path_org, path_sim, ransac_th=200, plot_result=True)
@@ -198,5 +201,99 @@ params_init = params # Initial parameters
 target_params = ["fov", "pan", "tilt", "roll", "a1", "a2", "k1", "k2", "k3", "k4", "k5", "k6", "p1", "p2", "s1", "s2", "s3", "s4"] # Parameters to be optimized
 cma_optimizer = CMAOptimizer(obj_points, img_points, params_init) # Create an optimizer instance.
 cma_optimizer.set_target(target_params)
-params_optim, error = cma_optimizer.optimize(generation = 500, bounds = None, sigma = 1.0, population_size=50)
+params_optim, error = cma_optimizer.optimize(generation = 300, bounds = None, sigma = 1.0, population_size=50) # Executing optimization
 ```
+
+```
+>>> params_optim, error = cma_optimizer.optimize(generation = 300, bounds = None, sigma = 1.0, population_size=50)
+100%|██████████████████████████████| 300/300 [00:34<00:00,  8.70it/s]
+>>> error
+4.8703777893270335
+>>> params_optim
+{'x': 732731, 'y': 4051171, 'z': 2458, 'w': 5616, 'h': 3744, 'cx': 2808.0, 'cy': 1872.0, 'fov': 72.7290644465022, 'pan': 96.61170204959896, 'tilt': -0.11552408078299625, 'roll': 0.13489679466899157, 'a1': -0.06632296375509533, 'a2': 0.017306226071500935, 'k1': -0.19848898326165829, 'k2': 0.054213972377095715, 'k3': 0.03875795616853486, 'k4': -0.08828147417948777, 'k5': -0.06425366365767886, 'k6': 0.05423288516486188, 'p1': 0.001605487393669105, 'p2': 0.0028034675418415864, 's1': -0.034626019251498615, 's2': 0.05211054664935553, 's3': 0.001925502186032381, 's4': -0.002550219390348231}
+```
+The optimized camera parameters reproduces the target image exactly.
+```python
+vert, col, ind = crop(conn, params_optim, 3000, 1000000)
+sim2 = sim_image(vert, col, ind, params_optim)
+cv2.imwrite("optimized.png", sim2)
+```
+![](_static/optimized.png)
+![](_static/target.jpg)
+
+You can get geographic coordinates of each pixel of the target image.
+```python
+original = cv2.imread("ttym_2016.jpg")
+georectificated = reverse_proj(original, vert, ind, params_optim)
+```
+
+```
+>>> georectificated
+             u     v            x           y            z      B      G      R
+3047434   3562   542  734196.7500  4050689.00  2987.948242  176.0  160.0  148.0
+3047435   3563   542  734194.6875  4050689.25  2987.231934  171.0  155.0  143.0
+3047436   3564   542  734193.3125  4050689.25  2986.759521  175.0  159.0  146.0
+3047437   3565   542  734192.6250  4050689.00  2986.516602  185.0  169.0  156.0
+3047438   3566   542  734192.1250  4050688.75  2986.366943  191.0  179.0  161.0
+...        ...   ...          ...         ...          ...    ...    ...    ...
+21026299  5611  3743  732739.0000  4051163.50  2453.503174   98.0  153.0  156.0
+21026300  5612  3743  732739.0000  4051163.50  2453.503174   92.0  151.0  153.0
+21026301  5613  3743  732739.0000  4051163.50  2453.503174   88.0  152.0  153.0
+21026302  5614  3743  732739.0000  4051163.50  2453.503418   89.0  153.0  157.0
+21026303  5615  3743  732739.0000  4051163.50  2453.503418   89.0  156.0  159.0
+
+[16456070 rows x 8 columns]
+>>> 
+```
+
+You can also visualize the results with GIS tools. Here, I show an example using R's [sf](https://r-spatial.github.io/sf/) and [stars](https://r-spatial.github.io/stars/) package.
+```r
+library(sf)
+library(stars)
+library(tidyverse)
+
+# Read result csv file
+points <- read_csv(
+  "georectificated.csv",
+  col_types = cols_only(x = "d", y = "d", R = "d", G = "d", B = "d")
+) %>%
+  mutate(R = as.integer(R), G = as.integer(G), B = as.integer(B))
+
+# Converting the dataframe to points. 
+points <- points %>% 
+  st_as_sf(coords = c("x", "y"))
+
+# Rsaterize
+R <- points %>%
+  select(R) %>%
+  st_rasterize(dx = 5, dy = 5) 
+
+G <- points %>%
+  select(G) %>%
+  st_rasterize(dx = 5, dy = 5) 
+
+B <- points %>%
+  select(B) %>%
+  st_rasterize(dx = 5, dy = 5) 
+
+rm(points)
+
+gc()
+
+raster <- c(R, G, B) %>%
+  merge() %>%
+  `st_crs<-`(6690)
+
+# Plotting
+
+ggplot() +
+  geom_stars(data = st_rgb(raster)) +
+  scale_fill_identity()
+
+# Saving raster data as a GeoTiff file.
+write_stars(raster, "ortholike.tif")
+```
+
+Result Plot
+
+![](_static/ortholike.png)
