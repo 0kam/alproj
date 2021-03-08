@@ -2,6 +2,7 @@
 A simple georectification tool for alpine landscape photographs.
 
 [Documentation](https://alproj.readthedocs.io/en/latest/index.html)
+[日本語ドキュメント](https://green-light.netlify.app/posts/usage_of_alproj/)
 ## Overview
 `alproj` is a simple python package for geo-rectification of alpine landscape photographs.   
 `alproj` has 3 steps for geo-rectification of landscape photograph.  
