@@ -145,7 +145,7 @@ def crop(conn, params, distance=3000, chunksize=100000):
     FROM (SELECT `id`, `x`, `y`, `z`, `r`, `g`, `b`, ATAN2(`y` - " + params["y"] + ", `x` -" + params["x"] + ") * 180.0 / 3.14159265358979 - 90.0 AS `theta` \
     FROM `vertices`)) \
     WHERE ((POWER((`x` - " + params["x"] + "), 2.0) + POWER((`y` - " + params["y"] +"), 2.0) < POWER("+ str(distance) + ", 2.0)) \
-        AND (POWER((`x` - " + params["x"] + "), 2.0) + POWER((`y` - " + params["y"] + "), 2.0) > 1.0) AND (`theta2` >= "+ params["pan"] + "-" + params["fov"] + "/ 2.0 * 1.0) \
+        AND (POWER((`x` - " + params["x"] + "), 2.0) + POWER((`y` - " + params["y"] + "), 2.0) > 5.0) AND (`theta2` >= "+ params["pan"] + "-" + params["fov"] + "/ 2.0 * 1.0) \
             AND (`theta2` <= "+ params["pan"] + "+" + params["fov"] + " / 2.0 * 1.0)))) \
     WHERE (((`x`) IS NULL) = 0 AND ((`y`) IS NULL) = 0 AND ((`z`) IS NULL) = 0 AND ((`r`) IS NULL) = 0 AND ((`g`) IS NULL) = 0 AND ((`b`) IS NULL) = 0)") 
     
