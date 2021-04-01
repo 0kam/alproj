@@ -161,7 +161,7 @@ def default_bounds(params_init, target_params) :
         if key in {"fov","pan","tilt","roll"}:
             bounds[i,:] = np.array([value-45, value+45])
         else:
-            bounds[i,:] = np.array([-0.2,0.2])
+            bounds[i,:] = np.array([-0.1,0.1])
         i += 1
     return bounds
         
