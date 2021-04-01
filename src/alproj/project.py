@@ -317,7 +317,7 @@ def reverse_proj(array, vert, ind, params, chnames=["B", "G", "R"]):
     coord = persp_proj(vert, vert, ind, params)[:, :, [0,2,1]] # channel: x, z, y
     uv = np.meshgrid(np.arange(0,array.shape[1]), np.arange(0,array.shape[0]))
     uv = np.stack(uv, axis = 2)
-    concat = np.concatenate([uv, coord, array], 2).reshape(-1, 8)
+    concat = np.concatenate([uv, coord, array], 2).reshape(-1, 5+array.shape[2])
     columns = ["u", "v", "x", "y", "z"]
     columns.extend(chnames)
     df = pd.DataFrame(concat, columns=columns)
