@@ -205,7 +205,7 @@ params_optim, error = cma_optimizer.optimize(generation = 300, bounds = None, si
 ```
 
 ```
->>> params_optim, error = cma_optimizer.optimize(generation = 300, bounds = None, sigma = 1.0, population_size=50)
+>>> params_optim, error = cma_optimizer.optimize(generation = 1000, bounds = None, sigma = 1.0, population_size=10)
 100%|██████████████████████████████| 300/300 [00:34<00:00,  8.70it/s]
 >>> error
 4.8703777893270335

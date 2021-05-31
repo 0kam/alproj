@@ -214,7 +214,7 @@ class CMAOptimizer():
             return loss
         return _proj_error
     
-    def optimize(self, sigma=1.0, bounds=None, generation=500, population_size=10, n_max_resampling = 100):
+    def optimize(self, sigma=1.0, bounds=None, generation=1000, population_size=10, n_max_resampling = 100):
         """
         CMA-optimization of camera parameters.
         See https://github.com/CyberAgent/cmaes/blob/main/cmaes/_cma.py .
