@@ -7,3 +7,4 @@ pillow
 moderngl
 cmaes
 tqdm
+gendoc
