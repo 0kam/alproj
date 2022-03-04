@@ -21,7 +21,8 @@ A simple georectification tool for alpine landscape photographs.
 This project aims to revive alpine landscape photographs in your photo albams, as valuable geospatial data that may reveal the unknown changes of alpine landscape, ecosystem and cryosphere!
 
 ## Installation
-`pip install git+https://github.com/0kam/alproj`
+1. Make sure that you are using the latest version of pip
+2. Run `pip install git+https://github.com/0kam/alproj`
 
 ## Acknowledgements
 The example photograph is of [NIES' long-period monitoring](https://db.cger.nies.go.jp/gem/ja/mountain/station.html?id=2).   
