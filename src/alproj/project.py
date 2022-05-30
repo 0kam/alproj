@@ -165,6 +165,7 @@ def persp_proj(vert, value, ind, params):
     prog = ctx.program(
      vertex_shader='''
          #version 330
+         precision highp float;
          in vec3 in_vert;
          in vec3 in_color;
          out vec3 v_color;  
@@ -177,24 +178,28 @@ def persp_proj(vert, value, ind, params):
         
          vec4 distort(vec4 view_pos){
           // normalize
-          float z =  view_pos[2];
-          float z_inv = 1 / z;
-          float x1 = view_pos[0] * z_inv;
-          float y1 = view_pos[1] * z_inv;
+          float z =  view_pos.z;
+          float x1 = view_pos.x / z;
+          float y1 = view_pos.y / z;
           
           // precalculations
           float x1_2 = x1*x1;
           float y1_2 = y1*y1;
+
+          if ((x1_2 > 1.0) || (y1_2 > 1.0) ) {
+              return view_pos;
+          }
+
           float x1_y1 = x1*y1;
           float r2 = x1_2 + y1_2;
           float r4 = r2*r2;
           float r6 = r4*r2;
           
           // radial distortion factor
-          float r_dist_x = (1+dist_coeffs[2]*r2+dist_coeffs[3]*r4+dist_coeffs[4]*r6) 
-                           /(1+dist_coeffs[5]*r2+dist_coeffs[6]*r4+dist_coeffs[7]*r6); 
-          float r_dist_y = (1+dist_coeffs[0]+dist_coeffs[2]*r2+dist_coeffs[3]*r4+dist_coeffs[4]*r6) //dist_coeffs[0] = a1
-                           /(1+dist_coeffs[1]+dist_coeffs[5]*r2+dist_coeffs[6]*r4+dist_coeffs[7]*r6);//dist_coefs[1] = a2
+          float r_dist_x = (1.0+dist_coeffs[2]*r2+dist_coeffs[3]*r4+dist_coeffs[4]*r6) 
+                           /(1.0+dist_coeffs[5]*r2+dist_coeffs[6]*r4+dist_coeffs[7]*r6); 
+          float r_dist_y = (1.0+dist_coeffs[0]+dist_coeffs[2]*r2+dist_coeffs[3]*r4+dist_coeffs[4]*r6)  //dist_coeffs[0] = a1
+                           /(1.0+dist_coeffs[1]+dist_coeffs[5]*r2+dist_coeffs[6]*r4+dist_coeffs[7]*r6); //dist_coefs[1] = a2
                           
           // full (radial + tangential + skew) distortion
           float x2 = x1*r_dist_x + 2*dist_coeffs[8]*x1_y1 + dist_coeffs[9]*(r2 + 2*x1_2) + dist_coeffs[10]*r2 + dist_coeffs[11]*r4;
@@ -208,12 +213,13 @@ def persp_proj(vert, value, ind, params):
              vec4 local_pos = vec4(in_vert, 1.0);
              vec4 view_pos = vec4(view * local_pos);
              vec4 dist_pos = distort(view_pos);
-             v_color = in_color;
              gl_Position = vec4(proj * dist_pos);
+             v_color = in_color;
          }
      ''',
      fragment_shader='''
          #version 330
+         precision highp float;
          in vec3 v_color;
          layout(location=0)out vec4 f_color;
          void main() {

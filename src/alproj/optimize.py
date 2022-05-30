@@ -98,16 +98,17 @@ def distort(points, a1, a2, k1, k2, k3, k4, k5, k6, p1, p2, s1, s2, s3, s4):
     """
     Distorts an image by given parameters. See alproj.project.persp_proj().
     """
-    x_norm = points[0,]/points[2,]
-    y_norm = points[1,]/points[2,]
+    z = points[2,]
+    x_norm = points[0,]/z
+    y_norm = points[1,]/z
     r2 = (x_norm**2 + y_norm**2)
     r4 = r2**2
     r6 = r2*r4
     x_distort = (x_norm*((1+k1*r2+k2*r4+k3*r6) / (1+k4*r2+k5*r4+k6*r6)) \
-        - 2*p1*x_norm*y_norm - p2*(r2+2*x_norm**2) - s1*r2 - s2*r4) * points[2,]
+        - 2*p1*x_norm*y_norm - p2*(r2+2*x_norm**2) - s1*r2 - s2*r4) * z
     y_distort = (y_norm*((1+a1+k1*r2+k2*r4+k3*r6) / (1+a2+k4*r2+k5*r4+k6*r6)) \
-        - 2*p2*x_norm*y_norm - p1*(r2+2*y_norm**2) - s3*r2 - s4*r4) * points[2,]
-    points_distort = np.vstack([x_distort, y_distort, points[2,:]])
+        - 2*p2*x_norm*y_norm - p1*(r2+2*y_norm**2) - s3*r2 - s4*r4) * z
+    points_distort = np.vstack([x_distort, y_distort, z])
     return points_distort
 
 def project(obj_points, params):

@@ -91,14 +91,16 @@ def create_db(aerial, dsm, out_path, res=1.0, chunksize=10000):
 
 def crop(conn, params, distance=3000, chunksize=100000):
     """
-    Crops the given surface in fan shape.
+    Crops the given surface in circle.
     
     Parameters
     ----------
+    conn : str
+        Path to the SQLite3 database of a colored surface generated with alproj.surface.create_db().
     params : dict
         Camera parameters.
     distance : float default 3000
-        Radius of the fan shape in m.
+        Radius of the circle in m.
     chunksize : int default 100000
         Specify the number of rows in each batch to be written at a time. By default, all rows will be written at once.
         See https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.to_sql.html
@@ -130,8 +132,11 @@ def crop(conn, params, distance=3000, chunksize=100000):
     corners = np.vstack([x1,y1,np.ones(4)])
     corners = distort(corners, p["a1"], p["a2"], p["k1"], p["k2"], p["k3"], p["k4"], p["k5"], p["k6"], p["p1"], p["p2"], p["s1"], p["s2"], p["s3"], p["s4"])
     x = corners[0, :] * centre[0] ## Modified from coners[0, :] * centre[1]
-    fov = params["fov"] /  params["w"] * (max(x) - min(x))
-    pan = params["pan"] + math.atan2(( (max(x) + min(x)) / 2 ) / centre[0], 1) * 180 / math.pi
+    
+    # fov = params["fov"] /  params["w"] * (max(x) - min(x))
+    # pan = params["pan"] + math.atan2(( (max(x) + min(x)) / 2 ) / centre[0], 1) * 180 / math.pi
+    fov = params["fov"] /  params["w"] * 1.5
+    pan = params["pan"]
 
     params = {"x":str(params["x"]),"y":str(params["y"]),"pan":str(pan), "fov":str(fov)}
     csr = conn.cursor()
@@ -144,8 +149,7 @@ def crop(conn, params, distance=3000, chunksize=100000):
     FROM (SELECT `id`, `x`, `y`, `z`, `r`, `g`, `b`, ATAN2(`y` - " + params["y"] + ", `x` -" + params["x"] + ") * 180.0 / 3.14159265358979 - 90.0 AS `theta` \
     FROM `vertices`)) \
     WHERE ((POWER((`x` - " + params["x"] + "), 2.0) + POWER((`y` - " + params["y"] +"), 2.0) < POWER("+ str(distance) + ", 2.0)) \
-        AND (POWER((`x` - " + params["x"] + "), 2.0) + POWER((`y` - " + params["y"] + "), 2.0) > 5.0) AND (`theta2` >= "+ params["pan"] + "-" + params["fov"] + "/ 2.0 * 1.0) \
-            AND (`theta2` <= "+ params["pan"] + "+" + params["fov"] + " / 2.0 * 1.0)))) \
+        AND (POWER((`x` - " + params["x"] + "), 2.0) + POWER((`y` - " + params["y"] + "), 2.0) > 0.0)) )) \
     WHERE (((`x`) IS NULL) = 0 AND ((`y`) IS NULL) = 0 AND ((`z`) IS NULL) = 0 AND ((`r`) IS NULL) = 0 AND ((`g`) IS NULL) = 0 AND ((`b`) IS NULL) = 0)") 
     
     vert = dt.Frame(np.array(csr.fetchall()), names = ["id","x","y","z","r","g","b"])
