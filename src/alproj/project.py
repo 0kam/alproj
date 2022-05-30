@@ -4,6 +4,7 @@ import math
 from PIL import Image
 import cv2
 import pandas as pd
+import warnings
 
 def projection_mat(fov_x_deg, w, h, near=-1, far=1, cx=None, cy=None):
     """
@@ -156,6 +157,8 @@ def persp_proj(vert, value, ind, params):
         Projected result.
     
     """
+    if params["fov"] > 90:
+        warnings.warn("Wider FoV may cause redering fault. Please check the output image carefuly.")
     ctx = gl.create_standalone_context()
     ctx.enable(gl.DEPTH_TEST) # enable depth testing
     ctx.enable(gl.CULL_FACE)

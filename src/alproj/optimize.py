@@ -162,7 +162,7 @@ def default_bounds(params_init, target_params) :
         if key in {"fov","pan","tilt","roll"}:
             bounds[i,:] = np.array([value-45, value+45])
         else:
-            bounds[i,:] = np.array([-0.1,0.1])
+            bounds[i,:] = np.array([-0.2,0.2])
         i += 1
     return bounds
         
@@ -227,7 +227,7 @@ class CMAOptimizer():
         bounds : numpy.ndarray default None
             Lower and upper domain boundaries for each parameter (optional).
             The shape must be (len(target_params), 2).
-            If None, bounds will be automatically set +-45 degree for fov, pan, tilt, roll and -1 to 1 for radial distortion coefficients, -0.1 to 0.1 for other distortion coefficients.
+            If None, bounds will be automatically set +-45 degree for fov, pan, tilt, roll and -1 to 1 for radial distortion coefficients, -0.2 to 0.2 for other distortion coefficients.
             Note that large absolute values of distortion coefficients may cause broken projection.
         generation : int
             Generation numbers to run.

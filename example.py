@@ -30,40 +30,40 @@ import cv2
 sim = sim_image(vert, col, ind, params)
 cv2.imwrite("devel_data/test.png", sim)
 
-# df = reverse_proj(sim, vert, ind, params)
-# del(vert, col, ind) # Release memories
+df = reverse_proj(sim, vert, ind, params)
+del(vert, col, ind) # Release memories
 
 
-# # Setting GCPs
-# path_org = "devel_data/ttym_2016.jpg"
-# path_sim = "devel_data/test.png"
+# Setting GCPs
+path_org = "devel_data/ttym_2016.jpg"
+path_sim = "devel_data/test.png"
 
-# match, plot = akaze_match(path_org, path_sim, ransac_th=200, plot_result=True)
-# cv2.imwrite("devel_data/matched.png", plot)
-# gcps = set_gcp(match, df)
+match, plot = akaze_match(path_org, path_sim, ransac_th=200, plot_result=True)
+cv2.imwrite("devel_data/matched.png", plot)
+gcps = set_gcp(match, df)
 
-# del(df, sim)
+del(df, sim)
 
-# # Optimize camera parameters
-# obj_points = gcps[["x","y","z"]]
-# img_points = gcps[["u","v"]]
-# params_init = params
-# target_params = ["fov", "pan", "tilt", "roll", "a1", "a2", "k1", "k2", "k3", "k4", "k5", "k6", "p1", "p2", "s1", "s2", "s3", "s4"]
+# Optimize camera parameters
+obj_points = gcps[["x","y","z"]]
+img_points = gcps[["u","v"]]
+params_init = params
+target_params = ["fov", "pan", "tilt", "roll", "a1", "a2", "k1", "k2", "k3", "k4", "k5", "k6", "p1", "p2", "s1", "s2", "s3", "s4"]
 
-# cma_optimizer = CMAOptimizer(obj_points, img_points, params_init)
-# cma_optimizer.set_target(target_params)
-# params_optim, error = cma_optimizer.optimize(generation = 300, bounds = None, sigma = 1.0, population_size=50)
+cma_optimizer = CMAOptimizer(obj_points, img_points, params_init)
+cma_optimizer.set_target(target_params)
+params_optim, error = cma_optimizer.optimize(generation = 300, bounds = None, sigma = 1.0, population_size=50)
 
-# params_optim["error"] = error
-# import json
-# with open('devel_data/params_optim.json', 'w') as f:
-#     json.dump(params_optim, f, indent=4)
+params_optim["error"] = error
+import json
+with open('devel_data/params_optim.json', 'w') as f:
+    json.dump(params_optim, f, indent=4)
 
-# # Use optimized parameters
-# vert, col, ind = crop(conn, params_optim, 3000, 1000000)
-# sim2 = sim_image(vert, col, ind, params_optim)
-# cv2.imwrite("devel_data/optimized.png", sim2)
+# Use optimized parameters
+vert, col, ind = crop(conn, params_optim, 3000, 1000000)
+sim2 = sim_image(vert, col, ind, params_optim)
+cv2.imwrite("devel_data/optimized.png", sim2)
 
-# # Reverse projection
-# original = cv2.imread("devel_data/ttym_2016.jpg")
-# georectified = reverse_proj(original, vert, ind, params_optim)
+# Reverse projection
+original = cv2.imread("devel_data/ttym_2016.jpg")
+georectified = reverse_proj(original, vert, ind, params_optim)
