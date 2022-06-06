@@ -323,6 +323,9 @@ def reverse_proj(array, vert, ind, params, chnames=["B", "G", "R"]):
         - [chnames] : The channel names passed by chnames, such as B, G, R.
 
     """
+    if array.shape[2] != len(chnames):
+        raise ValueError("The array has {} channels but chnames has length of {}. Please set chnames correctly."\
+            .format(array.shape[2], len(chnames)))
     coord = persp_proj(vert, vert, ind, params)[:, :, [0,2,1]] # channel: x, z, y
     uv = np.meshgrid(np.arange(0,array.shape[1]), np.arange(0,array.shape[0]))
     uv = np.stack(uv, axis = 2)

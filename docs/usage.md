@@ -246,54 +246,61 @@ georectificated = reverse_proj(original, vert, ind, params_optim)
 >>> 
 ```
 
-You can also visualize the results with GIS tools. Here, I show an example using R's [sf](https://r-spatial.github.io/sf/) and [stars](https://r-spatial.github.io/stars/) package.
+You can also visualize the results with GIS tools. Here, I show an example using R's [sf](https://r-spatial.github.io/sf/), [stars](https://r-spatial.github.io/stars/), and [terra](https://rspatial.org/terra/) package. Since the output of alproj is a point data as shown above, below R script performs raterization and interpolation to make it an orthoimage.   
+
 ```r
 library(sf)
-library(stars)
 library(tidyverse)
+library(stars)
+library(terra)
+library(stringr)
+setwd("~/VegetationMapPaper/")
 
-# Read result csv file
-points <- read_csv(
-  "georectificated.csv",
-  col_types = cols_only(x = "d", y = "d", R = "d", G = "d", B = "d")
-) %>%
-  mutate(R = as.integer(R), G = as.integer(G), B = as.integer(B))
+interpolate <- function(in_path, out_path, res, max_dist, fun=terra::modal) {
+  print(str_c("Reading ", in_path, " ......"))
+  points <- read_csv(
+    in_path
+  ) %>%
+    st_as_sf(coords = c("x", "y")) %>%
+    st_set_crs(6690) %>%
+    mutate(z = as.integer(z)) %>%
+    select(-c(u, v, z))
+  
+  print("Rasterizing point data ......")
+  ras <- st_rasterize(points, dx = res, dy = res)
+  rm(points)
+  gc()
+  
+  ras <- ras %>% 
+    as("Raster") %>%
+    terra::rast()
+  
+  times <- ceiling(max_dist / res)
+  for (i in 1:times) {
+    print(str_c("Interpolating ......", i, " of ", times, " iterations"))
+    ras <- ras %>%
+      terra::focal(3, fun, na.policy="only", na.rm=TRUE)
+  }
+  print(str_c("Saving file to ", out_path, " ......"))
+  terra::writeRaster(ras, out_path, overwrite=TRUE)
+  rm(ras)
+  gc()
+  print("Finished !")
+}
 
-# Converting the dataframe to points. 
-points <- points %>% 
-  st_as_sf(coords = c("x", "y"))
+file <- "data/georectified.csv"
+out_path <- stringr::str_replace(file, "csv", "tiff")
 
-# Rsaterize
-R <- points %>%
-  select(R) %>%
-  st_rasterize(dx = 5, dy = 5) 
+interpolate(
+  file, 
+  out_path, 
+  0.5, 
+  1.0, 
+  fun = mean
+)
 
-G <- points %>%
-  select(G) %>%
-  st_rasterize(dx = 5, dy = 5) 
-
-B <- points %>%
-  select(B) %>%
-  st_rasterize(dx = 5, dy = 5) 
-
-rm(points)
-
-gc()
-
-raster <- c(R, G, B) %>%
-  merge() %>%
-  `st_crs<-`(6690)
-
-# Plotting
-
-ggplot() +
-  geom_stars(data = st_rgb(raster)) +
-  scale_fill_identity()
-
-# Saving raster data as a GeoTiff file.
-write_stars(raster, "ortholike.tif")
 ```
 
 Result Plot
 
-![](_static/ortholike.png)
+![](_static/ortho.png)

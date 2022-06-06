@@ -72,13 +72,9 @@ ggplot() +
 write_stars(raster, "ortholike.tif")
 ```
 
-Result Plot
-
-![](_static/ortholike.png)
-
 You can open the created GeoTiff file with GIS software such as QGIS and ArcGIS.
 
-![](_static/ortholike_qgis.png)
+![](_static/ortho.png)
 
 ## The Camera Model
 `alproj` uses a camera model that is  almost same as the [OpenCV's one](https://docs.opencv.org/3.4/d9/d0c/group__calib3d.html), however, the distortion coefficients are a little bit modified.
