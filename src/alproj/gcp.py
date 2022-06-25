@@ -93,4 +93,4 @@ def set_gcp(match, rev_proj):
          left_on=["u_sim", "v_sim"], right_on=["u", "v"]) \
              [["u_org","v_org","x","y","z"]] \
                  .rename(columns={"u_org":"u", "v_org":"v"})
-    return gcp
+    return gcp.dropna(how="any", axis=0)
