@@ -42,7 +42,8 @@ def create_db(aerial, dsm, out_path, res=1.0, chunksize=10000):
     l = max([aerial.bounds.left, dsm.bounds.left])
     aerial2, transform_a = merge([aerial], bounds=[l,b,r,t], res=res, resampling=Resampling.cubic_spline)
     dsm2, transform_d = merge([dsm], bounds=[l,b,r,t], res=res, resampling=Resampling.cubic_spline)
-    
+    aerial2[np.isnan(aerial2)] = 0
+    dsm2[np.isnan(dsm2)] = 0
     if transform_a == transform_d:
         transform = transform_a
     else:
