@@ -251,15 +251,14 @@ def persp_proj(vert, value, ind, params):
     fbo.clear(0.0, 0.0, 0.0, 1.0)
     # render the rgb image
     vao.render()
-    img = Image.frombytes('RGB', fbo.size, fbo.read(), 'raw', 'RGB', 0, -1)
     # convert RAW image to ndarray, raw is a 1-dimentional array (rgbrgbrgbrgb......) 
     # array starts from right-bottom of the image, you should flip it in l-r and u-b side
     raw = np.frombuffer((fbo.read(dtype="f4")), dtype = "float32")
     raw = raw.reshape(params["h"], params["w"], 3)
     raw = np.flipud(raw)
     vao.release()
-    rbo.release()
-    drbo.release()
+    # rbo.release()
+    # drbo.release()
     fbo.release()
     ctx.release()
     vbo.release()
