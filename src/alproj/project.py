@@ -238,7 +238,7 @@ def persp_proj(vert, value, ind, params):
         params["p1"], params["p2"], params["s1"], params["s2"], params["s3"], params["s4"]]
     prog['proj'].value = tuple(proj_mat)
     prog['view'].value = tuple(view_mat)
-    prog['dist_coeffs'].value = dist_coeff
+    prog['dist_coeffs'].write(np.array(dist_coeff))
     #  pass the vertex, color, index info to the shader
     vao_content = [(vbo, "3f", "in_vert"), (cbo, "3f", "in_color")]
     vao = ctx.vertex_array(program = prog, content = vao_content, index_buffer = ibo)
