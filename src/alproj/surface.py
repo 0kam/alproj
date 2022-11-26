@@ -116,42 +116,18 @@ def crop(conn, params, distance=3000, chunksize=100000):
         Index array that shows which three poits shape a triangle. See http://www.opengl-tutorial.org/intermediate-tutorials/tutorial-9-vbo-indexing/ .
     """
     # filter and collect vertices
-    corners = np.array([
-        [-params["w"]/2, -params["w"]/2, params["w"]/2, params["w"]/2],
-        [0, 0, 0, 0],
-        [params["h"]/2, -params["h"]/2, params["h"]/2, -params["h"]/2],
-        [1, 1, 1, 1]
-        ])
     p = params.copy()
     p["x"] = p["y"] = p["z"] = p["pan"] = 0
-    emat = extrinsic_mat(p["pan"], p["tilt"], p["roll"], p["x"], p["y"], p["z"])
-    corners = np.dot(emat, corners)
 
-    centre = np.array([(p["w"] - 1) / 2, (p["h"] - 1) / 2], dtype = 'float32')
-    x1 = corners[0,:] / centre[0]
-    y1 = (p["h"] / p["w"]) * corners[1,:] / centre[1]
-    corners = np.vstack([x1,y1,np.ones(4)])
-    corners = distort(corners, p["a1"], p["a2"], p["k1"], p["k2"], p["k3"], p["k4"], p["k5"], p["k6"], p["p1"], p["p2"], p["s1"], p["s2"], p["s3"], p["s4"])
-    x = corners[0, :] * centre[0] ## Modified from coners[0, :] * centre[1]
-    
-    # fov = params["fov"] /  params["w"] * (max(x) - min(x))
-    # pan = params["pan"] + math.atan2(( (max(x) + min(x)) / 2 ) / centre[0], 1) * 180 / math.pi
-    fov = params["fov"] /  params["w"] * 1.5
-    pan = params["pan"]
-
-    params = {"x":str(params["x"]),"y":str(params["y"]),"pan":str(pan), "fov":str(fov)}
+    params = {"x":str(params["x"]),"y":str(params["y"])}
     csr = conn.cursor()
-    conn.create_function("ATAN2", 2, math.atan2)
     conn.create_function("POWER", 2, math.pow)
     csr.execute("SELECT * \
     FROM (SELECT `id`, `x`, `y`, `z`, `r`, `g`, `b` \
     FROM (SELECT * \
-    FROM (SELECT `id`, `x`, `y`, `z`, `r`, `g`, `b`, `theta`, CASE WHEN (`theta` < 0.0) THEN (-`theta`) WHEN NOT(`theta` < 0.0) THEN (360.0 - `theta`) END AS `theta2` \
-    FROM (SELECT `id`, `x`, `y`, `z`, `r`, `g`, `b`, ATAN2(`y` - " + params["y"] + ", `x` -" + params["x"] + ") * 180.0 / 3.14159265358979 - 90.0 AS `theta` \
     FROM `vertices`)) \
     WHERE ((POWER((`x` - " + params["x"] + "), 2.0) + POWER((`y` - " + params["y"] +"), 2.0) < POWER("+ str(distance) + ", 2.0)) \
-        AND (POWER((`x` - " + params["x"] + "), 2.0) + POWER((`y` - " + params["y"] + "), 2.0) > 0.0)) )) \
-    WHERE (((`x`) IS NULL) = 0 AND ((`y`) IS NULL) = 0 AND ((`z`) IS NULL) = 0 AND ((`r`) IS NULL) = 0 AND ((`g`) IS NULL) = 0 AND ((`b`) IS NULL) = 0)") 
+        AND (POWER((`x` - " + params["x"] + "), 2.0) + POWER((`y` - " + params["y"] + "), 2.0) > 0.0))") 
     
     vert = dt.Frame(np.array(csr.fetchall()), names = ["id","x","y","z","r","g","b"])
     # collect all indices
