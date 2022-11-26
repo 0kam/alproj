@@ -127,7 +127,9 @@ def crop(conn, params, distance=3000, chunksize=100000):
     FROM (SELECT * \
     FROM `vertices`)) \
     WHERE ((POWER((`x` - " + params["x"] + "), 2.0) + POWER((`y` - " + params["y"] +"), 2.0) < POWER("+ str(distance) + ", 2.0)) \
-        AND (POWER((`x` - " + params["x"] + "), 2.0) + POWER((`y` - " + params["y"] + "), 2.0) > 0.0))") 
+        AND (POWER((`x` - " + params["x"] + "), 2.0) + POWER((`y` - " + params["y"] + "), 2.0) > 0.0)) \
+    WHERE (((`x`) IS NULL) = 0 AND ((`y`) IS NULL) = 0 AND ((`z`) IS NULL) = 0 AND ((`r`) IS NULL) = 0 AND ((`g`) IS NULL) = 0 AND ((`b`) IS NULL) = 0)
+    ") 
     
     vert = dt.Frame(np.array(csr.fetchall()), names = ["id","x","y","z","r","g","b"])
     # collect all indices
