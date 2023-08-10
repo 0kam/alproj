@@ -16,7 +16,7 @@ A simple georectification tool for alpine landscape photographs.
 3. Perspective reverse projection of the target photograph on Digital Surface Model, with estimated camera parameters, using OpenGL.
 ![](docs/_static/georectification.jpg)
 
-![](docs/_static/ortholike.png)
+![](docs/_static/ortho.png)
 
 This project aims to revive alpine landscape photographs in your photo albams, as valuable geospatial data that may reveal the unknown changes of alpine landscape, ecosystem and cryosphere!
 
