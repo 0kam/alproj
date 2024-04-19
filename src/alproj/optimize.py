@@ -130,6 +130,7 @@ def project(obj_points, params):
     """
     obj_points = obj_points[["x", "y", "z"]]
     op = np.vstack((obj_points.to_numpy().T, np.ones([1,len(obj_points)])))
+    op = np.vstack((obj_points.T, np.ones([1,len(obj_points)])))
     imat = intrinsic_mat(params["fov"], params["w"], params["h"], params["cx"], params["cy"])
     emat = extrinsic_mat(params["pan"], params["tilt"], params["roll"], params["x"], params["y"], params["z"])
     op_cc = np.dot(emat, op) # Object points in camera coordinate system
@@ -162,7 +163,7 @@ def default_bounds(params_init, target_params) :
         if key in {"fov","pan","tilt","roll"}:
             bounds[i,:] = np.array([value-45, value+45])
         else:
-            bounds[i,:] = np.array([-0.2,0.2])
+            bounds[i,:] = np.array([value-0.2,value+0.2])
         i += 1
     return bounds
         

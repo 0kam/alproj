@@ -1,7 +1,6 @@
 import numpy as np
 import moderngl as gl
 import math
-from PIL import Image
 import cv2
 import pandas as pd
 import warnings
@@ -105,7 +104,7 @@ def modelview_mat(pan_deg, tilt_deg, roll_deg, t_x, t_y, t_z):
     return np.dot(rmat, tmat).transpose().flatten()
 
 
-def persp_proj(vert, value, ind, params):
+def persp_proj(vert, value, ind, params, offsets=None):
     """
     3D to 2D perspective projection of vertices, with given camera parameters.
 
@@ -114,7 +113,7 @@ def persp_proj(vert, value, ind, params):
     vert : numpy.ndarray
         Coordinates of vertices, in X(latitudial), Z(vertical), Y(longitudial) order.
     value : numpy.ndarray
-        Values of vertices. e.g. colors, giographic coordinates.
+        Values of vertices. e.g. colors, geographic coordinates.
     ind : numpy.ndarray
         Index data of vertices. See http://www.opengl-tutorial.org/intermediate-tutorials/tutorial-9-vbo-indexing/ .
     paramas : dict
@@ -150,6 +149,8 @@ def persp_proj(vert, value, ind, params):
             Tangental distortion coefficients.
         s1, s2, s3, s4 : float
             Prism distortion coefficients.
+    offsets : numpy.ndarray default None
+        Offset for vertex coordinates. Usually returned by alproj.surface.get_colored_surface().
 
     Returns
     -------
@@ -157,6 +158,11 @@ def persp_proj(vert, value, ind, params):
         Projected result.
     
     """
+    params = params.copy()
+    if offsets is not None:
+        params["x"] = params["x"] - offsets[0]
+        params["y"] = params["y"] - offsets[2]
+        params["z"] = params["z"] - offsets[1]
     if params["fov"] > 90:
         warnings.warn("Wider FoV may cause redering fault. Please check the output image carefuly.")
     ctx = gl.create_standalone_context()
@@ -166,70 +172,70 @@ def persp_proj(vert, value, ind, params):
     cbo = ctx.buffer(value.astype("f4").tobytes())
     ibo = ctx.buffer(ind.astype("i4").tobytes()) #vertex indecies of each triangles
     prog = ctx.program(
-     vertex_shader='''
-         #version 330
-         precision highp float;
-         in vec3 in_vert;
-         in vec3 in_color;
-         out vec3 v_color;  
-         // decrare some values used inside GPU by "uniform"
-         // the real values will be later set by CPU
-         uniform mat4 proj; // projection matrix
-         uniform mat4 view; // model view matrix
-         uniform float dist_coeffs[14]; // distortion coefficients 
-         // distortion coefficients of customized OpenCV model a1, a2, k1~k6, p1, p2, s1~s4
-        
-         vec4 distort(vec4 view_pos){
-          // normalize
-          float z =  view_pos.z;
-          float x1 = view_pos.x / z;
-          float y1 = view_pos.y / z;
-          
-          // precalculations
-          float x1_2 = x1*x1;
-          float y1_2 = y1*y1;
+        vertex_shader='''
+            #version 330
+            precision highp float;
+            in vec3 in_vert;
+            in vec3 in_color;
+            out vec3 v_color;  
+            // decrare some values used inside GPU by "uniform"
+            // the real values will be later set by CPU
+            uniform mat4 proj; // projection matrix
+            uniform mat4 view; // model view matrix
+            uniform float dist_coeffs[14]; // distortion coefficients 
+            // distortion coefficients of customized OpenCV model a1, a2, k1~k6, p1, p2, s1~s4
+            
+            vec4 distort(vec4 view_pos){
+            // normalize
+            float z =  max(view_pos.z, 1.0);
+            float x1 = view_pos.x / z;
+            float y1 = view_pos.y / z;
+            
+            // precalculations
+            float x1_2 = x1*x1;
+            float y1_2 = y1*y1;
 
-          if ((x1_2 > 1.0) || (y1_2 > 1.0) ) {
-              return view_pos;
-          }
+            if ((x1_2 > 1.0) || (y1_2 > 1.0) ) {
+                return view_pos;
+            }
 
-          float x1_y1 = x1*y1;
-          float r2 = x1_2 + y1_2;
-          float r4 = r2*r2;
-          float r6 = r4*r2;
-          
-          // radial distortion factor
-          float r_dist_x = (1.0+dist_coeffs[2]*r2+dist_coeffs[3]*r4+dist_coeffs[4]*r6) 
-                           /(1.0+dist_coeffs[5]*r2+dist_coeffs[6]*r4+dist_coeffs[7]*r6); 
-          float r_dist_y = (1.0+dist_coeffs[0]+dist_coeffs[2]*r2+dist_coeffs[3]*r4+dist_coeffs[4]*r6)  //dist_coeffs[0] = a1
-                           /(1.0+dist_coeffs[1]+dist_coeffs[5]*r2+dist_coeffs[6]*r4+dist_coeffs[7]*r6); //dist_coefs[1] = a2
-                          
-          // full (radial + tangential + skew) distortion
-          float x2 = x1*r_dist_x + 2*dist_coeffs[8]*x1_y1 + dist_coeffs[9]*(r2 + 2*x1_2) + dist_coeffs[10]*r2 + dist_coeffs[11]*r4;
-          float y2 = y1*r_dist_y + 2*dist_coeffs[9]*x1_y1 + dist_coeffs[8]*(r2 + 2*y1_2) + dist_coeffs[12]*r2 + dist_coeffs[13]*r4;
-          
-          // denormalize for projection (which is a linear operation)
-          return vec4(x2*z, y2*z, z, view_pos[3]);
-          }
-         
-         void main() {
-             vec4 local_pos = vec4(in_vert, 1.0);
-             vec4 view_pos = vec4(view * local_pos);
-             vec4 dist_pos = distort(view_pos);
-             gl_Position = vec4(proj * dist_pos);
-             v_color = in_color;
-         }
-     ''',
-     fragment_shader='''
-         #version 330
-         precision highp float;
-         in vec3 v_color;
-         layout(location=0)out vec4 f_color;
-         void main() {
-             f_color = vec4(v_color, 1.0); // 1,0 added is alpha
-         }
-     '''
-    )
+            float x1_y1 = x1*y1;
+            float r2 = x1_2 + y1_2;
+            float r4 = r2*r2;
+            float r6 = r4*r2;
+            
+            // radial distortion factor
+            float r_dist_x = (1.0+dist_coeffs[2]*r2+dist_coeffs[3]*r4+dist_coeffs[4]*r6) 
+                            /(1.0+dist_coeffs[5]*r2+dist_coeffs[6]*r4+dist_coeffs[7]*r6); 
+            float r_dist_y = (1.0+dist_coeffs[0]+dist_coeffs[2]*r2+dist_coeffs[3]*r4+dist_coeffs[4]*r6)  //dist_coeffs[0] = a1
+                            /(1.0+dist_coeffs[1]+dist_coeffs[5]*r2+dist_coeffs[6]*r4+dist_coeffs[7]*r6); //dist_coefs[1] = a2
+                            
+            // full (radial + tangential + skew) distortion
+            float x2 = x1*r_dist_x + 2*dist_coeffs[8]*x1_y1 + dist_coeffs[9]*(r2 + 2*x1_2) + dist_coeffs[10]*r2 + dist_coeffs[11]*r4;
+            float y2 = y1*r_dist_y + 2*dist_coeffs[9]*x1_y1 + dist_coeffs[8]*(r2 + 2*y1_2) + dist_coeffs[12]*r2 + dist_coeffs[13]*r4;
+            
+            // denormalize for projection (which is a linear operation)
+            return vec4(x2*z, y2*z, z, view_pos[3]);
+            }
+            
+            void main() {
+                vec4 local_pos = vec4(in_vert, 1.0);
+                vec4 view_pos = vec4(view * local_pos);
+                vec4 dist_pos = distort(view_pos);
+                gl_Position = vec4(proj * dist_pos);
+                v_color = in_color;
+            }
+        ''',
+        fragment_shader='''
+            #version 330
+            precision highp float;
+            in vec3 v_color;
+            layout(location=0)out vec4 f_color;
+            void main() {
+                f_color = vec4(v_color, 1.0); // 1,0 added is alpha
+            }
+        '''
+        )
     
     # set some "uniform" values in prog
     proj_mat = projection_mat(params["fov"], params["w"], params["h"])
@@ -268,7 +274,7 @@ def persp_proj(vert, value, ind, params):
     del(vao_content, vert, value, ind)
     return raw
 
-def sim_image(vert, color, ind, params):
+def sim_image(vert, color, ind, params, offsets=None):
     """
     Renders a simulated image of landscape with given surface and camera parameters.
 
@@ -282,19 +288,21 @@ def sim_image(vert, color, ind, params):
         Index data of vertices, returned by alproj.surface.crop().
     params : dict
         Camera parameters. See alproj.project.persp_proj().
+    offsets : numpy.ndarray default None
+        Offset for vertex coordinates. Usually returned by alproj.surface.get_colored_surface().
     
     Returns
     -------
     img : numpy.ndarray
         Rendered image in OpenCV's image format.
     """
-    raw = persp_proj(vert, color, ind, params) * 255
+    raw = persp_proj(vert, color, ind, params, offsets) * 255
     raw = raw.astype(np.uint8)
     img = cv2.cvtColor(raw, cv2.COLOR_RGB2BGR)
     return img
 
 
-def reverse_proj(array, vert, ind, params, chnames=["B", "G", "R"]):
+def reverse_proj(array, vert, ind, params, offsets=None, chnames=["B", "G", "R"]):
     """
     2D to 3D reverse-projection (geo-rectification) of given array, onto given surface, with given camera parameters.
     Reverse-projected array will be returned as pandas.DataFrame with channel names, coordinates in the original array, 
@@ -310,6 +318,8 @@ def reverse_proj(array, vert, ind, params, chnames=["B", "G", "R"]):
         Index array that shows which three poits shape a triangle. See http://www.opengl-tutorial.org/intermediate-tutorials/tutorial-9-vbo-indexing/ .
     params : dict
         Camera parameters. See alproj.project.persp_proj
+    offsets : numpy.ndarray default None
+        Offset for vertex coordinates. Usually returned by alproj.surface.get_colored_surface().
     chnames : list of str default ["B", "G", "R"]
         Channel names of the target array. Default value is ["B","G","R"] because channel order is BGR in OpenCV.
     
@@ -325,7 +335,8 @@ def reverse_proj(array, vert, ind, params, chnames=["B", "G", "R"]):
     if array.shape[2] != len(chnames):
         raise ValueError("The array has {} channels but chnames has length of {}. Please set chnames correctly."\
             .format(array.shape[2], len(chnames)))
-    coord = persp_proj(vert, vert, ind, params)[:, :, [0,2,1]] # channel: x, z, y
+    coord = persp_proj(vert, vert, ind, params, offsets)
+    coord = coord[:, :, [0,2,1]] # channel: x, z, y -> x, y, z
     uv = np.meshgrid(np.arange(0,array.shape[1]), np.arange(0,array.shape[0]))
     uv = np.stack(uv, axis = 2)
     concat = np.concatenate([uv, coord, array], 2).reshape(-1, 5+array.shape[2])
@@ -334,5 +345,8 @@ def reverse_proj(array, vert, ind, params, chnames=["B", "G", "R"]):
     df = pd.DataFrame(concat, columns=columns)
     df[["u", "v"]] = df[["u", "v"]].astype("int16")
     df = df[df["x"] > 0]
+    if offsets is not None:
+        df["x"] = df["x"] + offsets[0]
+        df["y"] = df["y"] + offsets[2]
+        df["z"] = df["z"] + offsets[1]
     return df
-

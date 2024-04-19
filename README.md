@@ -24,8 +24,5 @@ This project aims to revive alpine landscape photographs in your photo albams, a
 1. Make sure that you are using the latest version of pip
 2. Run `pip install git+https://github.com/0kam/alproj`
 
-`alproj` is depending on `datatable` library and `datatable` installation fails in python 3.10 environment. If you encountered this, please install `datatable` from github repository. 
-Run `pip install git+https://github.com/h2oai/datatable`.
-
 ## Acknowledgements
 The example photograph is of [NIES' long-period monitoring](https://db.cger.nies.go.jp/gem/ja/mountain/station.html?id=2).   
