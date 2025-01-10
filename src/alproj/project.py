@@ -186,43 +186,46 @@ def persp_proj(vert, value, ind, params, offsets=None):
             // distortion coefficients of customized OpenCV model a1, a2, k1~k6, p1, p2, s1~s4
             
             vec4 distort(vec4 view_pos){
-            // normalize
-            float z =  max(view_pos.z, 1.0);
-            float x1 = view_pos.x / z;
-            float y1 = view_pos.y / z;
-            
-            // precalculations
-            float x1_2 = x1*x1;
-            float y1_2 = y1*y1;
+                // normalize
+                //float z =  max(view_pos.z, 1.0);
+                
+                float w = view_pos.w;
+                float x1 = view_pos.x / w;
+                float y1 = view_pos.y / w;
+                
+                // precalculations
+                float x1_2 = x1*x1;
+                float y1_2 = y1*y1;
 
-            if ((x1_2 > 1.0) || (y1_2 > 1.0) ) {
-                return view_pos;
-            }
+                //if ((x1_2 > 1.0) || (y1_2 > 1.0) ) {
+                //    return view_pos;
+                //}
 
-            float x1_y1 = x1*y1;
-            float r2 = x1_2 + y1_2;
-            float r4 = r2*r2;
-            float r6 = r4*r2;
-            
-            // radial distortion factor
-            float r_dist_x = (1.0+dist_coeffs[2]*r2+dist_coeffs[3]*r4+dist_coeffs[4]*r6) 
-                            /(1.0+dist_coeffs[5]*r2+dist_coeffs[6]*r4+dist_coeffs[7]*r6); 
-            float r_dist_y = (1.0+dist_coeffs[0]+dist_coeffs[2]*r2+dist_coeffs[3]*r4+dist_coeffs[4]*r6)  //dist_coeffs[0] = a1
-                            /(1.0+dist_coeffs[1]+dist_coeffs[5]*r2+dist_coeffs[6]*r4+dist_coeffs[7]*r6); //dist_coefs[1] = a2
-                            
-            // full (radial + tangential + skew) distortion
-            float x2 = x1*r_dist_x + 2*dist_coeffs[8]*x1_y1 + dist_coeffs[9]*(r2 + 2*x1_2) + dist_coeffs[10]*r2 + dist_coeffs[11]*r4;
-            float y2 = y1*r_dist_y + 2*dist_coeffs[9]*x1_y1 + dist_coeffs[8]*(r2 + 2*y1_2) + dist_coeffs[12]*r2 + dist_coeffs[13]*r4;
-            
-            // denormalize for projection (which is a linear operation)
-            return vec4(x2*z, y2*z, z, view_pos[3]);
+                float x1_y1 = x1*y1;
+                float r2 = x1_2 + y1_2;
+                float r4 = r2*r2;
+                float r6 = r4*r2;
+                
+                // radial distortion factor
+                float r_dist_x = (1.0+dist_coeffs[2]*r2+dist_coeffs[3]*r4+dist_coeffs[4]*r6) 
+                                /(1.0+dist_coeffs[5]*r2+dist_coeffs[6]*r4+dist_coeffs[7]*r6); 
+                float r_dist_y = (1.0+dist_coeffs[0]+dist_coeffs[2]*r2+dist_coeffs[3]*r4+dist_coeffs[4]*r6)  //dist_coeffs[0] = a1
+                                /(1.0+dist_coeffs[1]+dist_coeffs[5]*r2+dist_coeffs[6]*r4+dist_coeffs[7]*r6); //dist_coeffs[1] = a2
+                                
+                // full (radial + tangential + skew) distortion
+                float x2 = x1*r_dist_x + 2*dist_coeffs[8]*x1_y1 + dist_coeffs[9]*(r2 + 2*x1_2) + dist_coeffs[10]*r2 + dist_coeffs[11]*r4;
+                float y2 = y1*r_dist_y + 2*dist_coeffs[9]*x1_y1 + dist_coeffs[8]*(r2 + 2*y1_2) + dist_coeffs[12]*r2 + dist_coeffs[13]*r4;
+                
+                // denormalize for projection (which is a linear operation)
+                return vec4(x2*w, y2*w, view_pos.z, view_pos.w);
             }
             
             void main() {
                 vec4 local_pos = vec4(in_vert, 1.0);
                 vec4 view_pos = vec4(view * local_pos);
-                vec4 dist_pos = distort(view_pos);
-                gl_Position = vec4(proj * dist_pos);
+                vec4 proj_pos = vec4(proj * view_pos);
+                gl_Position = distort(proj_pos);
+                // gl_Position = vec4(proj * dist_pos);
                 v_color = in_color;
             }
         ''',
@@ -240,11 +243,12 @@ def persp_proj(vert, value, ind, params, offsets=None):
     # set some "uniform" values in prog
     proj_mat = projection_mat(params["fov"], params["w"], params["h"])
     view_mat = modelview_mat(params["pan"], params["tilt"], params["roll"], params["x"], params["y"], params["z"])
-    dist_coeff = [params["a1"], params["a2"], params["k1"], params["k2"], params["k3"], params["k4"], params["k5"], params["k6"], \
-        params["p1"], params["p2"], params["s1"], params["s2"], params["s3"], params["s4"]]
+    dist_coeff = (params["a1"], params["a2"], params["k1"], params["k2"], params["k3"], params["k4"], params["k5"], params["k6"], \
+        params["p1"], params["p2"], params["s1"], params["s2"], params["s3"], params["s4"])
+    
     prog['proj'].value = tuple(proj_mat)
     prog['view'].value = tuple(view_mat)
-    prog['dist_coeffs'].write(np.array(dist_coeff))
+    prog['dist_coeffs'].value = dist_coeff
     #  pass the vertex, color, index info to the shader
     vao_content = [(vbo, "3f", "in_vert"), (cbo, "3f", "in_color")]
     vao = ctx.vertex_array(program = prog, content = vao_content, index_buffer = ibo)

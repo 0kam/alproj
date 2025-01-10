@@ -3,3 +3,4 @@ src/alproj/run.py
 devel*.py
 *copy.py
 __pycache__/
+.venv

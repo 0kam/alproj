@@ -1,4 +1,4 @@
-from src.alproj.surface import create_db, crop
+from src.alproj.surface import get_colored_surface
 from src.alproj.project import sim_image, reverse_proj
 from src.alproj.gcp import akaze_match, set_gcp
 from src.alproj.optimize import CMAOptimizer
@@ -9,25 +9,21 @@ import rasterio
 res = 5.0 # resolution in m
 aerial = rasterio.open("devel_data/tateyama2.tif")
 dsm = rasterio.open("devel_data/tateyamadem_small.tif")
-out_path = "devel_data/pc.db"
-
-#create_db(aerial, dsm, out_path, res)
 
 # crop_surface
-conn = sqlite3.connect("devel_data/pc.db")
 params = {"x":732731,"y":4051171, "z":2458, "fov":70, "pan":100, "tilt":0, "roll":0,\
-     "a1":1, "a2":1, "k1":0.5, "k2":0.0, "k3":0, "k4":0, "k5":0.0, "k6":-0.2, \
+     "a1":1, "a2":1, "k1":0, "k2":0.0, "k3":0, "k4":0.5, "k5":0.0, "k6":0, \
          "p1":0, "p2":0, "s1":0, "s2":0, "s3":0, "s4":0, \
          "w":5616, "h":3744, "cx":5616/2, "cy":3744/2}
 
-distance = 3000
-chunksize = 1000000
-
-vert, col, ind = crop(conn, params, distance, chunksize) # This takes some minites.
+# vert, col, ind, offsets = get_colored_surface(
+#     aerial, dsm, shooting_point=params, distance=2000) # This takes some minites.
 
 # make sim
 import cv2
-sim = sim_image(vert, col, ind, params)
+
+
+sim = sim_image(vert, col, ind, params, offsets)
 cv2.imwrite("devel_data/test.png", sim)
 
 df = reverse_proj(sim, vert, ind, params)

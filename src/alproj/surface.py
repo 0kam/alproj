@@ -8,7 +8,7 @@ import numpy as np
 import math
 import warnings
 
-def _get_window(raster: rasterio.DatasetReader, shooting_point: dict, distance=3000):
+def _get_window(raster: rasterio.DatasetReader, shooting_point: dict, distance: float):
     """
     Get window of a rectangle centered at shooting point.
     
@@ -39,10 +39,10 @@ def _get_window(raster: rasterio.DatasetReader, shooting_point: dict, distance=3
     min_value = min(lb[0], lb[1], rt[0], rt[1])
     if min_value < 0:
         too_large = math.ceil(abs(min_value) * raster.res[0] + 1)
-        raise ValueError(f"Distance is too large. Consider using a smaller distance less than {too_large} m.")
+        raise ValueError(f"Distance is too large. Consider using a smaller distance less than {distance - too_large} m.")
     return Window.from_slices((lb[0], rt[0]), (lb[1], rt[1]))
 
-def _get_bounds(shooting_point: dict, distance=2000):
+def _get_bounds(shooting_point: dict, distance: float):
     """
     Get bounds of a rectangle centered at shooting point.
     
@@ -58,7 +58,6 @@ def _get_bounds(shooting_point: dict, distance=2000):
     bottom = shooting_point["y"] - distance
     top = shooting_point["y"] + distance
     return (left, bottom, right, top)
-
 
 def _merge_rasters(aerial, dsm, bounds=None, res=1.0, resampling=Resampling.cubic_spline):
     """
@@ -96,7 +95,7 @@ def _merge_rasters(aerial, dsm, bounds=None, res=1.0, resampling=Resampling.cubi
         print("error in merging aerial photo and DSM")
     return aerial2, dsm2, transform
 
-def get_colored_surface(aerial, dsm, shooting_point, distance=3000, res=1.0, resampling=Resampling.cubic_spline, fill_dsm_dist=300):
+def get_colored_surface(aerial, dsm, shooting_point, distance=2000, res=1.0, resampling=Resampling.cubic_spline, fill_dsm_dist=300):
     """
     Get colored surface.
     
@@ -131,6 +130,7 @@ def get_colored_surface(aerial, dsm, shooting_point, distance=3000, res=1.0, res
     bounds = _get_bounds(shooting_point, distance=distance)
     window_dsm = _get_window(dsm, shooting_point, distance=distance)
     window_aerial = _get_window(aerial, shooting_point, distance=distance)
+
     with MemoryFile() as memfile:
         with memfile.open(driver="GTiff", width=window_dsm.width, height=window_dsm.height, count=1, dtype=dsm.dtypes[0], crs=dsm.crs, transform=dsm.window_transform(window_dsm)) as dst:
             dst.write(dsm.read(window=window_dsm))
@@ -140,7 +140,18 @@ def get_colored_surface(aerial, dsm, shooting_point, distance=3000, res=1.0, res
         with memfile.open(driver="GTiff", width=window_aerial.width, height=window_aerial.height, count=3, dtype=aerial.dtypes[0], crs=aerial.crs, transform=aerial.window_transform(window_aerial)) as dst:
             dst.write(aerial.read(window=window_aerial))
         aerial2 = memfile.open()
-    aerial2, dsm2, transform = _merge_rasters(aerial2, dsm2, res=res, resampling=resampling)
+    
+    
+    with MemoryFile() as dsm_memfile, MemoryFile() as aerial_memfile:
+        with dsm_memfile.open(driver="GTiff", width=window_dsm.width, height=window_dsm.height, count=1, dtype=dsm.dtypes[0], crs=dsm.crs, transform=dsm.window_transform(window_dsm)) as dst:
+            dst.write(dsm.read(window=window_dsm))
+        dsm2 = dsm_memfile.open()
+        dsm_max_height = dsm2.read().max()
+        with aerial_memfile.open(driver="GTiff", width=window_aerial.width, height=window_aerial.height, count=3, dtype=aerial.dtypes[0], crs=aerial.crs, transform=aerial.window_transform(window_aerial)) as dst:
+            dst.write(aerial.read(window=window_aerial))
+        aerial2 = aerial_memfile.open()
+        aerial2, dsm2, transform = _merge_rasters(aerial2, dsm2, res=res, resampling=resampling)
+    
     dsm_mask = dsm2 > 0
     dsm2 = fillnodata(dsm2, dsm_mask, max_search_distance=math.ceil(fill_dsm_dist*res))
     if dsm2.min() < 0:
