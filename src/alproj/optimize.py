@@ -94,22 +94,27 @@ def extrinsic_mat(pan_deg, tilt_deg, roll_deg, t_x, t_y, t_z):
     tmat = np.dot(rmat, tmat)
     return np.vstack((np.hstack((rmat, tmat)), np.array([0,0,0,1])))
 
-def distort(points, a1, a2, k1, k2, k3, k4, k5, k6, p1, p2, s1, s2, s3, s4):
+def _distort(points, w, h, a1, a2, k1, k2, k3, k4, k5, k6, p1, p2, s1, s2, s3, s4):
     """
     Distorts an image by given parameters. See alproj.project.persp_proj().
     """
-    z = points[2,]
-    x_norm = points[0,]/z
-    y_norm = points[1,]/z
-    r2 = (x_norm**2 + y_norm**2)
-    r4 = r2**2
-    r6 = r2*r4
-    x_distort = (x_norm*((1+k1*r2+k2*r4+k3*r6) / (1+k4*r2+k5*r4+k6*r6)) \
-        - 2*p1*x_norm*y_norm - p2*(r2+2*x_norm**2) - s1*r2 - s2*r4) * z
-    y_distort = (y_norm*((1+a1+k1*r2+k2*r4+k3*r6) / (1+a2+k4*r2+k5*r4+k6*r6)) \
-        - 2*p2*x_norm*y_norm - p1*(r2+2*y_norm**2) - s3*r2 - s4*r4) * z
-    points_distort = np.vstack([x_distort, y_distort, z])
-    return points_distort
+    centre = np.array([(w - 1) / 2, (h - 1) / 2], dtype = 'float32')
+    x1 = (points[:,0] - centre[0]) / centre[0]
+    y1 = (points[:,1] - centre[1]) / centre[1]
+    r = (x1**2 + y1**2)**0.5
+    r2 = r**2
+    r4 = r**4
+    r6 = r**6
+
+    x1_d = x1 * (1 + k1*r2 + k2*r4 + k3*r6) / (1 + k4*r2 + k5*r4 + k6*r6) + \
+        2*p1*x1*y1 + p2*(r2*2*x1**2) + \
+        s1*r2 + s2*r4
+    y1_d = y1 * (1 + a1 + k1*r2 + k2*r4 + k3*r6) / (1 + a2 + k4*r2 + k5*r4 + k6*r6) + \
+        2*p1*x1*y1 + p2*(r2*2*y1**2) + s3*r2 + s4*r4
+    x1_d = x1_d * centre[0] + centre[0]
+    y1_d = y1_d * centre[1] + centre[1]
+    pts_d = np.stack([x1_d, y1_d], axis = 0).T
+    return pts_d
 
 def project(obj_points, params):
     """
@@ -130,18 +135,21 @@ def project(obj_points, params):
     """
     obj_points = obj_points[["x", "y", "z"]]
     op = np.vstack((obj_points.to_numpy().T, np.ones([1,len(obj_points)])))
+    op = np.vstack((obj_points.T, np.ones([1,len(obj_points)])))
     imat = intrinsic_mat(params["fov"], params["w"], params["h"], params["cx"], params["cy"])
     emat = extrinsic_mat(params["pan"], params["tilt"], params["roll"], params["x"], params["y"], params["z"])
     op_cc = np.dot(emat, op) # Object points in camera coordinate system
-    op_cc2 = distort(op_cc, params["a1"], params["a2"], params["k1"], params["k2"], params["k3"], params["k4"], \
-        params["k5"], params["k6"], params["p1"], params["p2"], params["s1"], params["s2"], params["s3"], params["s4"])
-    op_ic = np.dot(imat, op_cc2)
+    op_ic = np.dot(imat, op_cc[:3,:]) # Object points in image coordinate system
     uv = np.array([
         params["w"] - op_ic[0,:]/op_ic[2,:],
         op_ic[1,:]/op_ic[2,:]
-    ])
-    uv = pd.DataFrame(uv.T, columns = ["u", "v"])
-    return uv
+    ]).T
+    uv_distort = _distort(
+        uv, params["w"], params["h"], params["a1"], params["a2"], 
+        params["k1"], params["k2"], params["k3"], params["k4"], params["k5"], params["k6"], 
+        params["p1"], params["p2"], params["s1"], params["s2"], params["s3"], params["s4"])
+    uv_df = pd.DataFrame(uv_distort, columns = ["u", "v"])
+    return uv_df
 
 def rmse(img_points, projected):
     """
@@ -162,7 +170,7 @@ def default_bounds(params_init, target_params) :
         if key in {"fov","pan","tilt","roll"}:
             bounds[i,:] = np.array([value-45, value+45])
         else:
-            bounds[i,:] = np.array([-0.2,0.2])
+            bounds[i,:] = np.array([value-0.2,value+0.2])
         i += 1
     return bounds
         

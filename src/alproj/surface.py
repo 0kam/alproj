@@ -1,57 +1,167 @@
 import rasterio
 from rasterio.merge import merge
 from rasterio.enums import Resampling
+from rasterio.windows import Window
+from rasterio.fill import fillnodata
+from rasterio.io import MemoryFile
 import numpy as np
-import os
-import datatable as dt
-import pandas as pd
-import sqlite3
 import math
-from alproj.optimize import extrinsic_mat, distort
+import warnings
 
-
-def create_db(aerial, dsm, out_path, res=1.0, chunksize=10000):
+def _get_window(raster: rasterio.DatasetReader, shooting_point: dict, distance: float):
     """
-    Creates a SQLite3 database of a colored surface from a Digital Surface Model and an ortho-rectificated aerial/satellite photograph.
-    The result database contains coordinates, colors, and index data of created surface. The given DSM and aerial/satellite photograph must be 
-    transformed to the same planar coordinate reference system (such as UTM). The unit of these must be m.
+    Get window of a rectangle centered at shooting point.
+    
+    Parameters
+    ----------
+    raster : rasterio.DatasetReader
+        A raster opend by rasterio.open()
+    shooting_point : dict
+        Shooting point. Must contain keys "x" and "y". Should be in the same coordinate reference system as the DSM.
+    distance : float
+        Distance from shooting point to the edge of the rectangle.
+    """
+    raster_directions = (raster.transform[0] > 0, raster.transform[4] > 0)
+    if raster_directions[0]:
+        left = shooting_point["x"] - distance
+        right = shooting_point["x"] + distance
+    else:
+        left = shooting_point["x"] + distance
+        right = shooting_point["x"] - distance
+    if raster_directions[1]:
+        bottom = shooting_point["y"] - distance
+        top = shooting_point["y"] + distance
+    else:
+        bottom = shooting_point["y"] + distance
+        top = shooting_point["y"] - distance
+    lb = raster.index(left, bottom)
+    rt = raster.index(right, top)
+    min_value = min(lb[0], lb[1], rt[0], rt[1])
+    if min_value < 0:
+        too_large = math.ceil(abs(min_value) * raster.res[0] + 1)
+        raise ValueError(f"Distance is too large. Consider using a smaller distance less than {distance - too_large} m.")
+    return Window.from_slices((lb[0], rt[0]), (lb[1], rt[1]))
 
+def _get_bounds(shooting_point: dict, distance: float):
+    """
+    Get bounds of a rectangle centered at shooting point.
+    
+    Parameters
+    ----------
+    shooting_point : dict
+        Shooting point. Must contain keys "x" and "y". Should be in the same coordinate reference system as the DSM.
+    distance : float
+        Distance from shooting point to the edge of the rectangle.
+    """
+    left = shooting_point["x"] - distance
+    right = shooting_point["x"] + distance
+    bottom = shooting_point["y"] - distance
+    top = shooting_point["y"] + distance
+    return (left, bottom, right, top)
+
+def _merge_rasters(aerial, dsm, bounds=None, res=1.0, resampling=Resampling.cubic_spline):
+    """
+    Merge two rasters in the same coordinate reference system.
+    
     Parameters
     ----------
     aerial : rasterio.DatasetReader
         An aerial photograph opend by rasterio.open()
     dsm : rasterio.DatasetReader
         A Digital SurfaceModel opend by rasterio.open()
-    out_path : str
-        Path for output SQLite3 file.
+    bounds : tuple
+        (left, bottom, right, top) in the same coordinate reference system.
     res : float
-        Mesh resolution for generated surface in m.
-    chunksize : int
-        Specify the number of rows in each batch to be written at a time. By default, all rows will be written at once.
-        See https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.to_sql.html
-
+        Resolution of the output raster in m.
+    resampling : rasterio.enums.Resampling
+        Resampling method. See https://rasterio.readthedocs.io/en/latest/api/rasterio.enums.html#rasterio.enums.Resampling
+    
     Returns
     -------
-
+    merged : numpy.ndarray
+        Merged raster.
+    transform : affine.Affine
+        Affine transformation matrix.
     """
-    if os.path.exists(out_path):
-        os.remove(out_path)
-    t = min([aerial.bounds.top, dsm.bounds.top])
-    r = min([aerial.bounds.right, dsm.bounds.right])
-    b = max([aerial.bounds.bottom, dsm.bounds.bottom])
-    l = max([aerial.bounds.left, dsm.bounds.left])
-    aerial2, transform_a = merge([aerial], bounds=[l,b,r,t], res=res, resampling=Resampling.cubic_spline)
-    dsm2, transform_d = merge([dsm], bounds=[l,b,r,t], res=res, resampling=Resampling.cubic_spline)
+    if bounds is None:
+        bounds = aerial.bounds
+    aerial2, transform_a = merge([aerial], bounds=bounds, res=res, resampling=resampling)
+    dsm2, transform_d = merge([dsm], bounds=bounds, res=res, resampling=resampling)
     aerial2[np.isnan(aerial2)] = 0
     dsm2[np.isnan(dsm2)] = 0
     if transform_a == transform_d:
         transform = transform_a
     else:
         print("error in merging aerial photo and DSM")
+    return aerial2, dsm2, transform
+
+def get_colored_surface(aerial, dsm, shooting_point, distance=2000, res=1.0, resampling=Resampling.cubic_spline, fill_dsm_dist=300):
+    """
+    Get colored surface.
     
-    # xyz
-    x = np.arange(0, dsm2.shape[2]) * transform[0] + transform[2]
-    y = np.arange(0, dsm2.shape[1]) * transform[4] + transform[5]
+    Parameters
+    ----------
+    aerial : rasterio.DatasetReader
+        An aerial photograph opend by rasterio.open(), should be in a CRS that has units of meters, and have values of 0-255.
+    dsm : rasterio.DatasetReader
+        A Digital SurfaceModel opend by rasterio.open(), should be in the same CRS as the aerial.
+    shooting_point : dict
+        Shooting point. Must contain keys "x" and "y". Should be in the same coordinate reference system as the DSM.
+    distance : float default 3000
+        Distance from shooting point to the edge of the rectangle.
+    res : float default 1.0
+        Resolution of the output raster in m.
+    resampling : rasterio.enums.Resampling default Resampling.cubic_spline
+        Resampling method. See https://rasterio.readthedocs.io/en/latest/api/rasterio.enums.html#rasterio.enums.Resampling
+    fill_dsm_dist : float default 300
+        Distance in m for filling nodata in DSM.
+
+    Returns
+    -------
+    vert : numpy.ndarray
+        Vertex coordinates.
+    col : numpy.ndarray
+        Vertex color.
+    ind : numpy.ndarray
+        Index for each triangle.
+    offset : numpy.ndarray
+        Offset for vertex coordinates. You need to add this to vert to get the correct coordinates.
+    """
+    bounds = _get_bounds(shooting_point, distance=distance)
+    window_dsm = _get_window(dsm, shooting_point, distance=distance)
+    window_aerial = _get_window(aerial, shooting_point, distance=distance)
+
+    with MemoryFile() as memfile:
+        with memfile.open(driver="GTiff", width=window_dsm.width, height=window_dsm.height, count=1, dtype=dsm.dtypes[0], crs=dsm.crs, transform=dsm.window_transform(window_dsm)) as dst:
+            dst.write(dsm.read(window=window_dsm))
+        dsm2 = memfile.open()
+        dsm_max_height = dsm2.read().max()
+    with MemoryFile() as memfile:
+        with memfile.open(driver="GTiff", width=window_aerial.width, height=window_aerial.height, count=3, dtype=aerial.dtypes[0], crs=aerial.crs, transform=aerial.window_transform(window_aerial)) as dst:
+            dst.write(aerial.read(window=window_aerial))
+        aerial2 = memfile.open()
+    
+    
+    with MemoryFile() as dsm_memfile, MemoryFile() as aerial_memfile:
+        with dsm_memfile.open(driver="GTiff", width=window_dsm.width, height=window_dsm.height, count=1, dtype=dsm.dtypes[0], crs=dsm.crs, transform=dsm.window_transform(window_dsm)) as dst:
+            dst.write(dsm.read(window=window_dsm))
+        dsm2 = dsm_memfile.open()
+        dsm_max_height = dsm2.read().max()
+        with aerial_memfile.open(driver="GTiff", width=window_aerial.width, height=window_aerial.height, count=3, dtype=aerial.dtypes[0], crs=aerial.crs, transform=aerial.window_transform(window_aerial)) as dst:
+            dst.write(aerial.read(window=window_aerial))
+        aerial2 = aerial_memfile.open()
+        aerial2, dsm2, transform = _merge_rasters(aerial2, dsm2, res=res, resampling=resampling)
+    
+    dsm_mask = dsm2 > 0
+    dsm2 = fillnodata(dsm2, dsm_mask, max_search_distance=math.ceil(fill_dsm_dist*res))
+    if dsm2.min() < 0:
+        warnings.warn("DSM still has negative elevation values. Consider using a larger fill_dsm_dist. Negative values will be filled with 0.")
+    dsm2[dsm2 < 0] = 0
+    dsm2[dsm2 > dsm_max_height] = dsm_max_height
+    # Get colored surface
+    # Coordinates
+    x = np.arange(0, dsm2.shape[2])  * transform[0] + transform[2]
+    y = np.arange(0, dsm2.shape[1])  * transform[4] + transform[5]
     xx, yy = np.meshgrid(x, y)
     w = xx.shape[0]
     h = xx.shape[1]
@@ -60,105 +170,21 @@ def create_db(aerial, dsm, out_path, res=1.0, chunksize=10000):
     R = aerial2[0,:,:]
     G = aerial2[1,:,:]
     B = aerial2[2,:,:]
-    vertices = np.vstack((xx,yy,zz,R,G,B)).reshape([6, -1])
-    vertices = np.vstack((vertices, np.squeeze(np.arange(0, vertices.shape[1], 1, np.int32)))).transpose()
-    del(x, y, xx, yy, zz, R, G, B, dsm2, aerial2)
-    # save point cloud data as SQLite3 Data Base
-    columns = ["x","y","z","r","g","b","id"]
-    df = pd.DataFrame(data=vertices, columns=columns, dtype="float64")
-    df[["r","g","b"]] = df[["r","g","b"]].astype("uint8")
-    df["id"] = df["id"].astype("uint32")
-    conn = sqlite3.connect(out_path)
-    dtypes = {"id":"Integer", "x":"Float", "y":"Float", "z":"Float","r":"Integer", "g":"Integer", "b":"Integer"}
-    df.to_sql('vertices',conn,if_exists='replace',index=None, chunksize=chunksize, dtype = dtypes, method = None)
-    del(vertices, df)
-    # indices of vertices in each triangle
-    ai = np.arange(0, w)
-    aj = np.arange(0, h)
+    vert = np.vstack((xx,zz,yy)).reshape([3, -1])
+    vert = np.transpose(vert)
+    col = np.vstack((R,G,B)).reshape([3, -1]) / 255
+    col[col>1] = 1
+    col[col<0] = 0
+    col = np.transpose(col)
+    # Vertex index for each triangle
+    ai = np.arange(0, w-1)
+    aj = np.arange(0, h-1)
     aii, ajj = np.meshgrid(ai, aj)
     a = aii + ajj * h
     a = a.flatten()
-    tria = np.vstack((a, a + h, a + h + 1, a, a + h + 1, a + 1))
-    tria = np.transpose(tria).reshape([-1, 3])
-    del(aj, ai, aii, ajj, a)
-    
-    # write down into the sqlite
-    columns = ["v1", "v2", "v3"]
-    df = pd.DataFrame(data=tria, columns=columns, dtype="uint32")
-    del(tria)
-    df.to_sql('indices',conn,if_exists='replace',index=None, chunksize=chunksize, dtype="Integer")
-    del(df)
-    conn.close()
-
-def crop(conn, params, distance=3000, chunksize=100000):
-    """
-    Crops the given surface in circle.
-    
-    Parameters
-    ----------
-    conn : str
-        Path to the SQLite3 database of a colored surface generated with alproj.surface.create_db().
-    params : dict
-        Camera parameters.
-    distance : float default 3000
-        Radius of the circle in m.
-    chunksize : int default 100000
-        Specify the number of rows in each batch to be written at a time. By default, all rows will be written at once.
-        See https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.to_sql.html
-    
-    Returns
-    -------
-    vert : numpy.ndarray
-        Coordinates of vetices (X, Z, Y).
-    col : numpy.ndarray
-        Colors of vertices (R, G, B).
-    ind : numpy.ndarray
-        Index array that shows which three poits shape a triangle. See http://www.opengl-tutorial.org/intermediate-tutorials/tutorial-9-vbo-indexing/ .
-    """
-    # filter and collect vertices
-    p = params.copy()
-    p["x"] = p["y"] = p["z"] = p["pan"] = 0
-
-    params = {"x":str(params["x"]),"y":str(params["y"])}
-    csr = conn.cursor()
-    conn.create_function("POWER", 2, math.pow)
-    csr.execute("SELECT * \
-    FROM (SELECT `id`, `x`, `y`, `z`, `r`, `g`, `b` \
-    FROM (SELECT * \
-    FROM `vertices`)) \
-    WHERE ((POWER((`x` - " + params["x"] + "), 2.0) + POWER((`y` - " + params["y"] +"), 2.0) < POWER("+ str(distance) + ", 2.0)) \
-        AND (POWER((`x` - " + params["x"] + "), 2.0) + POWER((`y` - " + params["y"] +"), 2.0) > 0.0)) )) \
-    WHERE (((`x`) IS NULL) = 0 AND ((`y`) IS NULL) = 0 AND ((`z`) IS NULL) = 0 AND ((`r`) IS NULL) = 0 AND ((`g`) IS NULL) = 0 AND ((`b`) IS NULL) = 0)") 
-    
-    vert = dt.Frame(np.array(csr.fetchall()), names = ["id","x","y","z","r","g","b"])
-    # collect all indices
-    nrow = conn.execute("SELECT count(*) FROM indices").fetchall()[0][0]
-    csr = conn.cursor()
-    csr.execute("select * from indices")
-    ind_full = np.array([])
-    for i in range(math.ceil(nrow / chunksize)):
-        if i == math.ceil(nrow / chunksize) - 1:
-            chunksize = nrow - (chunksize * (i-1))
-        x = csr.fetchmany(chunksize)
-        ind_full = np.append(ind_full, x)
-    ind_full = ind_full.reshape([-1,3]).astype(np.int64)
-    ind_full = dt.Frame(ind_full, names = ["v1", "v2", "v3"])
-    id_ind = dt.Frame(np.vstack((np.arange(0,vert.nrows,1), vert["id"].to_numpy().squeeze())).astype("int64").transpose(), names = ["ind","id"])
-    
-    id_ind.names = ["ind", "v1"]
-    id_ind.key="v1"
-    ind = ind_full[:, :, dt.join(id_ind)]
-    
-    id_ind.names = ["v2", "ind"]
-    id_ind.key = "v2"
-    ind = ind[:, :, dt.join(id_ind)]
-    
-    id_ind.names = ["v3", "ind"]
-    id_ind.key="v3"
-    ind = ind[:, :, dt.join(id_ind)]
-    
-    ind = ind[dt.rowall(dt.math.isna(dt.f[:])==False), ["ind", "ind.0", "ind.1"]]
-    col = vert[:,["r", "g", "b"]].to_numpy() / 255
-    vert = vert[:, ["x", "z", "y"]].to_numpy() # in opengl, z is near-far axis
-    ind = ind.to_numpy()
-    return vert, col, ind # vertex coordinates, vertex color, index
+    ind = np.vstack((a, a + h, a + h + 1, a, a + h + 1, a + 1))
+    ind = np.transpose(ind).reshape([-1, 3])
+    assert ind.max() <= (vert.shape[0] - 1)
+    assert vert.shape == col.shape
+    offsets = vert.min(axis=0)
+    return vert-offsets, col, ind, offsets # vertex coordinates, vertex color, index for each triangle, offset

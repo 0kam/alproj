@@ -1,3 +1,6 @@
 devel_data/
 src/alproj/run.py
-devel.py
+devel*.py
+*copy.py
+__pycache__/
+.venv
