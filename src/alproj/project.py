@@ -5,7 +5,7 @@ import cv2
 import pandas as pd
 import warnings
 import copy
-from src.alproj.optimize import _distort
+from alproj.optimize import _distort
 
 def projection_mat(fov_x_deg, w, h, near=-1, far=1, cx=None, cy=None):
     """

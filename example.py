@@ -1,7 +1,7 @@
-from src.alproj.surface import get_colored_surface
-from src.alproj.project import sim_image, reverse_proj
-from src.alproj.gcp import akaze_match, set_gcp
-from src.alproj.optimize import CMAOptimizer
+from alproj.surface import get_colored_surface
+from alproj.project import sim_image, reverse_proj
+from alproj.gcp import akaze_match, set_gcp
+from alproj.optimize import CMAOptimizer
 import rasterio
 
 res = 1.0 # resolution in m
