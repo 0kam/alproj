@@ -4,6 +4,8 @@ import math
 import cv2
 import pandas as pd
 import warnings
+import copy
+from src.alproj.optimize import _distort
 
 def projection_mat(fov_x_deg, w, h, near=-1, far=1, cx=None, cy=None):
     """
@@ -103,6 +105,39 @@ def modelview_mat(pan_deg, tilt_deg, roll_deg, t_x, t_y, t_z):
     ])
     return np.dot(rmat, tmat).transpose().flatten()
 
+def distort(img: np.array, distort_coeffs: np.array):
+    """
+    Distorts an image with given distortion coefficients.
+
+    Parameters
+    ----------
+    img : numpy.ndarray, shape (height, width, channels)
+        An image to be distorted.
+    distort_coeffs : np.array, shape (14,)
+        Distortion coefficients. The order of the coefficients must be:
+        a1, a2, k1, k2, k3, k4, k5, k6, p1, p2, s1, s2, s3, s4.
+    
+    Returns
+    -------
+    img_distorted : numpy.ndarray
+        Distorted image.
+    """
+    width = img.shape[1]
+    height = img.shape[0]
+    map_x, map_y  = np.meshgrid(np.arange(width), np.arange(height))
+    grid = np.stack([map_x.flatten(), map_y.flatten()]).T
+    distort_coeffs = distort_coeffs
+    d = copy.copy(distort_coeffs)
+    grid_d = _distort(
+        grid, width, height, 
+        1/d[0], 1/d[1], -d[2], -d[3], -d[4], -d[5], -d[6], -d[7],
+        -d[8], -d[9], -d[10], -d[11], -d[12], -d[13]
+    )
+
+    map_d = grid_d.T.reshape([2, height, width]).astype('float32')
+    img_distorted = cv2.remap(img, map_d[0,:,:], map_d[1,:,:], interpolation = cv2.INTER_NEAREST)
+    
+    return img_distorted
 
 def persp_proj(vert, value, ind, params, offsets=None):
     """
@@ -173,6 +208,7 @@ def persp_proj(vert, value, ind, params, offsets=None):
     ibo = ctx.buffer(ind.astype("i4").tobytes()) #vertex indecies of each triangles
     prog = ctx.program(
         vertex_shader='''
+        // Vertex shader DONOT consider lens distortion
             #version 330
             precision highp float;
             in vec3 in_vert;
@@ -182,50 +218,11 @@ def persp_proj(vert, value, ind, params, offsets=None):
             // the real values will be later set by CPU
             uniform mat4 proj; // projection matrix
             uniform mat4 view; // model view matrix
-            uniform float dist_coeffs[14]; // distortion coefficients 
-            // distortion coefficients of customized OpenCV model a1, a2, k1~k6, p1, p2, s1~s4
-            
-            vec4 distort(vec4 view_pos){
-                // normalize
-                //float z =  max(view_pos.z, 1.0);
-                
-                float w = view_pos.w;
-                float x1 = view_pos.x / w;
-                float y1 = view_pos.y / w;
-                
-                // precalculations
-                float x1_2 = x1*x1;
-                float y1_2 = y1*y1;
-
-                //if ((x1_2 > 1.0) || (y1_2 > 1.0) ) {
-                //    return view_pos;
-                //}
-
-                float x1_y1 = x1*y1;
-                float r2 = x1_2 + y1_2;
-                float r4 = r2*r2;
-                float r6 = r4*r2;
-                
-                // radial distortion factor
-                float r_dist_x = (1.0+dist_coeffs[2]*r2+dist_coeffs[3]*r4+dist_coeffs[4]*r6) 
-                                /(1.0+dist_coeffs[5]*r2+dist_coeffs[6]*r4+dist_coeffs[7]*r6); 
-                float r_dist_y = (1.0+dist_coeffs[0]+dist_coeffs[2]*r2+dist_coeffs[3]*r4+dist_coeffs[4]*r6)  //dist_coeffs[0] = a1
-                                /(1.0+dist_coeffs[1]+dist_coeffs[5]*r2+dist_coeffs[6]*r4+dist_coeffs[7]*r6); //dist_coeffs[1] = a2
-                                
-                // full (radial + tangential + skew) distortion
-                float x2 = x1*r_dist_x + 2*dist_coeffs[8]*x1_y1 + dist_coeffs[9]*(r2 + 2*x1_2) + dist_coeffs[10]*r2 + dist_coeffs[11]*r4;
-                float y2 = y1*r_dist_y + 2*dist_coeffs[9]*x1_y1 + dist_coeffs[8]*(r2 + 2*y1_2) + dist_coeffs[12]*r2 + dist_coeffs[13]*r4;
-                
-                // denormalize for projection (which is a linear operation)
-                return vec4(x2*w, y2*w, view_pos.z, view_pos.w);
-            }
             
             void main() {
                 vec4 local_pos = vec4(in_vert, 1.0);
                 vec4 view_pos = vec4(view * local_pos);
-                vec4 proj_pos = vec4(proj * view_pos);
-                gl_Position = distort(proj_pos);
-                // gl_Position = vec4(proj * dist_pos);
+                gl_Position = vec4(proj * view_pos);
                 v_color = in_color;
             }
         ''',
@@ -233,6 +230,7 @@ def persp_proj(vert, value, ind, params, offsets=None):
             #version 330
             precision highp float;
             in vec3 v_color;
+
             layout(location=0)out vec4 f_color;
             void main() {
                 f_color = vec4(v_color, 1.0); // 1,0 added is alpha
@@ -243,12 +241,11 @@ def persp_proj(vert, value, ind, params, offsets=None):
     # set some "uniform" values in prog
     proj_mat = projection_mat(params["fov"], params["w"], params["h"])
     view_mat = modelview_mat(params["pan"], params["tilt"], params["roll"], params["x"], params["y"], params["z"])
-    dist_coeff = (params["a1"], params["a2"], params["k1"], params["k2"], params["k3"], params["k4"], params["k5"], params["k6"], \
-        params["p1"], params["p2"], params["s1"], params["s2"], params["s3"], params["s4"])
+    dist_coeff = np.array([params["a1"], params["a2"], params["k1"], params["k2"], params["k3"], params["k4"], params["k5"], params["k6"], \
+        params["p1"], params["p2"], params["s1"], params["s2"], params["s3"], params["s4"]])
     
     prog['proj'].value = tuple(proj_mat)
     prog['view'].value = tuple(view_mat)
-    prog['dist_coeffs'].value = dist_coeff
     #  pass the vertex, color, index info to the shader
     vao_content = [(vbo, "3f", "in_vert"), (cbo, "3f", "in_color")]
     vao = ctx.vertex_array(program = prog, content = vao_content, index_buffer = ibo)
@@ -276,7 +273,9 @@ def persp_proj(vert, value, ind, params, offsets=None):
     ibo.release()
     prog.release()
     del(vao_content, vert, value, ind)
-    return raw
+    raw_distorted = distort(raw, dist_coeff)
+
+    return raw_distorted
 
 def sim_image(vert, color, ind, params, offsets=None):
     """
@@ -304,7 +303,6 @@ def sim_image(vert, color, ind, params, offsets=None):
     raw = raw.astype(np.uint8)
     img = cv2.cvtColor(raw, cv2.COLOR_RGB2BGR)
     return img
-
 
 def reverse_proj(array, vert, ind, params, offsets=None, chnames=["B", "G", "R"]):
     """
@@ -350,7 +348,7 @@ def reverse_proj(array, vert, ind, params, offsets=None, chnames=["B", "G", "R"]
     df[["u", "v"]] = df[["u", "v"]].astype("int16")
     df = df[df["x"] > 0]
     if offsets is not None:
-        df["x"] = df["x"] + offsets[0]
-        df["y"] = df["y"] + offsets[2]
-        df["z"] = df["z"] + offsets[1]
+        df["x"] += offsets[0]
+        df["y"] += offsets[2]
+        df["z"] += offsets[1]
     return df
