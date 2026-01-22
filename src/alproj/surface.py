@@ -131,24 +131,13 @@ def get_colored_surface(aerial, dsm, shooting_point, distance=2000, res=1.0, res
     window_dsm = _get_window(dsm, shooting_point, distance=distance)
     window_aerial = _get_window(aerial, shooting_point, distance=distance)
 
-    with MemoryFile() as memfile:
-        with memfile.open(driver="GTiff", width=window_dsm.width, height=window_dsm.height, count=1, dtype=dsm.dtypes[0], crs=dsm.crs, transform=dsm.window_transform(window_dsm)) as dst:
-            dst.write(dsm.read(window=window_dsm))
-        dsm2 = memfile.open()
-        dsm_max_height = dsm2.read().max()
-    with MemoryFile() as memfile:
-        with memfile.open(driver="GTiff", width=window_aerial.width, height=window_aerial.height, count=3, dtype=aerial.dtypes[0], crs=aerial.crs, transform=aerial.window_transform(window_aerial)) as dst:
-            dst.write(aerial.read(window=window_aerial))
-        aerial2 = memfile.open()
-    
-    
     with MemoryFile() as dsm_memfile, MemoryFile() as aerial_memfile:
         with dsm_memfile.open(driver="GTiff", width=window_dsm.width, height=window_dsm.height, count=1, dtype=dsm.dtypes[0], crs=dsm.crs, transform=dsm.window_transform(window_dsm)) as dst:
             dst.write(dsm.read(window=window_dsm))
         dsm2 = dsm_memfile.open()
         dsm_max_height = dsm2.read().max()
         with aerial_memfile.open(driver="GTiff", width=window_aerial.width, height=window_aerial.height, count=3, dtype=aerial.dtypes[0], crs=aerial.crs, transform=aerial.window_transform(window_aerial)) as dst:
-            dst.write(aerial.read(window=window_aerial))
+            dst.write(aerial.read(window=window_aerial)[:3,:,:])
         aerial2 = aerial_memfile.open()
         aerial2, dsm2, transform = _merge_rasters(aerial2, dsm2, res=res, resampling=resampling)
     
@@ -184,7 +173,8 @@ def get_colored_surface(aerial, dsm, shooting_point, distance=2000, res=1.0, res
     a = a.flatten()
     ind = np.vstack((a, a + h, a + h + 1, a, a + h + 1, a + 1))
     ind = np.transpose(ind).reshape([-1, 3])
-    assert ind.max() <= (vert.shape[0] - 1)
+    if ind.max() <= (vert.shape[0] - 1):
+        warnings.warn("Some triangles are outside the bounds of the raster. Consider using a smaller distance.")
     assert vert.shape == col.shape
     offsets = vert.min(axis=0)
     return vert-offsets, col, ind, offsets # vertex coordinates, vertex color, index for each triangle, offset

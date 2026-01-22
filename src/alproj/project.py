@@ -200,7 +200,7 @@ def persp_proj(vert, value, ind, params, offsets=None):
         params["z"] = params["z"] - offsets[1]
     if params["fov"] > 90:
         warnings.warn("Wider FoV may cause redering fault. Please check the output image carefuly.")
-    ctx = gl.create_standalone_context()
+    ctx = gl.create_standalone_context(backend="egl")
     ctx.enable(gl.DEPTH_TEST) # enable depth testing
     ctx.enable(gl.CULL_FACE)
     vbo = ctx.buffer(vert.astype("f4").tobytes())
