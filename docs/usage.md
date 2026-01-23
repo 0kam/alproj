@@ -3,12 +3,10 @@ Here I show an example of the geo-rectification process using a photograph of [N
 
 ```python
 # Loading requirements
-from alproj.surface import create_db, crop
+from alproj.surface import get_colored_surface
 from alproj.project import sim_image, reverse_proj
 from alproj.gcp import akaze_match, set_gcp
 from alproj.optimize import CMAOptimizer
-import sqlite3
-import numpy as np
 import rasterio
 ```
 ## Data Preparation
@@ -23,34 +21,12 @@ You should prepare below before starting.
 Both the airborne photograph and the DSM must cover hole the area where the target photograph covers. 
 Both of them must be in the same planar Coordinate Reference System, e.g. Universal Transverse Mercator Coordinate System (UTM).
 
-## Setting up Pointcloud Database
-First, you should prepare a pointcloud database using the airborne photograph and the DSM.
+## Loading Raster Data
+First, load the airborne photograph and the DSM using rasterio.
 ```python
 res = 1.0 # Resolution in m
 aerial = rasterio.open("airborne.tif")
 dsm = rasterio.open("dsm.tif")
-out_path = "pointcloud.db" # Output database
-
-create_db(aerial, dsm, out_path) # This takes some minutes
-```
-An SQLite database that has two components like below will be created
-- vertices
-```
-# x, y and z stands for geographic coordinates of each point.
-# r, g and b stands for the color of each point.
-id x               y               z               r   g   b
-0  7.34942032e+05, 2.54030493e+03, 4.05319697e+06, 96, 91, 82 
-1       ...             ...              ...           ...
-...
-```
-- indices
-```
-# Each row stands for which three points form a triangle.
-v1       v2       v2
-0        3        4
-0        4        1
-        ...   
-7877845  7878552  7877846
 ```
 
 ## Define Initial Camera Parameters
@@ -77,18 +53,15 @@ params = {"x":732731,"y":4051171, "z":2458, "fov":70, "pan":100, "tilt":0, "roll
 ```
 
 ## Rendering a Simulated Landscape Image
-To find a set of Ground Control Points, render a simulated landscape image with the point cloud database and the initial camera parameters.
+To find a set of Ground Control Points, render a simulated landscape image with the aerial photograph, DSM, and the initial camera parameters.
 
-First, crop the pointcroud in fan shape
+First, get colored surface from aerial photograph and DSM.
 ```python
-conn = sqlite3.connect("pointcloud.db")
+distance = 3000 # Distance from shooting point in meters
 
-distance = 3000 # The radius of the fan shape
-chunksize = 1000000
-
-vert, col, ind = crop(conn, params, distance, chunksize) # This takes some minutes.
+vert, col, ind, offsets = get_colored_surface(aerial, dsm, shooting_point=params, distance=distance) # This takes some minutes.
 ```
-Then you'll get three `np.array`s looks like below.
+Then you'll get four `np.array`s looks like below.
 - vert  
   
   Vertex coordinates of each point. In x, z, y order.
@@ -128,17 +101,24 @@ Then you'll get three `np.array`s looks like below.
        [7877845, 7878551, 7878552],
        [7877845, 7878552, 7877846]], dtype=int64)
     ```
+- offsets
+
+  Offset values for vertex coordinates. You need to pass this to `sim_image` and `reverse_proj`.
+  ```
+  >>> offsets
+  array([7.31942032e+05, 2.15609204e+03, 4.04854197e+06])
+  ```
 Next, render a simulated landscape image.
 ```python
 import cv2
-sim = sim_image(vert, col, ind, params)
+sim = sim_image(vert, col, ind, params, offsets)
 cv2.imwrite("devel_data/initial.png", sim)
 ```
 ![](_static/initial.png)
 
 Every pixel in this image has geographic coordinates. Then you can get a table of image coordinates and geographic coordinates of it.
 ```python
-df = reverse_proj(sim, vert, ind, params)
+df = reverse_proj(sim, vert, ind, params, offsets)
 ```
 ```
 >>> df
@@ -214,8 +194,7 @@ params_optim, error = cma_optimizer.optimize(generation = 300, bounds = None, si
 ```
 The optimized camera parameters reproduces the target image exactly.
 ```python
-vert, col, ind = crop(conn, params_optim, 3000, 1000000)
-sim2 = sim_image(vert, col, ind, params_optim)
+sim2 = sim_image(vert, col, ind, params_optim, offsets)
 cv2.imwrite("optimized.png", sim2)
 ```
 ![](_static/optimized.png)
@@ -224,11 +203,11 @@ cv2.imwrite("optimized.png", sim2)
 You can get geographic coordinates of each pixel of the target image.
 ```python
 original = cv2.imread("ttym_2016.jpg")
-georectificated = reverse_proj(original, vert, ind, params_optim)
+georectified = reverse_proj(original, vert, ind, params_optim, offsets)
 ```
 
 ```
->>> georectificated
+>>> georectified
              u     v            x           y            z      B      G      R
 3047434   3562   542  734196.7500  4050689.00  2987.948242  176.0  160.0  148.0
 3047435   3563   542  734194.6875  4050689.25  2987.231934  171.0  155.0  143.0

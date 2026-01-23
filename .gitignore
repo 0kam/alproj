@@ -4,3 +4,4 @@ devel*.py
 *copy.py
 __pycache__/
 .venv
+.claude/
