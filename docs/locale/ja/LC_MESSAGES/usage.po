@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: alproj \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-23 12:57+0900\n"
+"POT-Creation-Date: 2026-01-23 13:08+0900\n"
 "PO-Revision-Date: 2026-01-23 11:38+0900\n"
 "Last-Translator: \n"
 "Language: ja\n"
@@ -76,118 +76,118 @@ msgstr "最適化のための初期カメラパラメータを設定します。
 
 #: ../../usage.md:35
 msgid ""
-"x, y, z A shooting point coordinate in the CRS of the aerial photograph /"
-" DSM."
-msgstr "x, y, z 航空写真/DSMの地理座標系における撮影地点の座標。"
+"x, y, z: A shooting point coordinate in the CRS of the aerial photograph "
+"/ DSM."
+msgstr "x, y, z: 航空写真/DSMの地理座標系における撮影地点の座標。"
+
+#: ../../usage.md:36
+msgid "fov: A Field of View in degree."
+msgstr "fov: 視野角（度）。"
 
 #: ../../usage.md:37
-msgid "fov<br />A Field of View in degree."
-msgstr "fov<br />視野角（度）。"
+msgid "pan, tilt, roll: A set of Euler angles of the camera in degree."
+msgstr "pan, tilt, roll: カメラのオイラー角（度）。"
+
+#: ../../usage.md:38
+msgid "a1 ~ s4: Distortion coefficients. See Algorithm for detail."
+msgstr "a1 ~ s4: 歪み係数。詳細はアルゴリズムを参照。"
 
 #: ../../usage.md:39
-msgid "pan, tilt, roll<br />A set of Euler angles of the camera in degree."
-msgstr "pan, tilt, roll<br />カメラのオイラー角（度）。"
+msgid "w, h: The width and height of the target image in pixel."
+msgstr "w, h: 対象画像の幅と高さ（ピクセル）。"
 
-#: ../../usage.md:41
-msgid "a1 ~ s4<br />Distortion coefficients. See Algorithm for detail."
-msgstr "a1 ~ s4<br />歪み係数。詳細はアルゴリズムを参照。"
+#: ../../usage.md:40
+msgid "cx, cy: A coordinate of the principal point in pixel."
+msgstr "cx, cy: 主点の座標（ピクセル）。"
 
-#: ../../usage.md:43
-msgid "w, h<br />The width and height of the target image in pixel."
-msgstr "w, h<br />対象画像の幅と高さ（ピクセル）。"
-
-#: ../../usage.md:45
-msgid "cx, cy<br />A coordinate of the principal point in pixel."
-msgstr "cx, cy<br />主点の座標（ピクセル）。"
-
-#: ../../usage.md:55
+#: ../../usage.md:49
 msgid "Rendering a Simulated Landscape Image"
 msgstr "シミュレーション景観画像のレンダリング"
 
-#: ../../usage.md:56
+#: ../../usage.md:50
 msgid ""
 "To find a set of Ground Control Points, render a simulated landscape "
 "image with the aerial photograph, DSM, and the initial camera parameters."
 msgstr "地上基準点を見つけるために、航空写真、DSM、初期カメラパラメータを使用してシミュレーション景観画像をレンダリングします。"
 
-#: ../../usage.md:58
+#: ../../usage.md:52
 msgid "First, get colored surface from aerial photograph and DSM."
 msgstr "まず、航空写真とDSMから色付きサーフェスを取得します。"
 
-#: ../../usage.md:64
+#: ../../usage.md:58
 msgid "Then you'll get four np.arrays looks like below."
 msgstr "以下のような4つのnp.arrayが得られます。"
 
-#: ../../usage.md:65
+#: ../../usage.md:59
 msgid "vert"
 msgstr "vert"
 
-#: ../../usage.md:67
+#: ../../usage.md:61
 msgid "Vertex coordinates of each point relative to offsets. In x, z, y order."
 msgstr "オフセットからの相対的な各点の頂点座標。x, z, yの順。"
 
-#: ../../usage.md:78
+#: ../../usage.md:72
 msgid "col"
 msgstr "col"
 
-#: ../../usage.md:80
+#: ../../usage.md:74
 msgid "Vertex colors in 0 to 1."
 msgstr "0から1の範囲の頂点カラー。"
 
-#: ../../usage.md:91
+#: ../../usage.md:85
 msgid "ind"
 msgstr "ind"
 
-#: ../../usage.md:93
+#: ../../usage.md:87
 msgid "The index shows which three points form a triangle."
 msgstr "どの3点が三角形を形成するかを示すインデックス。"
 
-#: ../../usage.md:104
+#: ../../usage.md:98
 msgid "offsets"
 msgstr "offsets"
 
-#: ../../usage.md:106
+#: ../../usage.md:100
 msgid ""
 "Offset values for vertex coordinates. You need to pass this to sim_image "
 "and reverse_proj."
 msgstr "頂点座標のオフセット値。sim_imageとreverse_projに渡す必要があります。"
 
-#: ../../usage.md:111
+#: ../../usage.md:105
 msgid "Next, render a simulated landscape image."
 msgstr "次に、シミュレーション景観画像をレンダリングします。"
 
-#: ../../usage.md:119
+#: ../../usage.md:113
 msgid ""
 "Every pixel in this image has geographic coordinates. Then you can get a "
 "table of image coordinates and geographic coordinates of it."
 msgstr "この画像の各ピクセルは地理座標を持っています。画像座標と地理座標のテーブルを取得できます。"
 
-#: ../../usage.md:141
+#: ../../usage.md:135
 msgid "Finding Ground Contorol Points"
 msgstr "地上基準点の検出"
 
-#: ../../usage.md:142
+#: ../../usage.md:136
 msgid ""
 "Then, you can add some Ground Contorol Points (GCPs) in the target image "
 "by matching target image and simulated image. AKAZE local features and "
 "FLANN matcher is available."
 msgstr "対象画像とシミュレーション画像をマッチングすることで、対象画像に地上基準点（GCP）を追加できます。AKAZE局所特徴量とFLANNマッチャーが利用可能です。"
 
-#: ../../usage.md:153
+#: ../../usage.md:147
 msgid "Matching result."
 msgstr "マッチング結果。"
 
-#: ../../usage.md:170
+#: ../../usage.md:164
 msgid ""
 "Where u and v stands for the x and y axis coordinates in the image "
 "coordinate system."
 msgstr "uとvは画像座標系におけるx軸とy軸の座標を表します。"
 
-#: ../../usage.md:172
+#: ../../usage.md:166
 msgid "Optimization of Camera Parameters"
 msgstr "カメラパラメータの最適化"
 
-#: ../../usage.md:173
+#: ../../usage.md:167
 msgid ""
 "Finally, optimizing camera parameters using GCPs. Camera parameters are "
 "optimized by minimizing reproection errors with a CMA-ES optimizer.<br "
@@ -196,15 +196,15 @@ msgstr ""
 "最後に、GCPを使用してカメラパラメータを最適化します。カメラパラメータはCMA-"
 "ES最適化器を使用して再投影誤差を最小化することで最適化されます。<br />最適化するパラメータを指定できます。"
 
-#: ../../usage.md:195
+#: ../../usage.md:189
 msgid "The optimized camera parameters reproduces the target image exactly."
 msgstr "最適化されたカメラパラメータは対象画像を正確に再現します。"
 
-#: ../../usage.md:203
+#: ../../usage.md:197
 msgid "You can get geographic coordinates of each pixel of the target image."
 msgstr "対象画像の各ピクセルの地理座標を取得できます。"
 
-#: ../../usage.md:228
+#: ../../usage.md:222
 msgid ""
 "You can also visualize the results with GIS tools. Here, I show an "
 "example using R's sf, stars, and terra package. Since the output of "
@@ -212,7 +212,7 @@ msgid ""
 "raterization and interpolation to make it an orthoimage."
 msgstr "結果はGISツールで可視化することもできます。ここでは、Rのsf、stars、terraパッケージを使用した例を示します。alprojの出力は上記のような点データであるため、以下のRスクリプトはラスタライズと補間を行いオルソ画像を作成します。"
 
-#: ../../usage.md:283
+#: ../../usage.md:277
 msgid "Result Plot"
 msgstr "結果プロット"
 
