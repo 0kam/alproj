@@ -82,10 +82,10 @@ msgstr ""
 
 #: ../../usage.md:35
 msgid ""
-"x, y, z<br />A shooting point coordinate in the CRS of the point cloud "
-"database."
+"x, y, z<br />A shooting point coordinate in the CRS of the aerial "
+"photograph / DSM."
 msgstr ""
-"x, y, z<br />点群データベースの座標系における撮影地点の座標。"
+"x, y, z<br />航空写真/DSMの地理座標系における撮影地点の座標。"
 
 #: ../../usage.md:37
 msgid "fov<br />A Field of View in degree."

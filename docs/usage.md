@@ -32,8 +32,8 @@ dsm = rasterio.open("dsm.tif")
 ## Define Initial Camera Parameters
 Setting initial camera parameters for optimization.
 Note that `alproj` does NOT support the estimation of camera location now.
-- x, y, z  
-A shooting point coordinate in the CRS of the point cloud database.
+- x, y, z
+A shooting point coordinate in the CRS of the aerial photograph / DSM.
 - fov  
   A Field of View in degree.
 - pan, tilt, roll  
