@@ -62,18 +62,18 @@ distance = 3000 # Distance from shooting point in meters
 vert, col, ind, offsets = get_colored_surface(aerial, dsm, shooting_point=params, distance=distance) # This takes some minutes.
 ```
 Then you'll get four `np.array`s looks like below.
-- vert  
-  
-  Vertex coordinates of each point. In x, z, y order.
+- vert
+
+  Vertex coordinates of each point relative to offsets. In x, z, y order.
   ```
   >>> vert
-  array([[7.34942032e+05, 2.54030493e+03, 4.05319697e+06],
-       [7.34943032e+05, 2.53846924e+03, 4.05319697e+06],
-       [7.34941032e+05, 2.54056641e+03, 4.05319597e+06],
+  array([[3.00000000e+03, 3.84212890e+02, 4.65500000e+03],
+       [3.00100000e+03, 3.82377200e+02, 4.65500000e+03],
+       [2.99900000e+03, 3.84474370e+02, 4.65400000e+03],
        ...,
-       [7.34174032e+05, 2.15709058e+03, 4.04854197e+06],
-       [7.34175032e+05, 2.15659692e+03, 4.04854197e+06],
-       [7.34176032e+05, 2.15609204e+03, 4.04854197e+06]])
+       [2.23200000e+03, 9.98540000e-01, 0.00000000e+00],
+       [2.23300000e+03, 5.04880000e-01, 0.00000000e+00],
+       [2.23400000e+03, 0.00000000e+00, 0.00000000e+00]])
   ```
 - col  
   
