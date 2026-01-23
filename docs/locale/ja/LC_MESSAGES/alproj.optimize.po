@@ -1,0 +1,238 @@
+# Japanese translations for alproj package.
+# Copyright (C) 2021, Ryotaro Okamoto
+# This file is distributed under the same license as the alproj package.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: alproj \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-23 11:38+0900\n"
+"PO-Revision-Date: 2026-01-23 11:38+0900\n"
+"Last-Translator: \n"
+"Language: ja\n"
+"Language-Team: ja <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../alproj.optimize.rst:2
+msgid "alproj.optimize module"
+msgstr "alproj.optimize モジュール"
+
+#: alproj.optimize.CMAOptimizer:1 of
+msgid ""
+"Camera parameter optimizer using Covariance Matrix Adaptation Evolution "
+"Strategy (CMA-ES). See https://pypi.org/project/cmaes/ . You can select "
+"which parameters to be optimized. The camera location (x, y, z) must be "
+"fixed (not optimizable)."
+msgstr ""
+"共分散行列適応進化戦略（CMA-ES）を使用したカメラパラメータ最適化器。"
+"https://pypi.org/project/cmaes/ を参照。最適化するパラメータを選択できます。"
+"カメラ位置（x, y, z）は固定する必要があります（最適化不可）。"
+
+#: alproj.optimize.CMAOptimizer:8 of
+msgid ""
+"Geographic coordinates of the Ground Control Points. The column names "
+"must be x,y,z. See alproj.gcp.set_gcp()"
+msgstr ""
+"地上基準点の地理座標。列名はx,y,zである必要があります。"
+"alproj.gcp.set_gcp() を参照"
+
+#: alproj.optimize.CMAOptimizer of
+msgid "type"
+msgstr "型"
+
+#: alproj.optimize.CMAOptimizer:11 alproj.optimize.CMAOptimizer:18 of
+msgid "pandas.DataFrame"
+msgstr "pandas.DataFrame"
+
+#: alproj.optimize.CMAOptimizer:15 of
+msgid ""
+"Image coordinates of the Ground Control Points. The column names must be "
+"u, v. See alproj.gcp.set_gcp()"
+msgstr ""
+"地上基準点の画像座標。列名はu, vである必要があります。"
+"alproj.gcp.set_gcp() を参照"
+
+#: alproj.optimize.CMAOptimizer:22 of
+msgid "Initial values of camera parameters."
+msgstr "カメラパラメータの初期値"
+
+#: alproj.optimize.CMAOptimizer:24 of
+msgid "dict"
+msgstr "dict"
+
+#: alproj.optimize.CMAOptimizer.optimize:1 of
+msgid ""
+"CMA-optimization of camera parameters. See "
+"https://github.com/CyberAgent/cmaes/blob/main/cmaes/_cma.py ."
+msgstr ""
+"カメラパラメータのCMA最適化。"
+"https://github.com/CyberAgent/cmaes/blob/main/cmaes/_cma.py を参照"
+
+#: ../../alproj.optimize.rst
+msgid "Parameters"
+msgstr "パラメータ"
+
+#: alproj.optimize.CMAOptimizer.optimize:4 of
+msgid "Initial standard deviation of covariance matrix."
+msgstr "共分散行列の初期標準偏差"
+
+#: alproj.optimize.CMAOptimizer.optimize:6 of
+msgid ""
+"Lower and upper domain boundaries for each parameter (optional). The "
+"shape must be (len(target_params), 2). If None, bounds will be "
+"automatically set +-45 degree for fov, pan, tilt, roll and -1 to 1 for "
+"radial distortion coefficients, -0.2 to 0.2 for other distortion "
+"coefficients. Note that large absolute values of distortion coefficients "
+"may cause broken projection."
+msgstr ""
+"各パラメータの下限と上限（オプション）。形状は(len(target_params), 2)である"
+"必要があります。Noneの場合、fov, pan, tilt, rollは±45度、放射歪み係数は"
+"-1から1、その他の歪み係数は-0.2から0.2に自動設定されます。歪み係数の絶対値が"
+"大きいと投影が崩れる可能性があります。"
+
+#: alproj.optimize.CMAOptimizer.optimize:11 of
+msgid "Generation numbers to run."
+msgstr "実行する世代数"
+
+#: alproj.optimize.CMAOptimizer.optimize:13 of
+msgid "Population size."
+msgstr "集団サイズ"
+
+#: alproj.optimize.CMAOptimizer.optimize:15 of
+msgid ""
+"A maximum number of resampling parameters (default: 100). If all sampled "
+"parameters are infeasible, the last sampled one will be clipped with "
+"lower and upper bounds."
+msgstr ""
+"パラメータ再サンプリングの最大回数（デフォルト: 100）。サンプリングされた"
+"すべてのパラメータが実行不可能な場合、最後にサンプリングされたものが"
+"上下限でクリップされます。"
+
+#: ../../alproj.optimize.rst
+msgid "Returns"
+msgstr "戻り値"
+
+#: alproj.optimize.CMAOptimizer.optimize:20 of
+msgid ""
+"* **params** (*dict*) -- Optimized camera parameters. * **error** "
+"(*float*) -- A reprojection error in pixel."
+msgstr ""
+"* **params** (*dict*) -- 最適化されたカメラパラメータ "
+"* **error** (*float*) -- 再投影誤差（ピクセル）"
+
+#: alproj.optimize.CMAOptimizer.optimize:20 of
+msgid "**params** (*dict*) -- Optimized camera parameters."
+msgstr "**params** (*dict*) -- 最適化されたカメラパラメータ"
+
+#: alproj.optimize.CMAOptimizer.optimize:21 of
+msgid "**error** (*float*) -- A reprojection error in pixel."
+msgstr "**error** (*float*) -- 再投影誤差（ピクセル）"
+
+#: alproj.optimize.CMAOptimizer.set_target:1 of
+msgid "Set which parameters to be optimized."
+msgstr "最適化するパラメータを設定"
+
+#: alproj.optimize.CMAOptimizer.set_target:3 of
+msgid "Parameters to be optimized. You can not select x, y, and z."
+msgstr "最適化するパラメータ。x, y, zは選択できません。"
+
+#: alproj.optimize.extrinsic_mat:1 of
+msgid ""
+"Makes an extrinsic camera matrix from given parameters. See "
+"https://learnopencv.com/geometry-of-image-formation/ ."
+msgstr ""
+"与えられたパラメータから外部カメラ行列を作成。"
+"https://learnopencv.com/geometry-of-image-formation/ を参照"
+
+#: alproj.optimize.extrinsic_mat:4 of
+msgid "Pan angle in degree."
+msgstr "パン角度（度）"
+
+#: alproj.optimize.extrinsic_mat:6 of
+msgid "Tilt angle in degree."
+msgstr "チルト角度（度）"
+
+#: alproj.optimize.extrinsic_mat:8 of
+msgid "Roll angle in degree."
+msgstr "ロール角度（度）"
+
+#: alproj.optimize.extrinsic_mat:10 of
+msgid "X-axis coordinate of the camera location."
+msgstr "カメラ位置のX軸座標"
+
+#: alproj.optimize.extrinsic_mat:12 of
+msgid "Y-axis coordinate of the camera location."
+msgstr "カメラ位置のY軸座標"
+
+#: alproj.optimize.extrinsic_mat:14 of
+msgid "Z-axis coordinate of the camera location."
+msgstr "カメラ位置のZ軸座標"
+
+#: alproj.optimize.extrinsic_mat:17 of
+msgid "**mat** -- Extrinsic camera matrix."
+msgstr "**mat** -- 外部カメラ行列"
+
+#: ../../alproj.optimize.rst
+msgid "Return type"
+msgstr "戻り値の型"
+
+#: alproj.optimize.intrinsic_mat:1 of
+msgid ""
+"Makes an intrinsic camera matrix (in OpenCV style) from given parameters."
+" See https://learnopencv.com/geometry-of-image-formation/ ."
+msgstr ""
+"与えられたパラメータから内部カメラ行列（OpenCV形式）を作成。"
+"https://learnopencv.com/geometry-of-image-formation/ を参照"
+
+#: alproj.optimize.intrinsic_mat:4 of
+msgid "Field of View in degree."
+msgstr "視野角（度）"
+
+#: alproj.optimize.intrinsic_mat:6 of
+msgid "Width of the image"
+msgstr "画像の幅"
+
+#: alproj.optimize.intrinsic_mat:8 of
+msgid "Height of the image"
+msgstr "画像の高さ"
+
+#: alproj.optimize.intrinsic_mat:10 of
+msgid "X-coordinate of the principal point. If None, cx = w/2."
+msgstr "主点のX座標。Noneの場合、cx = w/2"
+
+#: alproj.optimize.intrinsic_mat:12 of
+msgid "Y-coordinate of the principal point. If None, y = h/2."
+msgstr "主点のY座標。Noneの場合、y = h/2"
+
+#: alproj.optimize.intrinsic_mat:15 of
+msgid "**mat** -- Intrinsic matrix."
+msgstr "**mat** -- 内部行列"
+
+#: alproj.optimize.project:1 of
+msgid ""
+"3D to 2D Perspective projection of given points with given camera "
+"parameters."
+msgstr "与えられたカメラパラメータによる点の3Dから2Dへの透視投影"
+
+#: alproj.optimize.project:3 of
+msgid ""
+"Coordinates of the points (usually GCPs) in 3D giographic coordinate "
+"system. The column names must be x,y,z."
+msgstr ""
+"3D地理座標系における点（通常はGCP）の座標。列名はx,y,zである必要があります。"
+
+#: alproj.optimize.project:6 of
+msgid "Camera parameters. See alproj.project.persp_proj()"
+msgstr "カメラパラメータ。alproj.project.persp_proj() を参照"
+
+#: alproj.optimize.project:9 of
+msgid "**uv** -- 2D projected coordinates."
+msgstr "**uv** -- 2D投影座標"
+
+#: alproj.optimize.rmse:1 of
+msgid "Calculate Root Mean Square Error of the projection."
+msgstr "投影の二乗平均平方根誤差（RMSE）を計算"

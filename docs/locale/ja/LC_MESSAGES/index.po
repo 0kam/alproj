@@ -1,0 +1,94 @@
+# Japanese translations for alproj package.
+# Copyright (C) 2021, Ryotaro Okamoto
+# This file is distributed under the same license as the alproj package.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: alproj \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-23 11:38+0900\n"
+"PO-Revision-Date: 2026-01-23 11:38+0900\n"
+"Last-Translator: \n"
+"Language: ja\n"
+"Language-Team: ja <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../index.rst:21
+msgid "Contents:"
+msgstr "目次:"
+
+#: ../../index.rst:29
+msgid "Package Reference:"
+msgstr "パッケージリファレンス:"
+
+#: ../../index.rst:7
+msgid "Welcome to alproj's documentation!"
+msgstr "alproj ドキュメントへようこそ！"
+
+#: ../../index.rst:8
+msgid ""
+"`alproj` is a simple python package for geo-rectification of alpine "
+"landscape photographs."
+msgstr ""
+"`alproj` は山岳景観写真の幾何補正（ジオレクティフィケーション）のための"
+"シンプルな Python パッケージです。"
+
+#: ../../index.rst:10
+msgid "`alproj` has 3 steps for geo-rectification of a landscape photograph."
+msgstr "`alproj` は景観写真の幾何補正を3つのステップで行います。"
+
+#: ../../index.rst:12
+msgid ""
+"Setting Ground Control Points (GCPs) in target photographs, using "
+"simulated landscape images rendered with Digital Surface Models and "
+"airborne photographs."
+msgstr ""
+"数値表層モデル（DSM）と航空写真からレンダリングされたシミュレーション画像を"
+"使用して、対象写真に地上基準点（GCP）を設定します。"
+
+#: ../../index.rst:14
+msgid ""
+"Heuristic estimation of camera parameters including the camera angle, "
+"field of view, and lens distortions (shooting point of the photograph is "
+"required)."
+msgstr ""
+"カメラアングル、視野角、レンズ歪みを含むカメラパラメータのヒューリスティック"
+"推定を行います（写真の撮影地点が必要です）。"
+
+#: ../../index.rst:16
+msgid ""
+"Perspective reverse projection of the target photograph on Digital "
+"Surface Model, with estimated camera parameters, using OpenGL."
+msgstr ""
+"推定されたカメラパラメータを使用し、OpenGLを用いて対象写真を数値表層モデル"
+"上に逆透視投影します。"
+
+#: ../../index.rst:18
+msgid ""
+"This project aims to revive alpine landscape photographs in your photo "
+"albams, as valuable geospatial data that may reveal the unknown changes "
+"of alpine landscape, ecosystem and cryosphere!"
+msgstr ""
+"このプロジェクトは、あなたのフォトアルバムに眠る山岳景観写真を、"
+"山岳景観・生態系・雪氷圏の未知の変化を明らかにする貴重な地理空間データとして"
+"蘇らせることを目指しています！"
+
+#: ../../index.rst:39
+msgid "Indices and tables"
+msgstr "索引とテーブル"
+
+#: ../../index.rst:41
+msgid ":ref:`genindex`"
+msgstr ":ref:`genindex`"
+
+#: ../../index.rst:42
+msgid ":ref:`modindex`"
+msgstr ":ref:`modindex`"
+
+#: ../../index.rst:43
+msgid ":ref:`search`"
+msgstr ":ref:`search`"

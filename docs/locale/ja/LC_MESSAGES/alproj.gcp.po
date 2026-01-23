@@ -1,0 +1,167 @@
+# Japanese translations for alproj package.
+# Copyright (C) 2021, Ryotaro Okamoto
+# This file is distributed under the same license as the alproj package.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: alproj \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-23 11:38+0900\n"
+"PO-Revision-Date: 2026-01-23 11:38+0900\n"
+"Last-Translator: \n"
+"Language: ja\n"
+"Language-Team: ja <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../alproj.gcp.rst:2
+msgid "alproj.gcp module"
+msgstr "alproj.gcp モジュール"
+
+#: alproj.gcp.akaze_match:1 of
+msgid ""
+"AKAZE matching between the original (real) photograph and a simulated "
+"landscape image The work flow is shown below. - AKAZE local feature "
+"detection - FLANN matching - Find and remove outliers by homography "
+"transformation with RANSAC"
+msgstr ""
+"元の（実際の）写真とシミュレーション景観画像間のAKAZEマッチング。"
+"ワークフローは以下の通りです。- AKAZE局所特徴量検出 - FLANNマッチング "
+"- RANSACを用いたホモグラフィ変換による外れ値の検出と除去"
+
+#: ../../alproj.gcp.rst
+msgid "Parameters"
+msgstr "パラメータ"
+
+#: alproj.gcp.akaze_match:7 of
+msgid "Path for original photograph"
+msgstr "元の写真のパス"
+
+#: alproj.gcp.akaze_match:9 of
+msgid "Path for simulated landscape image"
+msgstr "シミュレーション景観画像のパス"
+
+#: alproj.gcp.akaze_match:11 of
+msgid ""
+"If the error (pixel) of homography transformation on a point pair is "
+"larger than this value, it will be removed as an outlier."
+msgstr ""
+"点ペアのホモグラフィ変換の誤差（ピクセル）がこの値より大きい場合、"
+"外れ値として除去されます。"
+
+#: alproj.gcp.akaze_match:13 of
+msgid "Whether return a result plot"
+msgstr "結果プロットを返すかどうか"
+
+#: ../../alproj.gcp.rst
+msgid "Returns"
+msgstr "戻り値"
+
+#: alproj.gcp.akaze_match:16 of
+msgid ""
+"* **points** (*pd.DataFrame*) -- The coordinates of matched points. "
+"(Left-Top origin) * **plot** (*np.array*) -- An OpenCV image of result "
+"plot."
+msgstr ""
+"* **points** (*pd.DataFrame*) -- マッチした点の座標（左上原点）"
+"* **plot** (*np.array*) -- 結果プロットのOpenCV画像"
+
+#: alproj.gcp.akaze_match:16 of
+msgid ""
+"**points** (*pd.DataFrame*) -- The coordinates of matched points. (Left-"
+"Top origin)"
+msgstr "**points** (*pd.DataFrame*) -- マッチした点の座標（左上原点）"
+
+#: alproj.gcp.akaze_match:17 of
+msgid "**plot** (*np.array*) -- An OpenCV image of result plot."
+msgstr "**plot** (*np.array*) -- 結果プロットのOpenCV画像"
+
+#: alproj.gcp.set_gcp:1 of
+msgid ""
+"Adds giographic coordinates to the matched point pairs. The result of "
+"this function will be used as the Ground Control Points (GCPs) during "
+"camera parameter estimation"
+msgstr ""
+"マッチした点ペアに地理座標を追加します。この関数の結果はカメラパラメータ推定時の"
+"地上基準点（GCP）として使用されます"
+
+#: alproj.gcp.set_gcp:5 of
+msgid "Result of alproj.gcp.akaze_match()"
+msgstr "alproj.gcp.akaze_match() の結果"
+
+#: alproj.gcp.set_gcp:7 of
+msgid "Result of alproj.project.rverse_proj"
+msgstr "alproj.project.reverse_proj の結果"
+
+#: alproj.gcp.set_gcp:10 of
+msgid ""
+"**gcp** -- A dataframe with 5 columns  u : int     x_axis coordinates of "
+"the Ground Control Points on the original photograph. Left-Top origin. v "
+": int     y_axis coordinates of the GCPs. x : float     X coordinates of "
+"GCPs in a (planer) giographic coordinate system. y : float     Y "
+"coordinates of GCPs. z : float     Z coordinates of GCPs."
+msgstr ""
+"**gcp** -- 5列のデータフレーム  u : int     元の写真上のGCPのx軸座標（左上原点）"
+"v : int     GCPのy軸座標 x : float     （平面）地理座標系におけるGCPのX座標 "
+"y : float     GCPのY座標 z : float     GCPのZ座標"
+
+#: alproj.gcp.set_gcp:10 of
+msgid "**gcp** -- A dataframe with 5 columns"
+msgstr "**gcp** -- 5列のデータフレーム"
+
+#: alproj.gcp.set_gcp:12 of
+msgid "u"
+msgstr "u"
+
+#: alproj.gcp.set_gcp:-1 of
+msgid "int"
+msgstr "int"
+
+#: alproj.gcp.set_gcp:13 of
+msgid ""
+"x_axis coordinates of the Ground Control Points on the original "
+"photograph. Left-Top origin."
+msgstr "元の写真上のGCPのx軸座標（左上原点）"
+
+#: alproj.gcp.set_gcp:14 of
+msgid "v"
+msgstr "v"
+
+#: alproj.gcp.set_gcp:15 of
+msgid "y_axis coordinates of the GCPs."
+msgstr "GCPのy軸座標"
+
+#: alproj.gcp.set_gcp:16 of
+msgid "x"
+msgstr "x"
+
+#: alproj.gcp.set_gcp:-1 of
+msgid "float"
+msgstr "float"
+
+#: alproj.gcp.set_gcp:17 of
+msgid "X coordinates of GCPs in a (planer) giographic coordinate system."
+msgstr "（平面）地理座標系におけるGCPのX座標"
+
+#: alproj.gcp.set_gcp:18 of
+msgid "y"
+msgstr "y"
+
+#: alproj.gcp.set_gcp:19 of
+msgid "Y coordinates of GCPs."
+msgstr "GCPのY座標"
+
+#: alproj.gcp.set_gcp:20 of
+msgid "z"
+msgstr "z"
+
+#: alproj.gcp.set_gcp:21 of
+msgid "Z coordinates of GCPs."
+msgstr "GCPのZ座標"
+
+#: ../../alproj.gcp.rst
+msgid "Return type"
+msgstr "戻り値の型"

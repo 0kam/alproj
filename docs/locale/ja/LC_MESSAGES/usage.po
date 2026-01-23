@@ -1,0 +1,235 @@
+# Japanese translations for alproj package.
+# Copyright (C) 2021, Ryotaro Okamoto
+# This file is distributed under the same license as the alproj package.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: alproj \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-23 11:38+0900\n"
+"PO-Revision-Date: 2026-01-23 11:38+0900\n"
+"Last-Translator: \n"
+"Language: ja\n"
+"Language-Team: ja <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../usage.md:1
+msgid "Usage"
+msgstr "使い方"
+
+#: ../../usage.md:2
+msgid ""
+"Here I show an example of the geo-rectification process using a "
+"photograph of NIES' long-term monitoring taken at Tateyama Murodo-Sanso, "
+"Toyama prefecture, Japan."
+msgstr ""
+"ここでは、富山県立山室堂山荘で撮影された国立環境研究所の長期モニタリング写真"
+"を使用した幾何補正処理の例を示します。"
+
+#: ../../usage.md:12
+msgid "Data Preparation"
+msgstr "データの準備"
+
+#: ../../usage.md:13
+msgid "You should prepare below before starting."
+msgstr "開始前に以下を準備してください。"
+
+#: ../../usage.md:14
+msgid "The target landscape photograph."
+msgstr "対象となる景観写真。"
+
+#: ../../usage.md:16
+msgid "An orthorectificated airborne photograph."
+msgstr "オルソ補正済みの航空写真。"
+
+#: ../../usage.md:18
+msgid "A Digital Surface Model."
+msgstr "数値表層モデル（DSM）。"
+
+#: ../../usage.md:21
+msgid ""
+"Both the airborne photograph and the DSM must cover hole the area where "
+"the target photograph covers. Both of them must be in the same planar "
+"Coordinate Reference System, e.g. Universal Transverse Mercator "
+"Coordinate System (UTM)."
+msgstr ""
+"航空写真とDSMは、対象写真がカバーする領域全体を含んでいる必要があります。"
+"また、両者は同じ平面座標系（例：UTM座標系）である必要があります。"
+
+#: ../../usage.md:24
+msgid "Loading Raster Data"
+msgstr "ラスターデータの読み込み"
+
+#: ../../usage.md:25
+msgid "First, load the airborne photograph and the DSM using rasterio."
+msgstr "まず、rasterioを使用して航空写真とDSMを読み込みます。"
+
+#: ../../usage.md:32
+msgid "Define Initial Camera Parameters"
+msgstr "初期カメラパラメータの定義"
+
+#: ../../usage.md:33
+msgid ""
+"Setting initial camera parameters for optimization. Note that alproj does"
+" NOT support the estimation of camera location now."
+msgstr ""
+"最適化のための初期カメラパラメータを設定します。なお、alprojは現在カメラ位置"
+"の推定には対応していません。"
+
+#: ../../usage.md:35
+msgid ""
+"x, y, z<br />A shooting point coordinate in the CRS of the point cloud "
+"database."
+msgstr ""
+"x, y, z<br />点群データベースの座標系における撮影地点の座標。"
+
+#: ../../usage.md:37
+msgid "fov<br />A Field of View in degree."
+msgstr "fov<br />視野角（度）。"
+
+#: ../../usage.md:39
+msgid "pan, tilt, roll<br />A set of Euler angles of the camera in degree."
+msgstr "pan, tilt, roll<br />カメラのオイラー角（度）。"
+
+#: ../../usage.md:41
+msgid "a1 ~ s4<br />Distortion coefficients. See Algorithm for detail."
+msgstr "a1 ~ s4<br />歪み係数。詳細はアルゴリズムを参照。"
+
+#: ../../usage.md:43
+msgid "w, h<br />The width and height of the target image in pixel."
+msgstr "w, h<br />対象画像の幅と高さ（ピクセル）。"
+
+#: ../../usage.md:45
+msgid "cx, cy<br />A coordinate of the principal point in pixel."
+msgstr "cx, cy<br />主点の座標（ピクセル）。"
+
+#: ../../usage.md:55
+msgid "Rendering a Simulated Landscape Image"
+msgstr "シミュレーション景観画像のレンダリング"
+
+#: ../../usage.md:56
+msgid ""
+"To find a set of Ground Control Points, render a simulated landscape "
+"image with the aerial photograph, DSM, and the initial camera parameters."
+msgstr ""
+"地上基準点を見つけるために、航空写真、DSM、初期カメラパラメータを使用して"
+"シミュレーション景観画像をレンダリングします。"
+
+#: ../../usage.md:58
+msgid "First, get colored surface from aerial photograph and DSM."
+msgstr "まず、航空写真とDSMから色付きサーフェスを取得します。"
+
+#: ../../usage.md:64
+msgid "Then you'll get four np.arrays looks like below."
+msgstr "以下のような4つのnp.arrayが得られます。"
+
+#: ../../usage.md:65
+msgid "vert"
+msgstr "vert"
+
+#: ../../usage.md:67
+msgid "Vertex coordinates of each point relative to offsets. In x, z, y order."
+msgstr "オフセットからの相対的な各点の頂点座標。x, z, yの順。"
+
+#: ../../usage.md:78
+msgid "col"
+msgstr "col"
+
+#: ../../usage.md:80
+msgid "Vertex colors in 0 to 1."
+msgstr "0から1の範囲の頂点カラー。"
+
+#: ../../usage.md:91
+msgid "ind"
+msgstr "ind"
+
+#: ../../usage.md:93
+msgid "The index shows which three points form a triangle."
+msgstr "どの3点が三角形を形成するかを示すインデックス。"
+
+#: ../../usage.md:104
+msgid "offsets"
+msgstr "offsets"
+
+#: ../../usage.md:106
+msgid ""
+"Offset values for vertex coordinates. You need to pass this to sim_image "
+"and reverse_proj."
+msgstr ""
+"頂点座標のオフセット値。sim_imageとreverse_projに渡す必要があります。"
+
+#: ../../usage.md:111
+msgid "Next, render a simulated landscape image."
+msgstr "次に、シミュレーション景観画像をレンダリングします。"
+
+#: ../../usage.md:119
+msgid ""
+"Every pixel in this image has geographic coordinates. Then you can get a "
+"table of image coordinates and geographic coordinates of it."
+msgstr ""
+"この画像の各ピクセルは地理座標を持っています。画像座標と地理座標のテーブルを"
+"取得できます。"
+
+#: ../../usage.md:141
+msgid "Finding Ground Contorol Points"
+msgstr "地上基準点の検出"
+
+#: ../../usage.md:142
+msgid ""
+"Then, you can add some Ground Contorol Points (GCPs) in the target image "
+"by matching target image and simulated image. AKAZE local features and "
+"FLANN matcher is available."
+msgstr ""
+"対象画像とシミュレーション画像をマッチングすることで、対象画像に地上基準点"
+"（GCP）を追加できます。AKAZE局所特徴量とFLANNマッチャーが利用可能です。"
+
+#: ../../usage.md:153
+msgid "Matching result."
+msgstr "マッチング結果。"
+
+#: ../../usage.md:170
+msgid ""
+"Where u and v stands for the x and y axis coordinates in the image "
+"coordinate system."
+msgstr "uとvは画像座標系におけるx軸とy軸の座標を表します。"
+
+#: ../../usage.md:172
+msgid "Optimization of Camera Parameters"
+msgstr "カメラパラメータの最適化"
+
+#: ../../usage.md:173
+msgid ""
+"Finally, optimizing camera parameters using GCPs. Camera parameters are "
+"optimized by minimizing reproection errors with a CMA-ES optimizer.<br "
+"/>You can specify which parameters to be optimized."
+msgstr ""
+"最後に、GCPを使用してカメラパラメータを最適化します。カメラパラメータは"
+"CMA-ES最適化器を使用して再投影誤差を最小化することで最適化されます。<br />"
+"最適化するパラメータを指定できます。"
+
+#: ../../usage.md:195
+msgid "The optimized camera parameters reproduces the target image exactly."
+msgstr "最適化されたカメラパラメータは対象画像を正確に再現します。"
+
+#: ../../usage.md:203
+msgid "You can get geographic coordinates of each pixel of the target image."
+msgstr "対象画像の各ピクセルの地理座標を取得できます。"
+
+#: ../../usage.md:228
+msgid ""
+"You can also visualize the results with GIS tools. Here, I show an "
+"example using R's sf, stars, and terra package. Since the output of "
+"alproj is a point data as shown above, below R script performs "
+"raterization and interpolation to make it an orthoimage."
+msgstr ""
+"結果はGISツールで可視化することもできます。ここでは、Rのsf、stars、terra"
+"パッケージを使用した例を示します。alprojの出力は上記のような点データであるため、"
+"以下のRスクリプトはラスタライズと補間を行いオルソ画像を作成します。"
+
+#: ../../usage.md:283
+msgid "Result Plot"
+msgstr "結果プロット"

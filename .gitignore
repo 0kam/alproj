@@ -5,3 +5,5 @@ devel*.py
 __pycache__/
 .venv
 .claude/
+docs/_build/
+*.mo

@@ -17,3 +17,12 @@ python:
     - method: pip
       path: .
     - requirements: docs/requirements.txt
+
+# Multilingual documentation support
+# Note: For language switching UI, configure translations in the
+# Read the Docs dashboard (Admin > Translations)
+translations:
+  - language: ja
+    build:
+      sphinx:
+        configuration: docs/conf.py

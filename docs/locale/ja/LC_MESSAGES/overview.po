@@ -1,0 +1,137 @@
+# Japanese translations for alproj package.
+# Copyright (C) 2021, Ryotaro Okamoto
+# This file is distributed under the same license as the alproj package.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: alproj \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-23 11:38+0900\n"
+"PO-Revision-Date: 2026-01-23 11:38+0900\n"
+"Last-Translator: \n"
+"Language: ja\n"
+"Language-Team: ja <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../overview.md:12
+msgid "Overview"
+msgstr "概要"
+
+#: ../../overview.md:13
+msgid "Algorithm"
+msgstr "アルゴリズム"
+
+#: ../../overview.md:14
+msgid ""
+"alproj is a simple python package for geo-rectification of alpine "
+"landscape photographs.<br />alproj has 3 steps for geo-rectification of a"
+" landscape photograph."
+msgstr ""
+"alproj は山岳景観写真の幾何補正のためのシンプルな Python パッケージです。"
+"<br />alproj は景観写真の幾何補正を3つのステップで行います。"
+
+#: ../../overview.md:17
+msgid ""
+"Setting Ground Control Points (GCPs) in a target photograph, using a "
+"simulated landscape image rendered with Digital Surface Model and "
+"airborne photographs."
+msgstr ""
+"数値表層モデル（DSM）と航空写真からレンダリングされたシミュレーション画像を"
+"使用して、対象写真に地上基準点（GCP）を設定します。"
+
+#: ../../overview.md:19
+msgid ""
+"Heuristic estimation of camera parameters including the camera angle, "
+"field of view, and lens distortions (shooting point of the photograph is "
+"required)."
+msgstr ""
+"カメラアングル、視野角、レンズ歪みを含むカメラパラメータのヒューリスティック"
+"推定を行います（写真の撮影地点が必要です）。"
+
+#: ../../overview.md:21
+msgid ""
+"Reverse perspective projection of the target photograph on Digital "
+"Surface Model, with estimated camera parameters, using OpenGL."
+msgstr ""
+"推定されたカメラパラメータを使用し、OpenGLを用いて対象写真を数値表層モデル"
+"上に逆透視投影します。"
+
+#: ../../overview.md:24
+msgid "Now, every pixel in the photograph has its geographic coordinates!"
+msgstr "これにより、写真の各ピクセルが地理座標を持つようになります！"
+
+#: ../../overview.md:27
+msgid ""
+"You can visualize the results with GIS tools. Here, I show an example "
+"using R's sf and stars package."
+msgstr ""
+"結果はGISツールで可視化できます。ここでは、Rのsfパッケージとstarsパッケージを"
+"使用した例を示します。"
+
+#: ../../overview.md:75
+msgid ""
+"You can open the created GeoTiff file with GIS software such as QGIS and "
+"ArcGIS."
+msgstr ""
+"作成されたGeoTiffファイルは、QGISやArcGISなどのGISソフトウェアで開くことが"
+"できます。"
+
+#: ../../overview.md:79
+msgid "The Camera Model"
+msgstr "カメラモデル"
+
+#: ../../overview.md:80
+msgid ""
+"alproj uses a camera model that is  almost same as the OpenCV's one, "
+"however, the distortion coefficients are a little bit modified."
+msgstr ""
+"alprojはOpenCVとほぼ同じカメラモデルを使用していますが、歪み係数が少し"
+"修正されています。"
+
+#: ../../overview.md:81
+#, python-brace-format
+msgid ""
+"OpenCV $$ \\begin{bmatrix} x'' \\\\ y'' \\end{bmatrix} = \\begin{bmatrix}"
+" x' \\frac{1 + k_1 r^2 + k_2 r^4 + k_3 r^6}{1 + k_4 r^2 + k_5 r^4 + k_6 "
+"r^6} + 2 p_1 x' y' + p_2(r^2 + 2 x'^2) + s_1 r^2 + s_2 r^4 \\\\ y' "
+"\\frac{1 + k_1 r^2 + k_2 r^4 + k_3 r^6}{1 + k_4 r^2 + k_5 r^4 + k_6 r^6} "
+"+ p_1 (r^2 + 2 y'^2) + 2 p_2 x' y' + s_3 r^2 + s_4 r^4 \\ \\end{bmatrix} "
+"$$"
+msgstr ""
+
+#: ../../overview.md:83
+#, python-brace-format
+msgid ""
+"alproj $$ \\begin{bmatrix} x'' \\\\ y'' \\end{bmatrix} = \\begin{bmatrix}"
+" x' \\frac{1 + k_1 r^2 + k_2 r^4 + k_3 r^6}{1 + k_4 r^2 + k_5 r^4 + k_6 "
+"r^6} + 2 p_1 x' y' + p_2(r^2 + 2 x'^2) + s_1 r^2 + s_2 r^4 \\\\ y' "
+"\\frac{1 + a_1 + k_1 r^2 + k_2 r^4 + k_3 r^6}{1 + a_2 + k_4 r^2 + k_5 r^4"
+" + k_6 r^6} + p_1 (r^2 + 2 y'^2) + 2 p_2 x' y' + s_3 r^2 + s_4 r^4 \\ "
+"\\end{bmatrix} $$"
+msgstr ""
+
+#: ../../overview.md:86
+msgid "I added a1 and a2 to express inequal aspect ratios of image pixels."
+msgstr "画像ピクセルの不均等なアスペクト比を表現するためにa1とa2を追加しました。"
+
+#: ../../overview.md:88
+msgid "Future applications in alpine ecology, geology, and glaciology"
+msgstr "山岳生態学、地質学、雪氷学における将来の応用"
+
+#: ../../overview.md:89
+msgid "Drawing vegetation maps from landscape photographs taken by hikers."
+msgstr "登山者が撮影した景観写真から植生図を作成。"
+
+#: ../../overview.md:90
+msgid "Analysing snow melting with webcams attached at mountain huts."
+msgstr "山小屋に設置されたウェブカメラによる融雪解析。"
+
+#: ../../overview.md:91
+msgid ""
+"Estimating the area of glaciers in the past from historical photographs "
+"of glaciers."
+msgstr "氷河の歴史的写真から過去の氷河面積を推定。"

@@ -1,0 +1,106 @@
+# Japanese translations for alproj package.
+# Copyright (C) 2021, Ryotaro Okamoto
+# This file is distributed under the same license as the alproj package.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: alproj \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-23 11:38+0900\n"
+"PO-Revision-Date: 2026-01-23 11:38+0900\n"
+"Last-Translator: \n"
+"Language: ja\n"
+"Language-Team: ja <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../alproj.surface.rst:2
+msgid "alproj.surface module"
+msgstr "alproj.surface モジュール"
+
+#: alproj.surface.get_colored_surface:1 of
+msgid "Get colored surface."
+msgstr "色付きサーフェスを取得"
+
+#: ../../alproj.surface.rst
+msgid "Parameters"
+msgstr "パラメータ"
+
+#: alproj.surface.get_colored_surface:3 of
+msgid ""
+"An aerial photograph opend by rasterio.open(), should be in a CRS that "
+"has units of meters, and have values of 0-255."
+msgstr ""
+"rasterio.open()で開いた航空写真。メートル単位のCRSで、値は0-255である必要があります。"
+
+#: alproj.surface.get_colored_surface:5 of
+msgid ""
+"A Digital SurfaceModel opend by rasterio.open(), should be in the same "
+"CRS as the aerial."
+msgstr ""
+"rasterio.open()で開いた数値表層モデル。航空写真と同じCRSである必要があります。"
+
+#: alproj.surface.get_colored_surface:7 of
+msgid ""
+"Shooting point. Must contain keys \"x\" and \"y\". Should be in the same "
+"coordinate reference system as the DSM."
+msgstr ""
+"撮影地点。キー\"x\"と\"y\"を含む必要があります。DSMと同じ座標参照系である必要があります。"
+
+#: alproj.surface.get_colored_surface:9 of
+msgid "Distance from shooting point to the edge of the rectangle."
+msgstr "撮影地点から矩形の端までの距離"
+
+#: alproj.surface.get_colored_surface:11 of
+msgid "Resolution of the output raster in m."
+msgstr "出力ラスターの解像度（m）"
+
+#: alproj.surface.get_colored_surface:13 of
+msgid ""
+"Resampling method. See "
+"https://rasterio.readthedocs.io/en/latest/api/rasterio.enums.html#rasterio.enums.Resampling"
+msgstr ""
+"リサンプリング方法。"
+"https://rasterio.readthedocs.io/en/latest/api/rasterio.enums.html#rasterio.enums.Resampling を参照"
+
+#: alproj.surface.get_colored_surface:15 of
+msgid "Distance in m for filling nodata in DSM."
+msgstr "DSMのnodata補間距離（m）"
+
+#: ../../alproj.surface.rst
+msgid "Returns"
+msgstr "戻り値"
+
+#: alproj.surface.get_colored_surface:18 of
+msgid ""
+"* **vert** (*numpy.ndarray*) -- Vertex coordinates. * **col** "
+"(*numpy.ndarray*) -- Vertex color. * **ind** (*numpy.ndarray*) -- Index "
+"for each triangle. * **offset** (*numpy.ndarray*) -- Offset for vertex "
+"coordinates. You need to add this to vert to get the correct coordinates."
+msgstr ""
+"* **vert** (*numpy.ndarray*) -- 頂点座標 * **col** (*numpy.ndarray*) -- 頂点カラー "
+"* **ind** (*numpy.ndarray*) -- 各三角形のインデックス "
+"* **offset** (*numpy.ndarray*) -- 頂点座標のオフセット。正しい座標を得るにはvertに加算する必要があります。"
+
+#: alproj.surface.get_colored_surface:18 of
+msgid "**vert** (*numpy.ndarray*) -- Vertex coordinates."
+msgstr "**vert** (*numpy.ndarray*) -- 頂点座標"
+
+#: alproj.surface.get_colored_surface:19 of
+msgid "**col** (*numpy.ndarray*) -- Vertex color."
+msgstr "**col** (*numpy.ndarray*) -- 頂点カラー"
+
+#: alproj.surface.get_colored_surface:20 of
+msgid "**ind** (*numpy.ndarray*) -- Index for each triangle."
+msgstr "**ind** (*numpy.ndarray*) -- 各三角形のインデックス"
+
+#: alproj.surface.get_colored_surface:21 of
+msgid ""
+"**offset** (*numpy.ndarray*) -- Offset for vertex coordinates. You need "
+"to add this to vert to get the correct coordinates."
+msgstr ""
+"**offset** (*numpy.ndarray*) -- 頂点座標のオフセット。"
+"正しい座標を得るにはvertに加算する必要があります。"
