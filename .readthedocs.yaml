@@ -19,10 +19,7 @@ python:
     - requirements: docs/requirements.txt
 
 # Multilingual documentation support
-# Note: For language switching UI, configure translations in the
-# Read the Docs dashboard (Admin > Translations)
-translations:
-  - language: ja
-    build:
-      sphinx:
-        configuration: docs/conf.py
+# Configure translations in the Read the Docs dashboard:
+# 1. Create a new project for Japanese (alproj-ja)
+# 2. In the main project, go to Admin > Translations
+# 3. Add the Japanese project as a translation
