@@ -59,27 +59,7 @@ pip install "alproj[imm] @ git+https://github.com/0kam/alproj"
 ```
 
 ## Quick Start
-
-```python
-from alproj.gcp import image_match, set_gcp, filter_gcp_distance
-
-# Match features with built-in methods: "akaze" (default), "sift"
-match, plot = image_match(path_org, path_sim, method="sift", plot_result=True)
-
-# With imm package: deep learning methods with outlier filtering
-match, plot = image_match(
-    path_org, path_sim,
-    method="minima-roma",        # or "superpoint-lightglue", "roma", "loftr", etc.
-    outlier_filter="fundamental", # geometric outlier filtering (default)
-    spatial_thin_grid=100,        # uniform distribution of matches
-    device="cuda",
-    plot_result=True
-)
-
-# Set ground control points and filter by distance
-gcps = set_gcp(match, reverse_proj_result)
-gcps = filter_gcp_distance(gcps, params, min_distance=50)
-```
+See [example.py](example.py) for usage.
 
 ## Acknowledgements
 The example photograph is of [NIES' long-period monitoring](https://db.cger.nies.go.jp/gem/ja/mountain/station.html?id=2).   
