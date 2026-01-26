@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: alproj \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-23 11:38+0900\n"
+"POT-Creation-Date: 2026-01-26 17:18+0900\n"
 "PO-Revision-Date: 2026-01-23 11:38+0900\n"
 "Last-Translator: \n"
 "Language: ja\n"
@@ -28,3 +28,78 @@ msgstr "サブモジュール"
 #: ../../alproj.rst:15
 msgid "Module contents"
 msgstr "モジュールの内容"
+
+#: alproj.gcp.filter_gcp_distance:1 of
+msgid "Filter GCPs based on 3D distance from the camera position."
+msgstr ""
+
+#: alproj.gcp.filter_gcp_distance of
+msgid "Parameters"
+msgstr ""
+
+#: alproj.gcp.filter_gcp_distance:3 of
+msgid ""
+"GCP data with columns u, v, x, y, z (geographic coordinates in projected "
+"CRS, e.g., meters). Typically the result of set_gcp()."
+msgstr ""
+
+#: alproj.gcp.filter_gcp_distance:6 of
+msgid ""
+"Camera parameters containing 'x', 'y', 'z' keys (camera position in the "
+"same projected CRS as gcp)."
+msgstr ""
+
+#: alproj.gcp.filter_gcp_distance:9 of
+msgid ""
+"Minimum distance threshold in coordinate units (e.g., meters). Points "
+"closer than this are excluded. Must be non-negative if specified."
+msgstr ""
+
+#: alproj.gcp.filter_gcp_distance:12 of
+msgid ""
+"Maximum distance threshold. Points farther than this are excluded. Must "
+"be >= min_distance if both are specified."
+msgstr ""
+
+#: alproj.gcp.filter_gcp_distance of
+msgid "Returns"
+msgstr ""
+
+#: alproj.gcp.filter_gcp_distance:16 of
+msgid "**gcp_filtered** -- Filtered GCP data with reset index."
+msgstr ""
+
+#: alproj.gcp.filter_gcp_distance of
+msgid "Return type"
+msgstr ""
+
+#: alproj.gcp.filter_gcp_distance of
+msgid "Raises"
+msgstr ""
+
+#: alproj.gcp.filter_gcp_distance:19 of
+msgid "If params lacks 'x', 'y', or 'z' keys."
+msgstr ""
+
+#: alproj.gcp.filter_gcp_distance:20 of
+msgid "If min_distance < 0 or max_distance < min_distance."
+msgstr ""
+
+#: alproj.gcp.filter_gcp_distance:23 of
+msgid "Notes"
+msgstr ""
+
+#: alproj.gcp.filter_gcp_distance:24 of
+msgid ""
+"Coordinates must be in a projected CRS (e.g., UTM) for accurate Euclidean"
+" distance. Using lat/lon directly will produce incorrect results."
+msgstr ""
+
+#: alproj.gcp.filter_gcp_distance:26 of
+msgid "Rows with NaN in x, y, or z are excluded from the result."
+msgstr ""
+
+#: alproj.gcp.filter_gcp_distance:29 of
+msgid "Examples"
+msgstr ""
+

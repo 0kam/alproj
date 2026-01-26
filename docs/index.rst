@@ -25,7 +25,8 @@ This project aims to revive alpine landscape photographs in your photo albams, a
    installation
    overview
    usage
-   
+   matching_gallery
+
 .. toctree::
    :maxdepth: 2
    :caption: Package Reference:

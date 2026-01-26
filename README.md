@@ -2,7 +2,7 @@
 A simple georectification tool for alpine landscape photographs.
 
 [Documentation](https://alproj.readthedocs.io/en/latest/index.html)
-[日本語ドキュメント](https://green-light.netlify.app/posts/usage_of_alproj/)
+[日本語ドキュメント](https://alproj.readthedocs.io/ja/latest/index.html)
 [paper](https://doi.org/10.1002/rse2.364)
 
 ## Overview
@@ -22,9 +22,64 @@ A simple georectification tool for alpine landscape photographs.
 
 This project aims to revive alpine landscape photographs in your photo albams, as valuable geospatial data that may reveal the unknown changes of alpine landscape, ecosystem and cryosphere!
 
+## Breaking Changes (v1.0.0)
+
+**Important:** This version includes significant API changes. If you are upgrading from a previous version, please reinstall:
+
+```bash
+pip uninstall alproj
+pip install git+https://github.com/0kam/alproj
+```
+
+Key changes:
+- `akaze_match()` deprecated: Use new unified `image_match()` function instead
+- Deep learning matching methods now available via `imm` package (RoMa, LoFTR, LightGlue, etc.)
+- `image_match()`: Essential/Fundamental Matrix filtering (`outlier_filter` parameter)
+- `image_match()`: Spatial thinning for uniform GCP distribution (`spatial_thin_grid`)
+- `CMAOptimizer.optimize()`: Added `f_scale` parameter for Huber loss
+- New `LsqOptimizer` class for fast local refinement
+- New `filter_gcp_distance()` function for distance-based GCP filtering
+- New `to_geotiff()` function for direct GeoTIFF export
+- `sim_image()` / `persp_proj()`: Added `min_distance` parameter for near-field masking
+
 ## Installation
-1. Make sure that you are using the latest version of pip
-2. Run `pip install git+https://github.com/0kam/alproj`
+
+**Requires Python 3.9-3.12**
+
+```bash
+pip install git+https://github.com/0kam/alproj
+```
+
+### Optional: Advanced Image Matching
+
+For deep learning-based image matching methods (RoMa, LoFTR, LightGlue, etc.):
+
+```bash
+pip install "alproj[imm] @ git+https://github.com/0kam/alproj"
+```
+
+## Quick Start
+
+```python
+from alproj.gcp import image_match, set_gcp, filter_gcp_distance
+
+# Match features with built-in methods: "akaze" (default), "sift"
+match, plot = image_match(path_org, path_sim, method="sift", plot_result=True)
+
+# With imm package: deep learning methods with outlier filtering
+match, plot = image_match(
+    path_org, path_sim,
+    method="minima-roma",        # or "superpoint-lightglue", "roma", "loftr", etc.
+    outlier_filter="fundamental", # geometric outlier filtering (default)
+    spatial_thin_grid=100,        # uniform distribution of matches
+    device="cuda",
+    plot_result=True
+)
+
+# Set ground control points and filter by distance
+gcps = set_gcp(match, reverse_proj_result)
+gcps = filter_gcp_distance(gcps, params, min_distance=50)
+```
 
 ## Acknowledgements
 The example photograph is of [NIES' long-period monitoring](https://db.cger.nies.go.jp/gem/ja/mountain/station.html?id=2).   

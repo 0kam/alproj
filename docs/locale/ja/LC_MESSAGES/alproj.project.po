@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: alproj \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-23 11:38+0900\n"
-"PO-Revision-Date: 2026-01-23 11:38+0900\n"
+"POT-Creation-Date: 2026-01-26 17:18+0900\n"
+"PO-Revision-Date: 2026-01-26 12:00+0900\n"
 "Last-Translator: \n"
 "Language: ja\n"
 "Language-Team: ja <LL@li.org>\n"
@@ -23,32 +23,31 @@ msgstr "alproj.project モジュール"
 
 #: alproj.project.distort:1 of
 msgid "Distorts an image with given distortion coefficients."
-msgstr "与えられた歪み係数で画像を歪ませます"
+msgstr "与えられた歪み係数で画像を歪ませます。"
 
-#: ../../alproj.project.rst
+#: ../../alproj.project.rst alproj.project.to_geotiff of
 msgid "Parameters"
 msgstr "パラメータ"
 
 #: alproj.project.distort:3 of
 msgid "An image to be distorted."
-msgstr "歪ませる画像"
+msgstr "歪ませる画像。"
 
 #: alproj.project.distort:5 of
 msgid ""
 "Distortion coefficients. The order of the coefficients must be: a1, a2, "
 "k1, k2, k3, k4, k5, k6, p1, p2, s1, s2, s3, s4."
-msgstr ""
-"歪み係数。係数の順序は: a1, a2, k1, k2, k3, k4, k5, k6, p1, p2, s1, s2, s3, s4"
+msgstr "歪み係数。係数の順序は: a1, a2, k1, k2, k3, k4, k5, k6, p1, p2, s1, s2, s3, s4。"
 
-#: ../../alproj.project.rst
+#: ../../alproj.project.rst alproj.project.to_geotiff of
 msgid "Returns"
 msgstr "戻り値"
 
 #: alproj.project.distort:9 of
 msgid "**img_distorted** -- Distorted image."
-msgstr "**img_distorted** -- 歪んだ画像"
+msgstr "**img_distorted** -- 歪んだ画像。"
 
-#: ../../alproj.project.rst
+#: ../../alproj.project.rst alproj.project.to_geotiff of
 msgid "Return type"
 msgstr "戻り値の型"
 
@@ -58,8 +57,8 @@ msgid ""
 "location in world coordinate system. See https://learnopengl.com/Getting-"
 "started/Coordinate-Systems ."
 msgstr ""
-"オイラー角とワールド座標系でのカメラ位置からOpenGL形式のモデルビュー行列を作成。"
-"https://learnopengl.com/Getting-started/Coordinate-Systems を参照"
+"オイラー角とワールド座標系でのカメラ位置からOpenGL形式のモデルビュー行列を作成します。https://learnopengl.com"
+"/Getting-started/Coordinate-Systems を参照してください。"
 
 #: alproj.project.modelview_mat:4 of
 msgid "Pan angle in degrees"
@@ -75,59 +74,59 @@ msgstr "ロール角度（度）"
 
 #: alproj.project.modelview_mat:10 of
 msgid ""
-"X-axis (latitudinal) coordinate of the cameralocation in a (planer) "
-"giographic coordinate system."
-msgstr "（平面）地理座標系におけるカメラ位置のX軸（緯度方向）座標"
+"X-axis (latitudinal) coordinate of the camera location in a (planar) "
+"geographic coordinate system."
+msgstr "（平面）地理座標系におけるカメラ位置のX軸（緯度方向）座標。"
 
 #: alproj.project.modelview_mat:12 of
 msgid ""
-"Y-axis (longitudinal) coordinate of the cameralocation in a (planer) "
-"giographic coordinate system."
-msgstr "（平面）地理座標系におけるカメラ位置のY軸（経度方向）座標"
+"Y-axis (longitudinal) coordinate of the camera location in a (planar) "
+"geographic coordinate system."
+msgstr "（平面）地理座標系におけるカメラ位置のY軸（経度方向）座標。"
 
 #: alproj.project.modelview_mat:14 of
 msgid ""
-"Z-axis (elevational) coordinate of the cameralocation in a (planer) "
-"giographic coordinate system."
-msgstr "（平面）地理座標系におけるカメラ位置のZ軸（標高）座標"
+"Z-axis (elevational) coordinate of the camera location in a (planar) "
+"geographic coordinate system."
+msgstr "（平面）地理座標系におけるカメラ位置のZ軸（標高）座標。"
 
 #: alproj.project.modelview_mat:17 of
 msgid "**modelview_mat** -- A modelview matrix."
-msgstr "**modelview_mat** -- モデルビュー行列"
+msgstr "**modelview_mat** -- モデルビュー行列。"
 
 #: alproj.project.persp_proj:1 of
 msgid "3D to 2D perspective projection of vertices, with given camera parameters."
-msgstr "与えられたカメラパラメータによる頂点の3Dから2Dへの透視投影"
+msgstr "与えられたカメラパラメータによる頂点の3Dから2Dへの透視投影。"
 
 #: alproj.project.persp_proj:3 of
 msgid ""
-"Coordinates of vertices, in X(latitudial), Z(vertical), Y(longitudial) "
+"Coordinates of vertices, in X(latitudinal), Z(vertical), Y(longitudinal) "
 "order."
-msgstr "頂点の座標。X（緯度方向）、Z（垂直）、Y（経度方向）の順"
+msgstr "頂点の座標。X（緯度方向）、Z（垂直）、Y（経度方向）の順。"
 
 #: alproj.project.persp_proj:5 of
 msgid "Values of vertices. e.g. colors, geographic coordinates."
-msgstr "頂点の値。例：色、地理座標"
+msgstr "頂点の値。例：色、地理座標。"
 
 #: alproj.project.persp_proj:7 of
 msgid ""
 "Index data of vertices. See http://www.opengl-tutorial.org/intermediate-"
 "tutorials/tutorial-9-vbo-indexing/ ."
 msgstr ""
-"頂点のインデックスデータ。"
-"http://www.opengl-tutorial.org/intermediate-tutorials/tutorial-9-vbo-indexing/ を参照"
+"頂点のインデックスデータ。http://www.opengl-tutorial.org/intermediate-"
+"tutorials/tutorial-9-vbo-indexing/ を参照。"
 
 #: alproj.project.persp_proj:9 of
 msgid ""
-"Camera parameters.  x : float     The latitudial coordinate of the "
-"shooting point in planaer (e.g. UTM) coordinate reference systems. y : "
-"float     The longitudial coordinate of the shooting point. z : float"
+"Camera parameters.  x : float     The latitudinal coordinate of the "
+"shooting point in planar (e.g. UTM) coordinate reference systems. y : "
+"float     The longitudinal coordinate of the shooting point. z : float"
 "     The vertical coordinate of the shooting point, the unit of z must be"
 " the same as x and y (e.g. m). fov : float     A Field of View in degree."
 " pan : float     A pan angle in degree. North is 0 degree and East is 90 "
 "degree. The rotation angles (pan, tilt, roll) follows the OpenCV's left-"
 "handed coordinate system. tilt : float     A tilt angle in degree. 0 "
-"indecates that the camera is horizontal. A positive value indicates that "
+"indicates that the camera is horizontal. A positive value indicates that "
 "the camera looks up. roll : float     A roll angle in degree. A positive "
 "value indicates that camera leans to the right. w : int     An image "
 "width in pixel. h : int     An image height in pixel cx : float     The X"
@@ -138,21 +137,10 @@ msgid ""
 "distortion coefficients. s1, s2, s3, s4 : float     Prism distortion "
 "coefficients."
 msgstr ""
-"カメラパラメータ。x : float     平面座標系（例：UTM）における撮影地点の緯度方向座標 "
-"y : float     撮影地点の経度方向座標 z : float     撮影地点の垂直座標、zの単位は"
-"xとyと同じである必要があります（例：m） fov : float     視野角（度） "
-"pan : float     パン角度（度）。北が0度、東が90度。回転角度（pan, tilt, roll）は"
-"OpenCVの左手座標系に従います tilt : float     チルト角度（度）。0はカメラが"
-"水平であることを示します。正の値はカメラが上を向いていることを示します "
-"roll : float     ロール角度（度）。正の値はカメラが右に傾いていることを示します "
-"w : int     画像の幅（ピクセル） h : int     画像の高さ（ピクセル） "
-"cx : float     主点のX座標 cy : float     主点のY座標 a1, a2 : float     "
-"各ピクセルの不均等なアスペクト比を補正する歪み係数 k1, k2, k3, k4, k5, k6 : float     "
-"放射歪み係数 p1, p2 : float     接線歪み係数 s1, s2, s3, s4 : float     プリズム歪み係数"
 
 #: alproj.project.persp_proj:9 of
 msgid "Camera parameters."
-msgstr "カメラパラメータ"
+msgstr "カメラパラメータ。"
 
 #: alproj.project.persp_proj:11 of
 msgid "x"
@@ -164,17 +152,17 @@ msgstr "float"
 
 #: alproj.project.persp_proj:12 of
 msgid ""
-"The latitudial coordinate of the shooting point in planaer (e.g. UTM) "
+"The latitudinal coordinate of the shooting point in planar (e.g. UTM) "
 "coordinate reference systems."
-msgstr "平面座標系（例：UTM）における撮影地点の緯度方向座標"
+msgstr "平面座標系（例：UTM）における撮影地点の緯度方向座標。"
 
 #: alproj.project.persp_proj:13 of
 msgid "y"
 msgstr "y"
 
 #: alproj.project.persp_proj:14 of
-msgid "The longitudial coordinate of the shooting point."
-msgstr "撮影地点の経度方向座標"
+msgid "The longitudinal coordinate of the shooting point."
+msgstr "撮影地点の経度方向座標。"
 
 #: alproj.project.persp_proj:15 of
 msgid "z"
@@ -184,7 +172,7 @@ msgstr "z"
 msgid ""
 "The vertical coordinate of the shooting point, the unit of z must be the "
 "same as x and y (e.g. m)."
-msgstr "撮影地点の垂直座標。zの単位はxとyと同じである必要があります（例：m）"
+msgstr "撮影地点の垂直座標。zの単位はxとyと同じである必要があります（例：m）。"
 
 #: alproj.project.persp_proj:17 of
 msgid "fov"
@@ -192,7 +180,7 @@ msgstr "fov"
 
 #: alproj.project.persp_proj:18 of
 msgid "A Field of View in degree."
-msgstr "視野角（度）"
+msgstr "視野角（度）。"
 
 #: alproj.project.persp_proj:19 of
 msgid "pan"
@@ -203,9 +191,7 @@ msgid ""
 "A pan angle in degree. North is 0 degree and East is 90 degree. The "
 "rotation angles (pan, tilt, roll) follows the OpenCV's left-handed "
 "coordinate system."
-msgstr ""
-"パン角度（度）。北が0度、東が90度。回転角度（pan, tilt, roll）は"
-"OpenCVの左手座標系に従います"
+msgstr "パン角度（度）。北が0度、東が90度。回転角度（pan, tilt, roll）はOpenCVの左手座標系に従います。"
 
 #: alproj.project.persp_proj:21 of
 msgid "tilt"
@@ -213,11 +199,9 @@ msgstr "tilt"
 
 #: alproj.project.persp_proj:22 of
 msgid ""
-"A tilt angle in degree. 0 indecates that the camera is horizontal. A "
+"A tilt angle in degree. 0 indicates that the camera is horizontal. A "
 "positive value indicates that the camera looks up."
-msgstr ""
-"チルト角度（度）。0はカメラが水平であることを示します。"
-"正の値はカメラが上を向いていることを示します"
+msgstr "チルト角度（度）。0はカメラが水平であることを示します。正の値はカメラが上を向いていることを示します。"
 
 #: alproj.project.persp_proj:23 of
 msgid "roll"
@@ -227,7 +211,7 @@ msgstr "roll"
 msgid ""
 "A roll angle in degree. A positive value indicates that camera leans to "
 "the right."
-msgstr "ロール角度（度）。正の値はカメラが右に傾いていることを示します"
+msgstr "ロール角度（度）。正の値はカメラが右に傾いていることを示します。"
 
 #: alproj.project.persp_proj:25 of
 msgid "w"
@@ -239,7 +223,7 @@ msgstr "int"
 
 #: alproj.project.persp_proj:26 of
 msgid "An image width in pixel."
-msgstr "画像の幅（ピクセル）"
+msgstr "画像の幅（ピクセル）。"
 
 #: alproj.project.persp_proj:27 of
 msgid "h"
@@ -247,7 +231,7 @@ msgstr "h"
 
 #: alproj.project.persp_proj:28 of
 msgid "An image height in pixel"
-msgstr "画像の高さ（ピクセル）"
+msgstr "画像の高さ（ピクセル）。"
 
 #: alproj.project.persp_proj:29 of
 msgid "cx"
@@ -255,7 +239,7 @@ msgstr "cx"
 
 #: alproj.project.persp_proj:30 of
 msgid "The X coordinate of the principle point"
-msgstr "主点のX座標"
+msgstr "主点のX座標。"
 
 #: alproj.project.persp_proj:31 of
 msgid "cy"
@@ -263,7 +247,7 @@ msgstr "cy"
 
 #: alproj.project.persp_proj:32 of
 msgid "The Y coordinate of the principle point"
-msgstr "主点のY座標"
+msgstr "主点のY座標。"
 
 #: alproj.project.persp_proj:33 of
 msgid "a1, a2"
@@ -273,7 +257,7 @@ msgstr "a1, a2"
 msgid ""
 "Distortion coefficients that calibrates non-equal aspect ratio of each "
 "pixels."
-msgstr "各ピクセルの不均等なアスペクト比を補正する歪み係数"
+msgstr "各ピクセルの不均等なアスペクト比を補正する歪み係数。"
 
 #: alproj.project.persp_proj:35 of
 msgid "k1, k2, k3, k4, k5, k6"
@@ -281,7 +265,7 @@ msgstr "k1, k2, k3, k4, k5, k6"
 
 #: alproj.project.persp_proj:36 of
 msgid "Radial distortion coefficients."
-msgstr "放射歪み係数"
+msgstr "放射歪み係数。"
 
 #: alproj.project.persp_proj:37 of
 msgid "p1, p2"
@@ -289,7 +273,7 @@ msgstr "p1, p2"
 
 #: alproj.project.persp_proj:38 of
 msgid "Tangental distortion coefficients."
-msgstr "接線歪み係数"
+msgstr "接線歪み係数。"
 
 #: alproj.project.persp_proj:39 of
 msgid "s1, s2, s3, s4"
@@ -297,19 +281,25 @@ msgstr "s1, s2, s3, s4"
 
 #: alproj.project.persp_proj:40 of
 msgid "Prism distortion coefficients."
-msgstr "プリズム歪み係数"
+msgstr "プリズム歪み係数。"
 
 #: alproj.project.persp_proj:42 alproj.project.reverse_proj:13
 #: alproj.project.sim_image:11 of
 msgid ""
 "Offset for vertex coordinates. Usually returned by "
 "alproj.surface.get_colored_surface()."
-msgstr ""
-"頂点座標のオフセット。通常はalproj.surface.get_colored_surface()から返されます。"
+msgstr "頂点座標のオフセット。通常はalproj.surface.get_colored_surface()から返されます。"
 
-#: alproj.project.persp_proj:45 of
+#: alproj.project.persp_proj:44 alproj.project.sim_image:13 of
+msgid ""
+"Minimum distance from camera in coordinate units (e.g., meters). Pixels "
+"closer than this distance will be rendered as black. Useful for masking "
+"near-field objects that may cause matching errors."
+msgstr "カメラからの最小距離（座標単位、例：メートル）。この距離より近いピクセルは黒としてレンダリングされます。マッチングエラーを引き起こす可能性のある近距離オブジェクトをマスキングするのに便利です。"
+
+#: alproj.project.persp_proj:49 of
 msgid "**raw** -- Projected result."
-msgstr "**raw** -- 投影結果"
+msgstr "**raw** -- 投影結果。"
 
 #: alproj.project.projection_mat:1 of
 msgid ""
@@ -317,117 +307,176 @@ msgid ""
 "height of an image. See https://learnopengl.com/Getting-started"
 "/Coordinate-Systems ."
 msgstr ""
-"視野角、画像の幅と高さからOpenGL形式の投影行列を作成。"
-"https://learnopengl.com/Getting-started/Coordinate-Systems を参照"
+"視野角、画像の幅と高さからOpenGL形式の投影行列を作成します。https://learnopengl.com/Getting-started"
+"/Coordinate-Systems を参照してください。"
 
 #: alproj.project.projection_mat:4 of
 msgid "Field of View in degrees."
-msgstr "視野角（度）"
+msgstr "視野角（度）。"
 
 #: alproj.project.projection_mat:6 of
 msgid "Width in pixels"
-msgstr "幅（ピクセル）"
+msgstr "幅（ピクセル）。"
 
 #: alproj.project.projection_mat:8 of
 msgid "Height in pixels"
-msgstr "高さ（ピクセル）"
+msgstr "高さ（ピクセル）。"
 
 #: alproj.project.projection_mat:10 of
 msgid "Z-axis coordinate of near plane."
-msgstr "近平面のZ軸座標"
+msgstr "近平面のZ軸座標。"
 
 #: alproj.project.projection_mat:12 of
 msgid "Z-axis coordinate of far plane."
-msgstr "遠平面のZ軸座標"
+msgstr "遠平面のZ軸座標。"
 
 #: alproj.project.projection_mat:14 of
 msgid "X-axis coordinate of principal point. If None, w/2."
-msgstr "主点のX軸座標。Noneの場合、w/2"
+msgstr "主点のX軸座標。Noneの場合、w/2。"
 
 #: alproj.project.projection_mat:16 of
-msgid "Y-axis coordinate of prinsipal point. If None, h/2."
-msgstr "主点のY軸座標。Noneの場合、h/2"
+msgid "Y-axis coordinate of principal point. If None, h/2."
+msgstr "主点のY軸座標。Noneの場合、h/2。"
 
 #: alproj.project.projection_mat:19 of
 msgid "**projection_mat** -- A projection matrix."
-msgstr "**projection_mat** -- 投影行列"
+msgstr "**projection_mat** -- 投影行列。"
 
 #: alproj.project.reverse_proj:1 of
 msgid ""
 "2D to 3D reverse-projection (geo-rectification) of given array, onto "
 "given surface, with given camera parameters. Reverse-projected array will"
 " be returned as pandas.DataFrame with channel names, coordinates in the "
-"original array, and coordinates in the giographic coordinate system."
-msgstr ""
-"与えられたカメラパラメータを使用して、与えられた配列を与えられたサーフェスに"
-"2Dから3Dへ逆投影（幾何補正）。逆投影された配列は、チャンネル名、元の配列での座標、"
-"地理座標系での座標を含むpandas.DataFrameとして返されます。"
+"original array, and coordinates in the geographic coordinate system."
+msgstr "与えられたカメラパラメータを使用して、与えられた配列を与えられたサーフェスに2Dから3Dへ逆投影（幾何補正）します。逆投影された配列は、チャンネル名、元の配列での座標、地理座標系での座標を含むpandas.DataFrameとして返されます。"
 
 #: alproj.project.reverse_proj:5 of
 msgid ""
 "Target array, such as landscape photograph. The shape of the array must "
 "be (height, width, channels)."
-msgstr ""
-"景観写真などの対象配列。配列の形状は(height, width, channels)である必要があります。"
+msgstr "景観写真などの対象配列。配列の形状は(height, width, channels)である必要があります。"
 
 #: alproj.project.reverse_proj:7 of
 msgid "Vertex coordinates of the surface."
-msgstr "サーフェスの頂点座標"
+msgstr "サーフェスの頂点座標。"
 
 #: alproj.project.reverse_proj:9 of
 msgid ""
-"Index array that shows which three poits shape a triangle. See http://www"
-".opengl-tutorial.org/intermediate-tutorials/tutorial-9-vbo-indexing/ ."
+"Index array that shows which three points shape a triangle. See "
+"http://www.opengl-tutorial.org/intermediate-tutorials/tutorial-9-vbo-"
+"indexing/ ."
 msgstr ""
-"どの3点が三角形を形成するかを示すインデックス配列。"
-"http://www.opengl-tutorial.org/intermediate-tutorials/tutorial-9-vbo-indexing/ を参照"
+"どの3点が三角形を形成するかを示すインデックス配列。http://www.opengl-tutorial.org/intermediate-"
+"tutorials/tutorial-9-vbo-indexing/ を参照。"
 
-#: alproj.project.reverse_proj:11 of
-msgid "Camera parameters. See alproj.project.persp_proj"
-msgstr "カメラパラメータ。alproj.project.persp_proj を参照"
+#: alproj.project.reverse_proj:11 alproj.project.sim_image:9 of
+msgid "Camera parameters. See alproj.project.persp_proj()."
+msgstr "カメラパラメータ。alproj.project.persp_proj() を参照。"
 
 #: alproj.project.reverse_proj:15 of
 msgid ""
 "Channel names of the target array. Default value is [\"B\",\"G\",\"R\"] "
 "because channel order is BGR in OpenCV."
-msgstr ""
-"対象配列のチャンネル名。OpenCVではチャンネル順序がBGRのため、"
-"デフォルト値は[\"B\",\"G\",\"R\"]です。"
+msgstr "対象配列のチャンネル名。OpenCVではチャンネル順序がBGRのため、デフォルト値は[\"B\",\"G\",\"R\"]です。"
 
 #: alproj.project.reverse_proj:18 of
 msgid ""
 "**df** -- Reverse-projected result with column - u , v : The x and y axis"
-" coordinates in the original array. - x, y, z : The latitudial, "
-"longitudial, and vertical coordinates in the reverse-projected coordinate"
-" system. - [chnames] : The channel names passed by chnames, such as B, G,"
-" R."
+" coordinates in the original array. - x, y, z : The latitudinal, "
+"longitudinal, and vertical coordinates in the reverse-projected "
+"coordinate system. - [chnames] : The channel names passed by chnames, "
+"such as B, G, R."
 msgstr ""
-"**df** -- 逆投影結果。列 - u, v : 元の配列でのx軸とy軸の座標 "
-"- x, y, z : 逆投影された座標系での緯度方向、経度方向、垂直座標 "
-"- [chnames] : chnamesで渡されたチャンネル名（B, G, Rなど）"
+"**df** -- 逆投影結果。列 - u, v : 元の配列でのx軸とy軸の座標。 - x, y, z : "
+"逆投影された座標系での緯度方向、経度方向、垂直座標。 - [chnames] : chnamesで渡されたチャンネル名（B, G, Rなど）。"
 
 #: alproj.project.sim_image:1 of
 msgid ""
 "Renders a simulated image of landscape with given surface and camera "
 "parameters."
-msgstr "与えられたサーフェスとカメラパラメータで景観のシミュレーション画像をレンダリング"
+msgstr "与えられたサーフェスとカメラパラメータで景観のシミュレーション画像をレンダリングします。"
 
 #: alproj.project.sim_image:3 of
-msgid "Vertex coordinates of the surface returned by alproj.surface.crop()."
-msgstr "alproj.surface.crop()から返されるサーフェスの頂点座標"
+msgid ""
+"Vertex coordinates of the surface returned by "
+"alproj.surface.get_colored_surface()."
+msgstr "alproj.surface.get_colored_surface()から返されるサーフェスの頂点座標。"
 
 #: alproj.project.sim_image:5 of
-msgid "Vertex colors in RGB, returned by alproj.surface.crop()"
-msgstr "alproj.surface.crop()から返されるRGBの頂点カラー"
+msgid "Vertex colors in RGB, returned by alproj.surface.get_colored_surface()."
+msgstr "alproj.surface.get_colored_surface()から返されるRGBの頂点カラー。"
 
 #: alproj.project.sim_image:7 of
-msgid "Index data of vertices, returned by alproj.surface.crop()."
-msgstr "alproj.surface.crop()から返される頂点のインデックスデータ"
+msgid "Index data of vertices, returned by alproj.surface.get_colored_surface()."
+msgstr "alproj.surface.get_colored_surface()から返される頂点のインデックスデータ。"
 
-#: alproj.project.sim_image:9 of
-msgid "Camera parameters. See alproj.project.persp_proj()."
-msgstr "カメラパラメータ。alproj.project.persp_proj() を参照"
+#: alproj.project.sim_image:18 of
+msgid "**img** -- Rendered image in OpenCV's BGR format."
+msgstr "**img** -- OpenCVのBGRフォーマットでレンダリングされた画像。"
 
-#: alproj.project.sim_image:14 of
-msgid "**img** -- Rendered image in OpenCV's image format."
-msgstr "**img** -- OpenCVの画像フォーマットでレンダリングされた画像"
+#: alproj.project.to_geotiff:1 of
+msgid "Convert reverse_proj output DataFrame to GeoTIFF."
+msgstr "reverse_projの出力DataFrameをGeoTIFFに変換します。"
+
+#: alproj.project.to_geotiff:3 of
+msgid "Output from reverse_proj() containing x, y coordinates and band values."
+msgstr "reverse_proj()からの出力。x、y座標とバンド値を含みます。"
+
+#: alproj.project.to_geotiff:5 of
+msgid "Output file path for the GeoTIFF."
+msgstr "GeoTIFFの出力ファイルパス。"
+
+#: alproj.project.to_geotiff:7 of
+msgid "Pixel resolution in the same unit as the coordinate system."
+msgstr "座標系と同じ単位のピクセル解像度。"
+
+#: alproj.project.to_geotiff:9 of
+msgid ""
+"Coordinate Reference System. Default is JGD2011 / Japan Plane Rectangular"
+" CS II."
+msgstr "座標参照系。デフォルトはJGD2011 / 日本測地系2011 平面直角座標系II系。"
+
+#: alproj.project.to_geotiff:11 of
+msgid "Column names in df to use as raster bands."
+msgstr "ラスターバンドとして使用するdfの列名。"
+
+#: alproj.project.to_geotiff:13 of
+msgid "Whether to interpolate missing values using focal statistics."
+msgstr "フォーカル統計を使用して欠損値を補間するかどうか。"
+
+#: alproj.project.to_geotiff:15 of
+msgid "Maximum distance (in coordinate units) for interpolation."
+msgstr "補間の最大距離（座標単位）。"
+
+#: alproj.project.to_geotiff:17 of
+msgid ""
+"Aggregation function for rasterization and interpolation. Options: "
+"\"mean\", \"median\", \"max\", \"min\"."
+msgstr "ラスタライズと補間のための集約関数。オプション: \"mean\"、\"median\"、\"max\"、\"min\"。"
+
+#: alproj.project.to_geotiff:20 of
+msgid "NoData value for occluded/missing pixels."
+msgstr "遮蔽/欠損ピクセルのNoData値。"
+
+#: alproj.project.to_geotiff:23 of
+msgid "Writes GeoTIFF to output_path."
+msgstr "output_pathにGeoTIFFを書き込みます。"
+
+#: alproj.project.to_geotiff:27 of
+msgid "Examples"
+msgstr "使用例"
+
+#~ msgid "Camera parameters. See alproj.project.persp_proj()"
+#~ msgstr "カメラパラメータ。alproj.project.persp_proj() を参照。"
+
+#~ msgid ""
+#~ ">>> georectified = reverse_proj(original, "
+#~ "vert, ind, params_optim, offsets)\n"
+#~ ">>> to_geotiff(georectified, \"output.tif\", "
+#~ "resolution=1.0, crs=\"EPSG:6690\")"
+#~ msgstr ""
+#~ ">>> georectified = reverse_proj(original, "
+#~ "vert, ind, params_optim, offsets)\n"
+#~ ">>> to_geotiff(georectified, \"output.tif\", "
+#~ "resolution=1.0, crs=\"EPSG:6690\")"
+

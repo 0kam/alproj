@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: alproj \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-23 11:38+0900\n"
-"PO-Revision-Date: 2026-01-23 11:38+0900\n"
+"POT-Creation-Date: 2026-01-26 17:18+0900\n"
+"PO-Revision-Date: 2026-01-26 10:00+0900\n"
 "Last-Translator: \n"
 "Language: ja\n"
 "Language-Team: ja <LL@li.org>\n"
@@ -21,79 +21,386 @@ msgstr ""
 msgid "alproj.gcp module"
 msgstr "alproj.gcp モジュール"
 
-#: alproj.gcp.akaze_match:1 of
-msgid ""
-"AKAZE matching between the original (real) photograph and a simulated "
-"landscape image The work flow is shown below. - AKAZE local feature "
-"detection - FLANN matching - Find and remove outliers by homography "
-"transformation with RANSAC"
-msgstr ""
-"元の（実際の）写真とシミュレーション景観画像間のAKAZEマッチング。"
-"ワークフローは以下の通りです。- AKAZE局所特徴量検出 - FLANNマッチング "
-"- RANSACを用いたホモグラフィ変換による外れ値の検出と除去"
+# =============================================================================
+# filter_gcp_distance function
+#: alproj.gcp.filter_gcp_distance:1 of
+msgid "Filter GCPs based on 3D distance from the camera position."
+msgstr "カメラ位置からの3D距離に基づいてGCPをフィルタリングします。"
 
-#: ../../alproj.gcp.rst
+#: ../../alproj.gcp.rst alproj.gcp.filter_gcp_distance alproj.gcp.image_match
+#: of
 msgid "Parameters"
 msgstr "パラメータ"
 
-#: alproj.gcp.akaze_match:7 of
-msgid "Path for original photograph"
-msgstr "元の写真のパス"
-
-#: alproj.gcp.akaze_match:9 of
-msgid "Path for simulated landscape image"
-msgstr "シミュレーション景観画像のパス"
-
-#: alproj.gcp.akaze_match:11 of
+#: alproj.gcp.filter_gcp_distance:3 of
 msgid ""
-"If the error (pixel) of homography transformation on a point pair is "
-"larger than this value, it will be removed as an outlier."
-msgstr ""
-"点ペアのホモグラフィ変換の誤差（ピクセル）がこの値より大きい場合、"
-"外れ値として除去されます。"
+"GCP data with columns u, v, x, y, z (geographic coordinates in projected "
+"CRS, e.g., meters). Typically the result of set_gcp()."
+msgstr "u, v, x, y, z列を持つGCPデータ（投影CRSでの地理座標、例: メートル）。通常はset_gcp()の結果。"
 
-#: alproj.gcp.akaze_match:13 of
-msgid "Whether return a result plot"
-msgstr "結果プロットを返すかどうか"
+#: alproj.gcp.filter_gcp_distance:6 of
+msgid ""
+"Camera parameters containing 'x', 'y', 'z' keys (camera position in the "
+"same projected CRS as gcp)."
+msgstr "'x', 'y', 'z'キーを含むカメラパラメータ（gcpと同じ投影CRSでのカメラ位置）。"
 
-#: ../../alproj.gcp.rst
+#: alproj.gcp.filter_gcp_distance:9 of
+msgid ""
+"Minimum distance threshold in coordinate units (e.g., meters). Points "
+"closer than this are excluded. Must be non-negative if specified."
+msgstr "最小距離しきい値（座標単位、例: メートル）。これより近い点は除外されます。指定する場合は非負である必要があります。"
+
+#: alproj.gcp.filter_gcp_distance:12 of
+msgid ""
+"Maximum distance threshold. Points farther than this are excluded. Must "
+"be >= min_distance if both are specified."
+msgstr "最大距離しきい値。これより遠い点は除外されます。両方指定する場合はmin_distance以上である必要があります。"
+
+#: ../../alproj.gcp.rst alproj.gcp.filter_gcp_distance alproj.gcp.image_match
+#: of
 msgid "Returns"
 msgstr "戻り値"
 
-#: alproj.gcp.akaze_match:16 of
+#: alproj.gcp.filter_gcp_distance:16 of
+msgid "**gcp_filtered** -- Filtered GCP data with reset index."
+msgstr "**gcp_filtered** -- インデックスがリセットされたフィルタリング済みGCPデータ。"
+
+#: ../../alproj.gcp.rst alproj.gcp.filter_gcp_distance of
+msgid "Return type"
+msgstr "戻り値の型"
+
+#: alproj.gcp.filter_gcp_distance of
+msgid "Raises"
+msgstr "例外"
+
+#: alproj.gcp.filter_gcp_distance:19 of
+msgid "If params lacks 'x', 'y', or 'z' keys."
+msgstr "paramsに'x', 'y', または'z'キーがない場合。"
+
+#: alproj.gcp.filter_gcp_distance:20 of
+msgid "If min_distance < 0 or max_distance < min_distance."
+msgstr "min_distance < 0の場合、またはmax_distance < min_distanceの場合。"
+
+#: alproj.gcp.filter_gcp_distance:23 of
+msgid "Notes"
+msgstr "注記"
+
+#: alproj.gcp.filter_gcp_distance:24 of
+msgid ""
+"Coordinates must be in a projected CRS (e.g., UTM) for accurate Euclidean"
+" distance. Using lat/lon directly will produce incorrect results."
+msgstr "正確なユークリッド距離のために、座標は投影CRS（例: UTM）である必要があります。緯度/経度を直接使用すると正しくない結果が生じます。"
+
+#: alproj.gcp.filter_gcp_distance:26 of
+msgid "Rows with NaN in x, y, or z are excluded from the result."
+msgstr "x, y, zにNaNがある行は結果から除外されます。"
+
+#: alproj.gcp.filter_gcp_distance:29 alproj.gcp.image_match:75 of
+msgid "Examples"
+msgstr "使用例"
+
+# =============================================================================
+# image_match function
+#: alproj.gcp.image_match:1 of
+msgid ""
+"Feature matching between the original (real) photograph and a simulated "
+"landscape image."
+msgstr "元の（実際の）写真とシミュレーション景観画像間の特徴点マッチング。"
+
+#: alproj.gcp.image_match:3 of
+msgid "The workflow is:"
+msgstr "ワークフローは以下の通りです："
+
+#: alproj.gcp.image_match:5 of
+msgid "Local feature detection (method-dependent)"
+msgstr "局所特徴量検出（手法依存）"
+
+#: alproj.gcp.image_match:6 of
+msgid "Feature matching with Lowe's ratio test"
+msgstr "Loweの比率テストによる特徴点マッチング"
+
+# =============================================================================
+# _filter_geometric function
+#: alproj.gcp.image_match:7 of
+msgid "Geometric outlier filtering (Essential/Fundamental Matrix)"
+msgstr "幾何学的外れ値フィルタリング（本質行列/基本行列）"
+
+# =============================================================================
+# _filter_spatial function
+#: alproj.gcp.image_match:8 of
+msgid "Optional spatial thinning (grid-based sampling)"
+msgstr "オプションの空間的間引き（グリッドベースのサンプリング）"
+
+#: alproj.gcp.image_match:10 of
+msgid "Path for original photograph."
+msgstr "元の写真のパス。"
+
+#: alproj.gcp.image_match:12 of
+msgid "Path for simulated landscape image."
+msgstr "シミュレーション景観画像のパス。"
+
+#: alproj.gcp.image_match:14 of
+msgid ""
+"Matching method to use. Built-in methods: \"akaze\", \"sift\". With imm "
+"package installed: \"sift-lightglue\", \"superpoint-lightglue\", "
+"\"minima-superpoint-lightglue\", \"roma\", \"tiny-roma\", \"minima-"
+"roma\", \"loftr\", \"minima-loftr\", \"ufm\", \"rdd\", \"master\"."
+msgstr ""
+"使用するマッチング手法。組み込み手法: \"akaze\", \"sift\"。immパッケージがインストールされている場合: \"sift-"
+"lightglue\", \"superpoint-lightglue\", \"minima-superpoint-lightglue\", "
+"\"roma\", \"tiny-roma\", \"minima-roma\", \"loftr\", \"minima-loftr\", "
+"\"ufm\", \"rdd\", \"master\"。"
+
+#: alproj.gcp.image_match:19 of
+msgid ""
+"Outlier filtering method:  - \"fundamental\": Fundamental Matrix "
+"filtering (default). Use when camera   intrinsics are unknown. Requires "
+"at least 8 matches. - \"essential\": Essential Matrix filtering. "
+"Recommended when params   with fov is provided. Requires at least 5 "
+"matches. - \"none\": No geometric filtering. Use this when you plan to   "
+"apply custom filtering later."
+msgstr ""
+"外れ値フィルタリング手法：- \"fundamental\": 基本行列フィルタリング（デフォルト）。カメラの内部パラメータが不明な場合に使用。最低8組のマッチが必要。"
+"- \"essential\": 本質行列フィルタリング。fovを含むparamsが提供される場合に推奨。最低5組のマッチが必要。"
+"- \"none\": 幾何学的フィルタリングなし。後でカスタムフィルタリングを適用する予定の場合に使用。"
+
+#: alproj.gcp.image_match:19 of
+msgid "Outlier filtering method:"
+msgstr "外れ値フィルタリング手法："
+
+#: alproj.gcp.image_match:21 of
+msgid ""
+"\"fundamental\": Fundamental Matrix filtering (default). Use when camera "
+"intrinsics are unknown. Requires at least 8 matches."
+msgstr "\"fundamental\": 基本行列フィルタリング（デフォルト）。カメラ内部パラメータが不明な場合に使用。最低8組のマッチが必要。"
+
+#: alproj.gcp.image_match:23 of
+msgid ""
+"\"essential\": Essential Matrix filtering. Recommended when params with "
+"fov is provided. Requires at least 5 matches."
+msgstr "\"essential\": 本質行列フィルタリング。fovを含むparamsが提供される場合に推奨。最低5組のマッチが必要。"
+
+#: alproj.gcp.image_match:25 of
+msgid ""
+"\"none\": No geometric filtering. Use this when you plan to apply custom "
+"filtering later."
+msgstr "\"none\": 幾何学的フィルタリングなし。後でカスタムフィルタリングを適用する予定の場合に使用。"
+
+#: alproj.gcp.image_match:28 of
+msgid ""
+"Camera parameters dict containing fov, w, h, and optionally cx, cy. Used "
+"to compute focal_length and principal_point for \"essential\" filter. "
+"focal_length is calculated as: (w / 2) / tan(fov * pi / 180 / 2)"
+msgstr ""
+"fov, w, h、およびオプションでcx, "
+"cyを含むカメラパラメータ辞書。\"essential\"フィルタ用のfocal_lengthとprincipal_pointの計算に使用。focal_lengthは以下で計算:"
+" (w / 2) / tan(fov * pi / 180 / 2)"
+
+#: alproj.gcp.image_match:32 of
+msgid ""
+"Outlier threshold in pixels for Essential/Fundamental filtering. Higher "
+"values are more permissive (allow more matches through)."
+msgstr "本質行列/基本行列フィルタリングの外れ値しきい値（ピクセル）。値が大きいほど許容範囲が広くなります（より多くのマッチが通過します）。"
+
+#: alproj.gcp.image_match:35 of
+msgid ""
+"RANSAC variant for geometric filtering:  - \"RANSAC\": Standard RANSAC - "
+"\"LMEDS\": Least-Median of Squares - \"USAC_MAGSAC\": MAGSAC++ (most "
+"robust, recommended) - \"USAC_DEFAULT\": Default USAC configuration"
+msgstr ""
+"幾何学的フィルタリング用のRANSAC変種：- \"RANSAC\": 標準RANSAC "
+"- \"LMEDS\": 最小二乗中央値法 "
+"- \"USAC_MAGSAC\": MAGSAC++（最も堅牢、推奨）"
+"- \"USAC_DEFAULT\": デフォルトのUSAC設定"
+
+#: alproj.gcp.image_match:35 of
+msgid "RANSAC variant for geometric filtering:"
+msgstr "幾何学的フィルタリング用のRANSAC変種："
+
+#: alproj.gcp.image_match:37 of
+msgid "\"RANSAC\": Standard RANSAC"
+msgstr "\"RANSAC\": 標準RANSAC"
+
+#: alproj.gcp.image_match:38 of
+msgid "\"LMEDS\": Least-Median of Squares"
+msgstr "\"LMEDS\": 最小二乗中央値法"
+
+#: alproj.gcp.image_match:39 of
+msgid "\"USAC_MAGSAC\": MAGSAC++ (most robust, recommended)"
+msgstr "\"USAC_MAGSAC\": MAGSAC++（最も堅牢、推奨）"
+
+#: alproj.gcp.image_match:40 of
+msgid "\"USAC_DEFAULT\": Default USAC configuration"
+msgstr "\"USAC_DEFAULT\": デフォルトのUSAC設定"
+
+#: alproj.gcp.image_match:42 of
+msgid ""
+"Grid cell size in pixels for spatial thinning. If specified, keeps at "
+"most one match per grid cell. Example: 100 keeps ~1 point per 100x100 px "
+"region. Applied AFTER geometric outlier filtering."
+msgstr ""
+"空間的間引き用のグリッドセルサイズ（ピクセル単位）。指定すると、各グリッドセルに最大1つのマッチを保持。例: 100で100x100 "
+"px領域あたり約1点を保持。幾何学的外れ値フィルタリングの後に適用。"
+
+#: alproj.gcp.image_match:46 of
+msgid ""
+"Selection method for spatial thinning:  - \"first\": First point by input"
+" order (deterministic, fastest) - \"random\": Random selection (use "
+"spatial_thin_random_state for reproducibility) - \"center\": Point "
+"closest to cell center"
+msgstr ""
+"空間的間引きの選択方法：- \"first\": 入力順で最初の点（決定論的、最速）"
+"- \"random\": ランダム選択（再現性にはspatial_thin_random_stateを使用）"
+"- \"center\": セル中心に最も近い点"
+
+#: alproj.gcp.image_match:46 of
+msgid "Selection method for spatial thinning:"
+msgstr "空間的間引きの選択方法："
+
+#: alproj.gcp.image_match:48 of
+msgid "\"first\": First point by input order (deterministic, fastest)"
+msgstr "\"first\": 入力順で最初の点（決定論的、最速）"
+
+#: alproj.gcp.image_match:49 of
+msgid ""
+"\"random\": Random selection (use spatial_thin_random_state for "
+"reproducibility)"
+msgstr "\"random\": ランダム選択（再現性にはspatial_thin_random_stateを使用）"
+
+#: alproj.gcp.image_match:50 of
+msgid "\"center\": Point closest to cell center"
+msgstr "\"center\": セル中心に最も近い点"
+
+#: alproj.gcp.image_match:52 of
+msgid "Random seed when spatial_thin_selection=\"random\"."
+msgstr "spatial_thin_selection=\"random\"の場合のランダムシード。"
+
+#: alproj.gcp.image_match:54 of
+msgid "Whether to return a result plot."
+msgstr "結果プロットを返すかどうか。"
+
+#: alproj.gcp.image_match:56 of
+msgid ""
+"Device to use for imm methods (\"cpu\" or \"cuda\"). Ignored for built-in"
+" methods."
+msgstr "imm手法で使用するデバイス（\"cpu\"または\"cuda\"）。組み込み手法では無視されます。"
+
+#: alproj.gcp.image_match:58 of
+msgid ""
+"Resize images to this size for imm methods. Keypoints are automatically "
+"scaled back to original coordinates.  .. note::     For memory-intensive "
+"methods (roma, tiny-roma, minima-roma, loftr,     minima-loftr, ufm, rdd,"
+" master), if resize is None, images are     automatically resized to "
+"640px to prevent out-of-memory errors.     LightGlue-based methods (sift-"
+"lightglue, superpoint-lightglue,     minima-superpoint-lightglue) can "
+"handle full-resolution images     and do not auto-resize."
+msgstr ""
+"imm手法用に画像をこのサイズにリサイズします。キーポイントは自動的に元の座標にスケール変換されます。  "
+".. note:: メモリ集約型の手法（roma, tiny-roma, minima-roma, loftr, minima-loftr, ufm, rdd, "
+"master）の場合、resizeがNoneであれば、メモリ不足エラーを防ぐために画像は自動的に640pxにリサイズされます。LightGlueベースの手法"
+"（sift-lightglue, superpoint-lightglue, minima-superpoint-"
+"lightglue）はフル解像度の画像を処理でき、自動リサイズは行われません。"
+
+#: alproj.gcp.image_match:58 of
+msgid ""
+"Resize images to this size for imm methods. Keypoints are automatically "
+"scaled back to original coordinates."
+msgstr "imm手法用に画像をこのサイズにリサイズします。キーポイントは自動的に元の座標にスケール変換されます。"
+
+#: alproj.gcp.image_match:62 of
+msgid ""
+"For memory-intensive methods (roma, tiny-roma, minima-roma, loftr, "
+"minima-loftr, ufm, rdd, master), if resize is None, images are "
+"automatically resized to 640px to prevent out-of-memory errors. "
+"LightGlue-based methods (sift-lightglue, superpoint-lightglue, minima-"
+"superpoint-lightglue) can handle full-resolution images and do not auto-"
+"resize."
+msgstr ""
+"メモリ集約型の手法（roma, tiny-roma, minima-roma, loftr, minima-loftr, ufm, rdd, "
+"master）の場合、resizeがNoneであれば、メモリ不足エラーを防ぐために画像は自動的に640pxにリサイズされます。LightGlueベースの手法"
+"（sift-lightglue, superpoint-lightglue, minima-superpoint-"
+"lightglue）はフル解像度の画像を処理でき、自動リサイズは行われません。"
+
+#: alproj.gcp.image_match:69 of
+msgid ""
+"Additional keyword arguments passed to imm's get_matcher (e.g., "
+"max_num_keypoints)."
+msgstr "immのget_matcherに渡す追加のキーワード引数（例: max_num_keypoints）。"
+
+#: alproj.gcp.image_match:71 of
 msgid ""
 "* **points** (*pd.DataFrame*) -- The coordinates of matched points. "
-"(Left-Top origin) * **plot** (*np.array*) -- An OpenCV image of result "
-"plot."
+"(Left-Top origin) * **plot** (*np.array or None*) -- An OpenCV image of "
+"result plot if plot_result=True, otherwise None."
 msgstr ""
-"* **points** (*pd.DataFrame*) -- マッチした点の座標（左上原点）"
-"* **plot** (*np.array*) -- 結果プロットのOpenCV画像"
+"* **points** (*pd.DataFrame*) -- マッチした点の座標（左上原点）。"
+"* **plot** (*np.array or None*) -- plot_result=Trueの場合は結果プロットのOpenCV画像、そうでなければNone。"
 
-#: alproj.gcp.akaze_match:16 of
+#: alproj.gcp.image_match:71 of
 msgid ""
 "**points** (*pd.DataFrame*) -- The coordinates of matched points. (Left-"
 "Top origin)"
-msgstr "**points** (*pd.DataFrame*) -- マッチした点の座標（左上原点）"
+msgstr "**points** (*pd.DataFrame*) -- マッチした点の座標（左上原点）。"
 
-#: alproj.gcp.akaze_match:17 of
-msgid "**plot** (*np.array*) -- An OpenCV image of result plot."
-msgstr "**plot** (*np.array*) -- 結果プロットのOpenCV画像"
+#: alproj.gcp.image_match:72 of
+msgid ""
+"**plot** (*np.array or None*) -- An OpenCV image of result plot if "
+"plot_result=True, otherwise None."
+msgstr "**plot** (*np.array or None*) -- plot_result=Trueの場合は結果プロットのOpenCV画像、そうでなければNone。"
 
+#: alproj.gcp.image_match:76 of
+msgid "Basic matching with Fundamental Matrix filtering (default):"
+msgstr "基本行列フィルタリングによる基本的なマッチング（デフォルト）:"
+
+#: alproj.gcp.image_match:80 of
+msgid "Matching with Essential Matrix filtering using params:"
+msgstr "paramsを使用した本質行列フィルタリングによるマッチング:"
+
+# =============================================================================
+# plot_matches function
+#: alproj.gcp.plot_matches:1 of
+msgid "Plot feature matches on an image."
+msgstr "画像上に特徴点マッチを描画します。"
+
+#: alproj.gcp.plot_matches:3 of
+msgid "Image to draw on (BGR format)."
+msgstr "描画する画像（BGR形式）。"
+
+#: alproj.gcp.plot_matches:5 of
+msgid "Match coordinates with columns u_org, v_org, u_sim, v_sim."
+msgstr "u_org, v_org, u_sim, v_sim列を持つマッチ座標。"
+
+#: alproj.gcp.plot_matches:7 of
+msgid "Arrow color in BGR."
+msgstr "矢印の色（BGR形式）。"
+
+#: alproj.gcp.plot_matches:9 of
+msgid "Arrow thickness."
+msgstr "矢印の太さ。"
+
+#: alproj.gcp.plot_matches:11 of
+msgid "Arrow tip length as fraction of arrow length."
+msgstr "矢印の先端の長さ（矢印の長さに対する割合）。"
+
+#: alproj.gcp.plot_matches:14 of
+msgid "**plot** -- Image with arrows drawn."
+msgstr "**plot** -- 矢印が描画された画像。"
+
+# =============================================================================
+# set_gcp function
 #: alproj.gcp.set_gcp:1 of
 msgid ""
-"Adds giographic coordinates to the matched point pairs. The result of "
+"Adds geographic coordinates to the matched point pairs. The result of "
 "this function will be used as the Ground Control Points (GCPs) during "
-"camera parameter estimation"
-msgstr ""
-"マッチした点ペアに地理座標を追加します。この関数の結果はカメラパラメータ推定時の"
-"地上基準点（GCP）として使用されます"
+"camera parameter estimation."
+msgstr "マッチした点ペアに地理座標を追加します。この関数の結果はカメラパラメータ推定時の地上基準点（GCP）として使用されます。"
 
 #: alproj.gcp.set_gcp:5 of
-msgid "Result of alproj.gcp.akaze_match()"
-msgstr "alproj.gcp.akaze_match() の結果"
+msgid "Result of alproj.gcp.image_match()"
+msgstr "alproj.gcp.image_match() の結果"
 
 #: alproj.gcp.set_gcp:7 of
-msgid "Result of alproj.project.rverse_proj"
+msgid "Result of alproj.project.reverse_proj"
 msgstr "alproj.project.reverse_proj の結果"
 
 #: alproj.gcp.set_gcp:10 of
@@ -101,12 +408,15 @@ msgid ""
 "**gcp** -- A dataframe with 5 columns  u : int     x_axis coordinates of "
 "the Ground Control Points on the original photograph. Left-Top origin. v "
 ": int     y_axis coordinates of the GCPs. x : float     X coordinates of "
-"GCPs in a (planer) giographic coordinate system. y : float     Y "
-"coordinates of GCPs. z : float     Z coordinates of GCPs."
+"GCPs in a projected coordinate system (e.g., UTM in meters). y : float"
+"     Y coordinates of GCPs in the same projected coordinate system. z : "
+"float     Z coordinates (elevation) of GCPs in the same unit (e.g., "
+"meters)."
 msgstr ""
-"**gcp** -- 5列のデータフレーム  u : int     元の写真上のGCPのx軸座標（左上原点）"
-"v : int     GCPのy軸座標 x : float     （平面）地理座標系におけるGCPのX座標 "
-"y : float     GCPのY座標 z : float     GCPのZ座標"
+"**gcp** -- 5列のデータフレーム  u : int 元の写真上のGCPのx軸座標（左上原点）。v : int GCPのy軸座標。"
+"x : float 投影座標系（例: UTM、単位メートル）におけるGCPのX座標。"
+"y : float 同じ投影座標系におけるGCPのY座標。"
+"z : float 同じ単位（例: メートル）でのGCPのZ座標（標高）。"
 
 #: alproj.gcp.set_gcp:10 of
 msgid "**gcp** -- A dataframe with 5 columns"
@@ -116,6 +426,8 @@ msgstr "**gcp** -- 5列のデータフレーム"
 msgid "u"
 msgstr "u"
 
+# =============================================================================
+# Common type annotations
 #: alproj.gcp.set_gcp:-1 of
 msgid "int"
 msgstr "int"
@@ -124,7 +436,7 @@ msgstr "int"
 msgid ""
 "x_axis coordinates of the Ground Control Points on the original "
 "photograph. Left-Top origin."
-msgstr "元の写真上のGCPのx軸座標（左上原点）"
+msgstr "元の写真上のGCPのx軸座標（左上原点）。"
 
 #: alproj.gcp.set_gcp:14 of
 msgid "v"
@@ -132,7 +444,7 @@ msgstr "v"
 
 #: alproj.gcp.set_gcp:15 of
 msgid "y_axis coordinates of the GCPs."
-msgstr "GCPのy軸座標"
+msgstr "GCPのy軸座標。"
 
 #: alproj.gcp.set_gcp:16 of
 msgid "x"
@@ -143,25 +455,331 @@ msgid "float"
 msgstr "float"
 
 #: alproj.gcp.set_gcp:17 of
-msgid "X coordinates of GCPs in a (planer) giographic coordinate system."
-msgstr "（平面）地理座標系におけるGCPのX座標"
+msgid ""
+"X coordinates of GCPs in a projected coordinate system (e.g., UTM in "
+"meters)."
+msgstr "投影座標系（例: UTM、単位メートル）におけるGCPのX座標。"
 
 #: alproj.gcp.set_gcp:18 of
 msgid "y"
 msgstr "y"
 
 #: alproj.gcp.set_gcp:19 of
-msgid "Y coordinates of GCPs."
-msgstr "GCPのY座標"
+msgid "Y coordinates of GCPs in the same projected coordinate system."
+msgstr "同じ投影座標系におけるGCPのY座標。"
 
 #: alproj.gcp.set_gcp:20 of
 msgid "z"
 msgstr "z"
 
 #: alproj.gcp.set_gcp:21 of
-msgid "Z coordinates of GCPs."
-msgstr "GCPのZ座標"
+msgid "Z coordinates (elevation) of GCPs in the same unit (e.g., meters)."
+msgstr "同じ単位（例: メートル）でのGCPのZ座標（標高）。"
 
-#: ../../alproj.gcp.rst
-msgid "Return type"
-msgstr "戻り値の型"
+# =============================================================================
+# _opencv_match function
+#~ msgid "OpenCV feature matching (no Homography RANSAC)."
+#~ msgstr "OpenCV特徴点マッチング（HomographyによるRANSACなし）。"
+
+#~ msgid "im_org"
+#~ msgstr "im_org"
+
+#~ msgid "Original image (BGR)."
+#~ msgstr "元の画像（BGR形式）。"
+
+#~ msgid "im_sim"
+#~ msgstr "im_sim"
+
+#~ msgid "Simulated image (BGR)."
+#~ msgstr "シミュレーション画像（BGR形式）。"
+
+#~ msgid "detector_type"
+#~ msgstr "detector_type"
+
+#~ msgid "Feature detector type: \"akaze\" or \"sift\"."
+#~ msgstr "特徴点検出器のタイプ: \"akaze\" または \"sift\"。"
+
+#~ msgid "ratio"
+#~ msgstr "ratio"
+
+#~ msgid "Lowe's ratio test threshold."
+#~ msgstr "Loweの比率テストの閾値。"
+
+#~ msgid "pts1, pts2"
+#~ msgstr "pts1, pts2"
+
+#~ msgid "Matched point pairs, shape (N, 2)."
+#~ msgstr "マッチした点のペア、形状 (N, 2)。"
+
+# =============================================================================
+# _imm_match function
+#~ msgid "Internal imm-based matching implementation (no Homography RANSAC)."
+#~ msgstr "内部のimmベースマッチング実装（HomographyによるRANSACなし）。"
+
+#~ msgid "path_org"
+#~ msgstr "path_org"
+
+#~ msgid "Path to original image."
+#~ msgstr "元の画像へのパス。"
+
+#~ msgid "path_sim"
+#~ msgstr "path_sim"
+
+#~ msgid "Path to simulated image."
+#~ msgstr "シミュレーション画像へのパス。"
+
+#~ msgid "method"
+#~ msgstr "method"
+
+#~ msgid "IMM matching method name."
+#~ msgstr "IMMマッチング手法の名前。"
+
+#~ msgid "device"
+#~ msgstr "device"
+
+#~ msgid "Device for computation (\"cpu\" or \"cuda\")."
+#~ msgstr "計算に使用するデバイス（\"cpu\" または \"cuda\"）。"
+
+#~ msgid "resize"
+#~ msgstr "resize"
+
+#~ msgid "Resize images to this size."
+#~ msgstr "画像をこのサイズにリサイズします。"
+
+#~ msgid "**kwargs"
+#~ msgstr "**kwargs"
+
+#~ msgid "Additional arguments for imm's get_matcher."
+#~ msgstr "immのget_matcherに渡す追加の引数。"
+
+#~ msgid "pts1"
+#~ msgstr "pts1"
+
+#~ msgid "Points from image 1, shape (N, 2)."
+#~ msgstr "画像1からの点、形状 (N, 2)。"
+
+#~ msgid "pts2"
+#~ msgstr "pts2"
+
+#~ msgid "Points from image 2, shape (N, 2)."
+#~ msgstr "画像2からの点、形状 (N, 2)。"
+
+#~ msgid "Filtering method: \"essential\", \"fundamental\", or \"none\"."
+#~ msgstr "フィルタリング手法: \"essential\"、\"fundamental\"、または \"none\"。"
+
+#~ msgid "focal_length"
+#~ msgstr "focal_length"
+
+#~ msgid "Focal length in pixels."
+#~ msgstr "焦点距離（ピクセル単位）。"
+
+#~ msgid "principal_point"
+#~ msgstr "principal_point"
+
+#~ msgid "Principal point (cx, cy) in pixels."
+#~ msgstr "主点 (cx, cy)（ピクセル単位）。"
+
+#~ msgid "threshold"
+#~ msgstr "threshold"
+
+#~ msgid "Maximum allowed error in pixels."
+#~ msgstr "許容される最大誤差（ピクセル単位）。"
+
+#~ msgid "image_size"
+#~ msgstr "image_size"
+
+#~ msgid "Image size (width, height)."
+#~ msgstr "画像サイズ (幅, 高さ)。"
+
+#~ msgid "ransac_method"
+#~ msgstr "ransac_method"
+
+#~ msgid "RANSAC variant."
+#~ msgstr "RANSACの変種。"
+
+#~ msgid "mask"
+#~ msgstr "mask"
+
+#~ msgid "Boolean array where True indicates inliers."
+#~ msgstr "Trueがインライアを示すブール配列。"
+
+#~ msgid "pts"
+#~ msgstr "pts"
+
+#~ msgid "Points to thin, shape (N, 2). Typically pts1 (original image coords)."
+#~ msgstr "間引きする点、形状 (N, 2)。通常はpts1（元の画像座標）。"
+
+#~ msgid "grid_size"
+#~ msgstr "grid_size"
+
+#~ msgid ""
+#~ "Grid cell size in pixels (e.g., "
+#~ "100 for 100x100 px cells). Must be"
+#~ " positive integer."
+#~ msgstr "グリッドセルのサイズ（ピクセル単位、例: 100で100x100 pxセル）。正の整数である必要があります。"
+
+#~ msgid ""
+#~ "Image size as (width, height) in "
+#~ "pixels. Required for proper grid "
+#~ "coverage."
+#~ msgstr "画像サイズ (幅, 高さ)（ピクセル単位）。適切なグリッドカバレッジに必要。"
+
+#~ msgid "selection"
+#~ msgstr "selection"
+
+#~ msgid ""
+#~ "Point selection method within each grid cell:\n"
+#~ "\n"
+#~ "- \"first\": First point by input order (deterministic, fastest)\n"
+#~ "- \"random\": Random selection (requires "
+#~ "random_state for reproducibility)\n"
+#~ "- \"center\": Point closest to cell center (ties: first by index)"
+#~ msgstr ""
+#~ "各グリッドセル内での点の選択方法:\n"
+#~ "\n"
+#~ "- \"first\": 入力順で最初の点（決定論的、最速）\n"
+#~ "- \"random\": ランダム選択（再現性にはrandom_stateが必要）\n"
+#~ "- \"center\": セル中心に最も近い点（同点の場合: インデックス順で最初）"
+
+#~ msgid "random_state"
+#~ msgstr "random_state"
+
+#~ msgid "Seed for random selection. Required when selection=\"random\"."
+#~ msgstr "ランダム選択のシード。selection=\"random\"の場合に必要。"
+
+#~ msgid "Boolean array where True indicates selected points, shape (N,)."
+#~ msgstr "Trueが選択された点を示すブール配列、形状 (N,)。"
+
+#~ msgid "If grid_size <= 0 or selection is unknown."
+#~ msgstr "grid_size <= 0の場合、またはselectionが不明な場合。"
+
+#~ msgid ""
+#~ "The workflow is:\n"
+#~ "\n"
+#~ "- Local feature detection (method-dependent)\n"
+#~ "- Feature matching with Lowe's ratio test\n"
+#~ "- Geometric outlier filtering (Essential/Fundamental Matrix)\n"
+#~ "- Optional spatial thinning (grid-based sampling)"
+#~ msgstr ""
+#~ "ワークフローは以下の通りです:\n"
+#~ "\n"
+#~ "- 局所特徴量検出（手法依存）\n"
+#~ "- Loweの比率テストによる特徴点マッチング\n"
+#~ "- 幾何学的外れ値フィルタリング（本質行列/基本行列）\n"
+#~ "- オプションの空間的間引き（グリッドベースのサンプリング）"
+
+#~ msgid "params"
+#~ msgstr "params"
+
+#~ msgid "spatial_thin_grid"
+#~ msgstr "spatial_thin_grid"
+
+#~ msgid "spatial_thin_selection"
+#~ msgstr "spatial_thin_selection"
+
+#~ msgid "spatial_thin_random_state"
+#~ msgstr "spatial_thin_random_state"
+
+#~ msgid "plot_result"
+#~ msgstr "plot_result"
+
+#~ msgid "points"
+#~ msgstr "points"
+
+#~ msgid "plot"
+#~ msgstr "plot"
+
+#~ msgid ">>> match, _ = image_match(path_org, path_sim, method=\"akaze\")"
+#~ msgstr ">>> match, _ = image_match(path_org, path_sim, method=\"akaze\")"
+
+#~ msgid ""
+#~ ">>> match, _ = image_match(path_org, "
+#~ "path_sim, method=\"minima-roma\",\n"
+#~ "...                        outlier_filter=\"essential\", "
+#~ "params=params,\n"
+#~ "...                        device=\"cuda\")"
+#~ msgstr ""
+#~ ">>> match, _ = image_match(path_org, "
+#~ "path_sim, method=\"minima-roma\",\n"
+#~ "...                        outlier_filter=\"essential\", "
+#~ "params=params,\n"
+#~ "...                        device=\"cuda\")"
+
+#~ msgid "image"
+#~ msgstr "image"
+
+#~ msgid "matches"
+#~ msgstr "matches"
+
+#~ msgid "color"
+#~ msgstr "color"
+
+#~ msgid "thickness"
+#~ msgstr "thickness"
+
+#~ msgid "tip_length"
+#~ msgstr "tip_length"
+
+#~ msgid "match"
+#~ msgstr "match"
+
+#~ msgid "rev_proj"
+#~ msgstr "rev_proj"
+
+#~ msgid "gcp"
+#~ msgstr "gcp"
+
+#~ msgid "min_distance"
+#~ msgstr "min_distance"
+
+#~ msgid "max_distance"
+#~ msgstr "max_distance"
+
+#~ msgid "gcp_filtered"
+#~ msgstr "gcp_filtered"
+
+#~ msgid "KeyError"
+#~ msgstr "KeyError"
+
+#~ msgid "ValueError"
+#~ msgstr "ValueError"
+
+#~ msgid ""
+#~ ">>> gcps = set_gcp(match, df)\n"
+#~ ">>> gcps_filtered = filter_gcp_distance(gcps, params, min_distance=100)"
+#~ msgstr ""
+#~ ">>> gcps = set_gcp(match, df)\n"
+#~ ">>> gcps_filtered = filter_gcp_distance(gcps, params, min_distance=100)"
+
+# =============================================================================
+# Deprecated akaze_match function (for backwards compatibility)
+#~ msgid ""
+#~ "AKAZE matching between the original "
+#~ "(real) photograph and a simulated "
+#~ "landscape image."
+#~ msgstr "元の（実際の）写真とシミュレーション景観画像間のAKAZEマッチング。"
+
+#~ msgid "Use :func:`image_match` with ``method=\"akaze\"`` instead."
+#~ msgstr "代わりに :func:`image_match` を ``method=\"akaze\"`` で使用してください。"
+
+#~ msgid "str"
+#~ msgstr "str"
+
+#~ msgid "bool"
+#~ msgstr "bool"
+
+#~ msgid "numpy.ndarray"
+#~ msgstr "numpy.ndarray"
+
+#~ msgid "pd.DataFrame"
+#~ msgstr "pd.DataFrame"
+
+#~ msgid "tuple"
+#~ msgstr "tuple"
+
+#~ msgid "dict"
+#~ msgstr "dict"
+
+#~ msgid "optional"
+#~ msgstr "オプション"
+

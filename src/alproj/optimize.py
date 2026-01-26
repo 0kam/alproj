@@ -2,6 +2,7 @@ import numpy as np
 from math import pi, sin, cos, tan
 import pandas as pd
 from cmaes import CMA
+from scipy.optimize import least_squares
 from tqdm import tqdm
 
 def intrinsic_mat(fov_x_deg, w, h, cx=None, cy=None):
@@ -20,7 +21,7 @@ def intrinsic_mat(fov_x_deg, w, h, cx=None, cy=None):
     cx : float default None
         X-coordinate of the principal point. If None, cx = w/2.
     cy : float default None
-        Y-coordinate of the principal point. If None, y = h/2.
+        Y-coordinate of the principal point. If None, cy = h/2.
     
     Returns
     -------
@@ -96,7 +97,9 @@ def extrinsic_mat(pan_deg, tilt_deg, roll_deg, t_x, t_y, t_z):
 
 def _distort(points, w, h, a1, a2, k1, k2, k3, k4, k5, k6, p1, p2, s1, s2, s3, s4):
     """
-    Distorts an image by given parameters. See alproj.project.persp_proj().
+    Apply lens distortion to 2D points using the camera's distortion model.
+
+    For detailed parameter descriptions, see alproj.project.persp_proj().
     """
     centre = np.array([(w - 1) / 2, (h - 1) / 2], dtype = 'float32')
     x1 = (points[:,0] - centre[0]) / centre[0]
@@ -123,15 +126,15 @@ def project(obj_points, params):
     Parameters
     ----------
     obj_points : pandas.DataFrame
-        Coordinates of the points (usually GCPs) in 3D giographic coordinate system.
-        The column names must be x,y,z. 
+        Coordinates of the points (usually GCPs) in 3D geographic coordinate system.
+        The column names must be x, y, z.
     params : dict
-        Camera parameters. See alproj.project.persp_proj()
-    
+        Camera parameters. For detailed parameter descriptions, see alproj.project.persp_proj().
+
     Returns
     -------
     uv : pandas.DataFrame
-        2D projected coordinates.
+        2D projected coordinates with columns u, v.
     """
     obj_points = obj_points[["x", "y", "z"]]
     op = np.vstack((obj_points.to_numpy().T, np.ones([1,len(obj_points)])))
@@ -154,6 +157,18 @@ def project(obj_points, params):
 def rmse(img_points, projected):
     """
     Calculate Root Mean Square Error of the projection.
+
+    Parameters
+    ----------
+    img_points : pandas.DataFrame
+        Observed image coordinates with columns u, v.
+    projected : pandas.DataFrame
+        Projected image coordinates with columns u, v.
+
+    Returns
+    -------
+    rmse : float
+        Root mean square error in pixels.
     """
     img_points = img_points[["u", "v"]]
     img_points = img_points.to_numpy()
@@ -162,101 +177,244 @@ def rmse(img_points, projected):
     rmse = np.mean(dist)
     return rmse
 
-def default_bounds(params_init, target_params) :
-    bounds = np.zeros((len(target_params), 2))
-    i = 0
-    for key in target_params:
-        value = params_init[key]
-        if key in {"fov","pan","tilt","roll"}:
-            bounds[i,:] = np.array([value-45, value+45])
-        else:
-            bounds[i,:] = np.array([value-0.2,value+0.2])
-        i += 1
-    return bounds
-        
-class CMAOptimizer():
+
+def huber_loss(img_points, projected, f_scale=10.0):
     """
-    Camera parameter optimizer using Covariance Matrix Adaptation Evolution Strategy (CMA-ES).
-    See https://pypi.org/project/cmaes/ .
-    You can select which parameters to be optimized.
-    The camera location (x, y, z) must be fixed (not optimizable).
+    Calculate Huber loss for robust optimization.
+
+    Huber loss is less sensitive to outliers than squared error loss.
+    For residuals below f_scale, it behaves like L2 (squared) loss.
+    For residuals above f_scale, it behaves like L1 (linear) loss.
+
+    Parameters
+    ----------
+    img_points : pandas.DataFrame
+        Observed image coordinates with columns u, v.
+    projected : pandas.DataFrame
+        Projected image coordinates with columns u, v.
+    f_scale : float default 10.0
+        Threshold in pixels. Residuals below f_scale use L2, above use L1.
+
+    Returns
+    -------
+    loss : float
+        Mean Huber loss value.
+    """
+    img_arr = img_points[["u", "v"]].to_numpy()
+    proj_arr = projected.to_numpy()
+    residuals = np.sqrt((img_arr[:, 0] - proj_arr[:, 0])**2 +
+                        (img_arr[:, 1] - proj_arr[:, 1])**2)
+    loss = np.where(
+        residuals <= f_scale,
+        0.5 * residuals**2,
+        f_scale * (residuals - 0.5 * f_scale)
+    )
+    return np.mean(loss)
+
+
+def compute_residuals(obj_points, img_points, params):
+    """
+    Compute residual vector for least_squares optimization.
+
+    Parameters
+    ----------
+    obj_points : pandas.DataFrame
+        Geographic coordinates of the Ground Control Points.
+    img_points : pandas.DataFrame
+        Image coordinates of the Ground Control Points.
+    params : dict
+        Camera parameters.
+
+    Returns
+    -------
+    residuals : numpy.ndarray
+        Flattened residual vector (observed - projected).
+    """
+    projected = project(obj_points, params)
+    img_arr = img_points[["u", "v"]].to_numpy()
+    proj_arr = projected.to_numpy()
+    residuals = (img_arr - proj_arr).flatten()
+    return residuals
+
+
+DEFAULT_BOUND_WIDTHS = {
+    "fov": 45, "pan": 45, "tilt": 45, "roll": 45,
+    "x": 30, "y": 30, "z": 30,
+    "a1": 0.2, "a2": 0.2,
+    "k1": 0.2, "k2": 0.2, "k3": 0.2, "k4": 0.2, "k5": 0.2, "k6": 0.2,
+    "p1": 0.2, "p2": 0.2,
+    "s1": 0.2, "s2": 0.2, "s3": 0.2, "s4": 0.2,
+}
+
+def bounds_to_array(params_init, target_params, bound_widths=None):
+    """
+    Convert bound widths (dict) to numpy array for CMA-ES optimizer.
+
+    Parameters
+    ----------
+    params_init : dict
+        Initial values of camera parameters.
+    target_params : list
+        Parameters to be optimized.
+    bound_widths : dict default None
+        Width from initial value for each parameter (e.g., {"fov": 45, "x": 30}).
+        If None or parameter not specified, uses DEFAULT_BOUND_WIDTHS.
+
+    Returns
+    -------
+    bounds : numpy.ndarray
+        Bounds array with shape (len(target_params), 2).
+    """
+    if bound_widths is None:
+        bound_widths = {}
+
+    bounds = np.zeros((len(target_params), 2))
+    for i, key in enumerate(target_params):
+        value = params_init[key]
+        width = bound_widths.get(key, DEFAULT_BOUND_WIDTHS.get(key, 0.2))
+        bounds[i, :] = np.array([value - width, value + width])
+    return bounds
+
+
+class BaseOptimizer:
+    """
+    Base class for camera parameter optimizers.
 
     Attributes
     ----------
     obj_points : pandas.DataFrame
         Geographic coordinates of the Ground Control Points.
-        The column names must be x,y,z. See alproj.gcp.set_gcp()
+        The column names must be x, y, z. See alproj.gcp.set_gcp()
     img_points : pandas.DataFrame
         Image coordinates of the Ground Control Points.
         The column names must be u, v. See alproj.gcp.set_gcp()
     params_init : dict
-        Initial values of camera parameters.
+        Initial values of camera parameters. Must contain:
+        - x, y, z: Camera position in projected CRS (e.g., UTM in meters)
+        - fov: Field of view in degrees
+        - pan, tilt, roll: Orientation angles in degrees
+        - a1, a2, k1-k6, p1, p2, s1-s4: Distortion coefficients
+        - w, h: Image width and height in pixels
+        - cx, cy: Principal point coordinates
     """
+
     def __init__(self, obj_points, img_points, params_init):
         self.obj_points = obj_points
         self.img_points = img_points
         self.params_init = params_init
 
-    def set_target(self, target_params = ["fov", "pan", "tilt", "roll", "a1", "a2", "k1", "k2", "k3", \
-            "k4", "k5", "k6", "p1", "p2", "s1", "s2", "s3", "s4"]):
+    def set_target(self, target_params=["fov", "pan", "tilt", "roll", "a1", "a2", "k1", "k2", "k3",
+                                         "k4", "k5", "k6", "p1", "p2", "s1", "s2", "s3", "s4"]):
         """
         Set which parameters to be optimized.
 
         Parameters
         ----------
         target_params : list default ["fov", "pan", "tilt", "roll", "a1", "a2", "k1", "k2", "k3", "k4", "k5", "k6", "p1", "p2", "s1", "s2", "s3", "s4"]
-            Parameters to be optimized. You can not select x, y, and z.
+            Parameters to be optimized. You can also include x, y, and z for camera location.
         """
         p = self.params_init
         t = target_params
         self.target_params = target_params
         self.target_params_init = np.array([p[ti] for ti in t])
 
-    def _loss_function(self):
+
+class CMAOptimizer(BaseOptimizer):
+    """
+    Camera parameter optimizer using Covariance Matrix Adaptation Evolution Strategy (CMA-ES).
+    See https://pypi.org/project/cmaes/ .
+    You can select which parameters to be optimized, including camera location (x, y, z).
+    """
+
+    def _loss_function(self, bounds, f_scale=None):
+        """
+        Create loss function with normalization.
+
+        Parameters
+        ----------
+        bounds : numpy.ndarray
+            Bounds array with shape (len(target_params), 2).
+        f_scale : float default None
+            Threshold for Huber loss in pixels. If None, uses L2 loss (RMSE).
+            If specified, uses Huber loss with this threshold.
+        """
         params = self.params_init.copy()
         for t in self.target_params:
             params.pop(t)
-        def _proj_error(values): # parameter values to optimize, as np.array
+        lower = bounds[:, 0]
+        upper = bounds[:, 1]
+
+        def _proj_error(normalized_values):
+            # Denormalize: [0, 1] -> [lower, upper]
+            values = normalized_values * (upper - lower) + lower
             params.update(dict(zip(self.target_params, values)))
             projected = project(self.obj_points, params)
-            loss = rmse(self.img_points, projected)
+            if f_scale is None:
+                loss = rmse(self.img_points, projected)
+            else:
+                loss = huber_loss(self.img_points, projected, f_scale)
             return loss
         return _proj_error
-    
-    def optimize(self, sigma=1.0, bounds=None, generation=1000, population_size=10, n_max_resampling = 100):
+
+    def optimize(self, sigma=0.2, bound_widths=None, generation=1000, population_size=10,
+                 n_max_resampling=100, f_scale=None):
         """
         CMA-optimization of camera parameters.
         See https://github.com/CyberAgent/cmaes/blob/main/cmaes/_cma.py .
 
+        Parameters are normalized to [0, 1] range internally for efficient optimization.
+
         Parameters
         ----------
-        sigma : float default 1.0
-            Initial standard deviation of covariance matrix.
-        bounds : numpy.ndarray default None
-            Lower and upper domain boundaries for each parameter (optional).
-            The shape must be (len(target_params), 2).
-            If None, bounds will be automatically set +-45 degree for fov, pan, tilt, roll and -1 to 1 for radial distortion coefficients, -0.2 to 0.2 for other distortion coefficients.
+        sigma : float default 0.2
+            Initial standard deviation of covariance matrix (in normalized [0, 1] space).
+        bound_widths : dict default None
+            Width from initial value for each parameter (e.g., {"fov": 30, "x": 50}).
+            If None or parameter not specified, uses default widths:
+            +-45 degrees for fov, pan, tilt, roll; +-30 meters for x, y, z;
+            +-0.2 for distortion coefficients.
             Note that large absolute values of distortion coefficients may cause broken projection.
-        generation : int
-            Generation numbers to run.
-        pupulation_size : int default 10
+        generation : int default 1000
+            Number of generations to run.
+        population_size : int default 10
             Population size.
         n_max_resampling : int default 100
             A maximum number of resampling parameters (default: 100).
             If all sampled parameters are infeasible, the last sampled one
-            will be clipped with lower and upper bounds. 
-        
+            will be clipped with lower and upper bounds.
+        f_scale : float default None
+            Threshold for Huber loss in pixels. If None, uses L2 loss (RMSE).
+            If specified (e.g., 10.0), uses Huber loss which is more robust to outliers.
+
         Returns
         -------
         params : dict
             Optimized camera parameters.
         error : float
-            A reprojection error in pixel. 
+            A reprojection error in pixel.
         """
-        loss_function = self._loss_function()
-        if bounds is None:
-            bounds = default_bounds(self.params_init, self.target_params)
-        optimizer = CMA(mean=self.target_params_init.astype("float64"), sigma=float(sigma), bounds=bounds, population_size=population_size, n_max_resampling=n_max_resampling)
+        # Compute bounds in original space
+        bounds = bounds_to_array(self.params_init, self.target_params, bound_widths)
+        lower = bounds[:, 0]
+        upper = bounds[:, 1]
+
+        # Normalize initial values to [0, 1]
+        # Initial value is at center of bounds, so normalized = 0.5
+        normalized_init = (self.target_params_init - lower) / (upper - lower)
+
+        # CMA-ES works in normalized [0, 1] space
+        normalized_bounds = np.column_stack([np.zeros(len(self.target_params)),
+                                              np.ones(len(self.target_params))])
+
+        loss_function = self._loss_function(bounds, f_scale)
+        optimizer = CMA(
+            mean=normalized_init.astype("float64"),
+            sigma=float(sigma),
+            bounds=normalized_bounds,
+            population_size=population_size,
+            n_max_resampling=n_max_resampling
+        )
+
         for _ in tqdm(range(generation)):
             solutions = []
             for _ in range(population_size):
@@ -264,10 +422,118 @@ class CMAOptimizer():
                 value = loss_function(x)
                 solutions.append((x, value))
             optimizer.tell(solutions)
-        error = solutions[0][1]
+
+        # Denormalize best solution
+        best_normalized = solutions[0][0]
+        best_values = best_normalized * (upper - lower) + lower
+
         params = self.params_init.copy()
         for t in self.target_params:
             params.pop(t)
-        params.update(dict(zip(self.target_params, solutions[0][0])))
+        params.update(dict(zip(self.target_params, best_values)))
+
+        # Always return RMSE for consistency with LsqOptimizer
+        projected = project(self.obj_points, params)
+        error = rmse(self.img_points, projected)
+
         return params, error
-        
+
+
+class LsqOptimizer(BaseOptimizer):
+    """
+    Camera parameter optimizer using scipy.optimize.least_squares.
+    Supports Trust Region Reflective (trf), dogbox, and Levenberg-Marquardt (lm) methods.
+    """
+
+    def _residual_function(self):
+        """
+        Create residual function for least_squares.
+
+        Returns
+        -------
+        residual_func : callable
+            Function that computes residuals given parameter values.
+        """
+        params = self.params_init.copy()
+        for t in self.target_params:
+            params.pop(t)
+
+        def _residuals(values):
+            params.update(dict(zip(self.target_params, values)))
+            return compute_residuals(self.obj_points, self.img_points, params)
+
+        return _residuals
+
+    def optimize(self, method="trf", bound_widths=None, loss="linear", f_scale=1.0, **kwargs):
+        """
+        Least-squares optimization of camera parameters.
+
+        Parameters
+        ----------
+        method : str default "trf"
+            Algorithm to use: "trf" (Trust Region Reflective), "dogbox", or "lm" (Levenberg-Marquardt).
+            Note: "lm" does not support bounds or robust loss functions.
+        bound_widths : dict default None
+            Width from initial value for each parameter (e.g., {"fov": 30, "x": 50}).
+            If None, uses default widths. Ignored when method="lm".
+        loss : str default "linear"
+            Loss function to use. Options:
+            - "linear": Standard least squares (L2 loss).
+            - "huber": Huber loss, robust to outliers.
+            - "soft_l1": Smooth approximation of L1 loss.
+            - "cauchy": Cauchy loss, strongly robust to outliers.
+            - "arctan": Arctan loss.
+            Note: Only "linear" is supported when method="lm".
+        f_scale : float default 1.0
+            Soft threshold for inlier residuals (in pixels). Residuals below f_scale
+            are treated normally, while those above are down-weighted according to
+            the loss function. Has no effect when loss="linear".
+            Typical values: 1.0-20.0 pixels depending on expected outlier magnitude.
+        **kwargs :
+            Additional arguments passed to scipy.optimize.least_squares.
+
+        Returns
+        -------
+        params : dict
+            Optimized camera parameters.
+        error : float
+            A reprojection error (RMSE) in pixel.
+        """
+        if method == "lm" and bound_widths is not None:
+            raise ValueError("method='lm' does not support bounds. Set bound_widths=None or use 'trf'/'dogbox'.")
+        if method == "lm" and loss != "linear":
+            raise ValueError("method='lm' does not support robust loss functions. Use loss='linear' or method='trf'/'dogbox'.")
+
+        residual_func = self._residual_function()
+
+        if method == "lm":
+            result = least_squares(
+                residual_func,
+                self.target_params_init,
+                method=method,
+                **kwargs
+            )
+        else:
+            bounds = bounds_to_array(self.params_init, self.target_params, bound_widths)
+            lower = bounds[:, 0]
+            upper = bounds[:, 1]
+            result = least_squares(
+                residual_func,
+                self.target_params_init,
+                method=method,
+                bounds=(lower, upper),
+                loss=loss,
+                f_scale=f_scale,
+                **kwargs
+            )
+
+        best_values = result.x
+        params = self.params_init.copy()
+        for t in self.target_params:
+            params.pop(t)
+        params.update(dict(zip(self.target_params, best_values)))
+
+        projected = project(self.obj_points, params)
+        error = rmse(self.img_points, projected)
+
+        return params, error

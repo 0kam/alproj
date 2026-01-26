@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: alproj \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-23 11:38+0900\n"
-"PO-Revision-Date: 2026-01-23 11:38+0900\n"
+"POT-Creation-Date: 2026-01-26 12:00+0900\n"
+"PO-Revision-Date: 2026-01-26 12:00+0900\n"
 "Last-Translator: \n"
 "Language: ja\n"
 "Language-Team: ja <LL@li.org>\n"
@@ -21,14 +21,59 @@ msgstr ""
 msgid "Installation"
 msgstr "インストール"
 
+#: ../../installation.md:3
+msgid "**Requires Python 3.9-3.12**"
+msgstr "**Python 3.9-3.12 が必要です**"
+
 #: ../../installation.md:5
+msgid "Basic Installation"
+msgstr "基本インストール"
+
+#: ../../installation.md:10
+msgid "Optional Dependencies"
+msgstr "オプション依存関係"
+
+#: ../../installation.md:12
+msgid "Advanced Image Matching (imm)"
+msgstr "高度な画像マッチング (imm)"
+
+#: ../../installation.md:13
+msgid ""
+"For advanced deep learning-based image matching methods (RoMa, LoFTR, "
+"LightGlue, etc.), install with the imm option:"
+msgstr ""
+"高度な深層学習ベースの画像マッチング手法（RoMa、LoFTR、LightGlue等）を使用する場合は、"
+"immオプションでインストールしてください："
+
+#: ../../installation.md:19
+msgid ""
+"This installs the [imm](https://github.com/gmberton/image-matching-models) "
+"package along with PyTorch and other dependencies."
+msgstr ""
+"これにより、[imm](https://github.com/gmberton/image-matching-models)パッケージと"
+"PyTorchなどの依存関係がインストールされます。"
+
+#: ../../installation.md:21
+msgid ""
+"These methods can provide more robust matching for challenging images with "
+"different resolutions, lighting conditions, or low-texture regions. GPU "
+"(CUDA) is recommended for best performance."
+msgstr ""
+"これらの手法は、異なる解像度、照明条件、低テクスチャ領域など、困難な画像に対してより堅牢な"
+"マッチングを提供できます。最高のパフォーマンスを得るにはGPU（CUDA）を推奨します。"
+
+#: ../../installation.md:23
 msgid "Dependencies"
 msgstr "依存関係"
 
-#: ../../installation.md:17
+#: ../../installation.md:24
+msgid "Core dependencies (automatically installed):"
+msgstr "コア依存関係（自動インストール）："
+
+#: ../../installation.md:36
 msgid "Tested environments"
 msgstr "動作確認環境"
 
-#: ../../installation.md:18
-msgid "Ubuntu 20.04LTS with Python 3.8.5"
-msgstr "Ubuntu 20.04LTS、Python 3.8.5"
+#: ../../installation.md:37
+msgid "Ubuntu 20.04 LTS / Ubuntu24.04 LTS / macOS with Python 3.9-3.12"
+msgstr "Ubuntu 20.04 LTS / Ubuntu24.04 LTS / macOS、Python 3.9-3.12"

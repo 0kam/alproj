@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: alproj \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-23 11:38+0900\n"
-"PO-Revision-Date: 2026-01-23 11:38+0900\n"
+"POT-Creation-Date: 2026-01-26 17:18+0900\n"
+"PO-Revision-Date: 2026-01-26 12:00+0900\n"
 "Last-Translator: \n"
 "Language: ja\n"
 "Language-Team: ja <LL@li.org>\n"
@@ -21,132 +21,275 @@ msgstr ""
 msgid "alproj.optimize module"
 msgstr "alproj.optimize モジュール"
 
+# BaseOptimizer class
+#: alproj.optimize.BaseOptimizer:1 of
+msgid "Base class for camera parameter optimizers."
+msgstr "カメラパラメータオプティマイザの基底クラス"
+
+#: alproj.optimize.BaseOptimizer:5 of
+msgid ""
+"Geographic coordinates of the Ground Control Points. The column names "
+"must be x, y, z. See alproj.gcp.set_gcp()"
+msgstr "地上基準点の地理座標。列名はx, y, zである必要があります。alproj.gcp.set_gcp() を参照"
+
+#: alproj.optimize.BaseOptimizer of
+msgid "type"
+msgstr "型"
+
+#: alproj.optimize.BaseOptimizer:8 alproj.optimize.BaseOptimizer:15 of
+msgid "pandas.DataFrame"
+msgstr "pandas.DataFrame"
+
+#: alproj.optimize.BaseOptimizer:12 of
+msgid ""
+"Image coordinates of the Ground Control Points. The column names must be "
+"u, v. See alproj.gcp.set_gcp()"
+msgstr "地上基準点の画像座標。列名はu, vである必要があります。alproj.gcp.set_gcp() を参照"
+
+#: alproj.optimize.BaseOptimizer:19 of
+msgid ""
+"Initial values of camera parameters. Must contain: - x, y, z: Camera "
+"position in projected CRS (e.g., UTM in meters) - fov: Field of view in "
+"degrees - pan, tilt, roll: Orientation angles in degrees - a1, a2, k1-k6,"
+" p1, p2, s1-s4: Distortion coefficients - w, h: Image width and height in"
+" pixels - cx, cy: Principal point coordinates"
+msgstr ""
+"カメラパラメータの初期値。以下を含む必要があります：- x, y, z: 投影座標系でのカメラ位置（例：UTMメートル単位）- fov: "
+"視野角（度）- pan, tilt, roll: 姿勢角（度）- a1, a2, k1-k6, p1, p2, s1-s4: 歪み係数- w, "
+"h: 画像の幅と高さ（ピクセル）- cx, cy: 主点座標"
+
+#: alproj.optimize.BaseOptimizer:27 of
+msgid "dict"
+msgstr "dict"
+
+#: alproj.optimize.BaseOptimizer.set_target:1 of
+msgid "Set which parameters to be optimized."
+msgstr "最適化するパラメータを設定"
+
+#: ../../alproj.optimize.rst
+msgid "Parameters"
+msgstr "パラメータ"
+
+#: alproj.optimize.BaseOptimizer.set_target:3 of
+msgid ""
+"Parameters to be optimized. You can also include x, y, and z for camera "
+"location."
+msgstr "最適化するパラメータ。カメラ位置のx, y, zも含めることができます。"
+
+# CMAOptimizer class
 #: alproj.optimize.CMAOptimizer:1 of
 msgid ""
 "Camera parameter optimizer using Covariance Matrix Adaptation Evolution "
 "Strategy (CMA-ES). See https://pypi.org/project/cmaes/ . You can select "
-"which parameters to be optimized. The camera location (x, y, z) must be "
-"fixed (not optimizable)."
+"which parameters to be optimized, including camera location (x, y, z)."
 msgstr ""
-"共分散行列適応進化戦略（CMA-ES）を使用したカメラパラメータ最適化器。"
-"https://pypi.org/project/cmaes/ を参照。最適化するパラメータを選択できます。"
-"カメラ位置（x, y, z）は固定する必要があります（最適化不可）。"
-
-#: alproj.optimize.CMAOptimizer:8 of
-msgid ""
-"Geographic coordinates of the Ground Control Points. The column names "
-"must be x,y,z. See alproj.gcp.set_gcp()"
-msgstr ""
-"地上基準点の地理座標。列名はx,y,zである必要があります。"
-"alproj.gcp.set_gcp() を参照"
-
-#: alproj.optimize.CMAOptimizer of
-msgid "type"
-msgstr "型"
-
-#: alproj.optimize.CMAOptimizer:11 alproj.optimize.CMAOptimizer:18 of
-msgid "pandas.DataFrame"
-msgstr "pandas.DataFrame"
-
-#: alproj.optimize.CMAOptimizer:15 of
-msgid ""
-"Image coordinates of the Ground Control Points. The column names must be "
-"u, v. See alproj.gcp.set_gcp()"
-msgstr ""
-"地上基準点の画像座標。列名はu, vである必要があります。"
-"alproj.gcp.set_gcp() を参照"
-
-#: alproj.optimize.CMAOptimizer:22 of
-msgid "Initial values of camera parameters."
-msgstr "カメラパラメータの初期値"
-
-#: alproj.optimize.CMAOptimizer:24 of
-msgid "dict"
-msgstr "dict"
+"共分散行列適応進化戦略（CMA-ES）を使用したカメラパラメータオプティマイザ。https://pypi.org/project/cmaes/ "
+"を参照。カメラ位置（x, y, z）を含め、最適化するパラメータを選択できます。"
 
 #: alproj.optimize.CMAOptimizer.optimize:1 of
 msgid ""
 "CMA-optimization of camera parameters. See "
 "https://github.com/CyberAgent/cmaes/blob/main/cmaes/_cma.py ."
 msgstr ""
-"カメラパラメータのCMA最適化。"
-"https://github.com/CyberAgent/cmaes/blob/main/cmaes/_cma.py を参照"
-
-#: ../../alproj.optimize.rst
-msgid "Parameters"
-msgstr "パラメータ"
+"カメラパラメータのCMA最適化。https://github.com/CyberAgent/cmaes/blob/main/cmaes/_cma.py"
+" を参照"
 
 #: alproj.optimize.CMAOptimizer.optimize:4 of
-msgid "Initial standard deviation of covariance matrix."
-msgstr "共分散行列の初期標準偏差"
+msgid ""
+"Parameters are normalized to [0, 1] range internally for efficient "
+"optimization."
+msgstr "効率的な最適化のため、パラメータは内部で[0, 1]範囲に正規化されます。"
 
 #: alproj.optimize.CMAOptimizer.optimize:6 of
 msgid ""
-"Lower and upper domain boundaries for each parameter (optional). The "
-"shape must be (len(target_params), 2). If None, bounds will be "
-"automatically set +-45 degree for fov, pan, tilt, roll and -1 to 1 for "
-"radial distortion coefficients, -0.2 to 0.2 for other distortion "
-"coefficients. Note that large absolute values of distortion coefficients "
-"may cause broken projection."
-msgstr ""
-"各パラメータの下限と上限（オプション）。形状は(len(target_params), 2)である"
-"必要があります。Noneの場合、fov, pan, tilt, rollは±45度、放射歪み係数は"
-"-1から1、その他の歪み係数は-0.2から0.2に自動設定されます。歪み係数の絶対値が"
-"大きいと投影が崩れる可能性があります。"
+"Initial standard deviation of covariance matrix (in normalized [0, 1] "
+"space)."
+msgstr "共分散行列の初期標準偏差（正規化された[0, 1]空間内）"
 
-#: alproj.optimize.CMAOptimizer.optimize:11 of
-msgid "Generation numbers to run."
+#: alproj.optimize.CMAOptimizer.optimize:8 of
+#, python-brace-format
+msgid ""
+"Width from initial value for each parameter (e.g., {\"fov\": 30, \"x\": "
+"50}). If None or parameter not specified, uses default widths: +-45 "
+"degrees for fov, pan, tilt, roll; +-30 meters for x, y, z; +-0.2 for "
+"distortion coefficients. Note that large absolute values of distortion "
+"coefficients may cause broken projection."
+msgstr ""
+"各パラメータの初期値からの幅（例：{\"fov\": 30, \"x\": "
+"50}）。Noneまたはパラメータが指定されていない場合、デフォルト幅を使用：fov, pan, tilt, rollは±45度、x, y, "
+"zは±30メートル、歪み係数は±0.2。歪み係数の絶対値が大きいと投影が崩れる可能性があります。"
+
+#: alproj.optimize.CMAOptimizer.optimize:14 of
+msgid "Number of generations to run."
 msgstr "実行する世代数"
 
-#: alproj.optimize.CMAOptimizer.optimize:13 of
+#: alproj.optimize.CMAOptimizer.optimize:16 of
 msgid "Population size."
 msgstr "集団サイズ"
 
-#: alproj.optimize.CMAOptimizer.optimize:15 of
+#: alproj.optimize.CMAOptimizer.optimize:18 of
 msgid ""
 "A maximum number of resampling parameters (default: 100). If all sampled "
 "parameters are infeasible, the last sampled one will be clipped with "
 "lower and upper bounds."
 msgstr ""
-"パラメータ再サンプリングの最大回数（デフォルト: 100）。サンプリングされた"
-"すべてのパラメータが実行不可能な場合、最後にサンプリングされたものが"
-"上下限でクリップされます。"
+"パラメータ再サンプリングの最大回数（デフォルト: "
+"100）。サンプリングされたすべてのパラメータが実行不可能な場合、最後にサンプリングされたものが上下限でクリップされます。"
+
+#: alproj.optimize.CMAOptimizer.optimize:22 of
+msgid ""
+"Threshold for Huber loss in pixels. If None, uses L2 loss (RMSE). If "
+"specified (e.g., 10.0), uses Huber loss which is more robust to outliers."
+msgstr "ピクセル単位のHuber損失の閾値。Noneの場合、L2損失（RMSE）を使用。指定した場合（例：10.0）、外れ値に対してよりロバストなHuber損失を使用"
 
 #: ../../alproj.optimize.rst
 msgid "Returns"
 msgstr "戻り値"
 
-#: alproj.optimize.CMAOptimizer.optimize:20 of
+#: alproj.optimize.CMAOptimizer.optimize:26 of
 msgid ""
 "* **params** (*dict*) -- Optimized camera parameters. * **error** "
 "(*float*) -- A reprojection error in pixel."
 msgstr ""
-"* **params** (*dict*) -- 最適化されたカメラパラメータ "
-"* **error** (*float*) -- 再投影誤差（ピクセル）"
+"* **params** (*dict*) -- 最適化されたカメラパラメータ。"
+"* **error** (*float*) -- ピクセル単位の再投影誤差。"
 
-#: alproj.optimize.CMAOptimizer.optimize:20 of
+#: alproj.optimize.CMAOptimizer.optimize:26
+#: alproj.optimize.LsqOptimizer.optimize:24 of
 msgid "**params** (*dict*) -- Optimized camera parameters."
-msgstr "**params** (*dict*) -- 最適化されたカメラパラメータ"
+msgstr "**params** (*dict*) -- 最適化されたカメラパラメータ。"
 
-#: alproj.optimize.CMAOptimizer.optimize:21 of
+#: alproj.optimize.CMAOptimizer.optimize:27 of
 msgid "**error** (*float*) -- A reprojection error in pixel."
-msgstr "**error** (*float*) -- 再投影誤差（ピクセル）"
+msgstr "**error** (*float*) -- ピクセル単位の再投影誤差。"
 
-#: alproj.optimize.CMAOptimizer.set_target:1 of
-msgid "Set which parameters to be optimized."
-msgstr "最適化するパラメータを設定"
+# LsqOptimizer class
+#: alproj.optimize.LsqOptimizer:1 of
+msgid ""
+"Camera parameter optimizer using scipy.optimize.least_squares. Supports "
+"Trust Region Reflective (trf), dogbox, and Levenberg-Marquardt (lm) "
+"methods."
+msgstr ""
+"scipy.optimize.least_squaresを使用したカメラパラメータオプティマイザ。Trust Region Reflective "
+"(trf)、dogbox、Levenberg-Marquardt (lm) メソッドをサポート"
 
-#: alproj.optimize.CMAOptimizer.set_target:3 of
-msgid "Parameters to be optimized. You can not select x, y, and z."
-msgstr "最適化するパラメータ。x, y, zは選択できません。"
+#: alproj.optimize.LsqOptimizer.optimize:1 of
+msgid "Least-squares optimization of camera parameters."
+msgstr "カメラパラメータの最小二乗最適化"
 
+#: alproj.optimize.LsqOptimizer.optimize:3 of
+msgid ""
+"Algorithm to use: \"trf\" (Trust Region Reflective), \"dogbox\", or "
+"\"lm\" (Levenberg-Marquardt). Note: \"lm\" does not support bounds or "
+"robust loss functions."
+msgstr ""
+"使用するアルゴリズム：\"trf\"（Trust Region Reflective）、\"dogbox\"、または\"lm"
+"\"（Levenberg-Marquardt）。注意：\"lm\"は境界やロバスト損失関数をサポートしません。"
+
+#: alproj.optimize.LsqOptimizer.optimize:6 of
+#, python-brace-format
+msgid ""
+"Width from initial value for each parameter (e.g., {\"fov\": 30, \"x\": "
+"50}). If None, uses default widths. Ignored when method=\"lm\"."
+msgstr ""
+"各パラメータの初期値からの幅（例：{\"fov\": 30, \"x\": "
+"50}）。Noneの場合、デフォルト幅を使用。method=\"lm\"の場合は無視"
+
+#: alproj.optimize.LsqOptimizer.optimize:9 of
+msgid ""
+"Loss function to use. Options: - \"linear\": Standard least squares (L2 "
+"loss). - \"huber\": Huber loss, robust to outliers. - \"soft_l1\": Smooth"
+" approximation of L1 loss. - \"cauchy\": Cauchy loss, strongly robust to "
+"outliers. - \"arctan\": Arctan loss. Note: Only \"linear\" is supported "
+"when method=\"lm\"."
+msgstr ""
+"使用する損失関数。オプション：- \"linear\"：標準最小二乗（L2損失）- \"huber\"：Huber損失、外れ値にロバスト- "
+"\"soft_l1\"：L1損失の滑らかな近似- \"cauchy\"：Cauchy損失、外れ値に強くロバスト- "
+"\"arctan\"：Arctan損失注意：method=\"lm\"の場合は\"linear\"のみサポート"
+
+#: alproj.optimize.LsqOptimizer.optimize:17 of
+msgid ""
+"Soft threshold for inlier residuals (in pixels). Residuals below f_scale "
+"are treated normally, while those above are down-weighted according to "
+"the loss function. Has no effect when loss=\"linear\". Typical values: "
+"1.0-20.0 pixels depending on expected outlier magnitude."
+msgstr "インライア残差のソフト閾値（ピクセル単位）。f_scale以下の残差は通常通り扱われ、それ以上の残差は損失関数に従って重みが下げられます。loss=\"linear\"の場合は効果なし。典型的な値：予想される外れ値の大きさに応じて1.0〜20.0ピクセル"
+
+#: alproj.optimize.LsqOptimizer.optimize:22 of
+msgid "Additional arguments passed to scipy.optimize.least_squares."
+msgstr "scipy.optimize.least_squaresに渡される追加引数"
+
+#: alproj.optimize.LsqOptimizer.optimize:24 of
+msgid ""
+"* **params** (*dict*) -- Optimized camera parameters. * **error** "
+"(*float*) -- A reprojection error (RMSE) in pixel."
+msgstr ""
+"* **params** (*dict*) -- 最適化されたカメラパラメータ。"
+"* **error** (*float*) -- ピクセル単位の再投影誤差（RMSE）。"
+
+#: alproj.optimize.LsqOptimizer.optimize:25 of
+msgid "**error** (*float*) -- A reprojection error (RMSE) in pixel."
+msgstr "**error** (*float*) -- ピクセル単位の再投影誤差（RMSE）。"
+
+# bounds_to_array function
+#: alproj.optimize.bounds_to_array:1 of
+msgid "Convert bound widths (dict) to numpy array for CMA-ES optimizer."
+msgstr "CMA-ESオプティマイザ用に境界幅（dict）をnumpy配列に変換"
+
+#: alproj.optimize.bounds_to_array:3 of
+msgid "Initial values of camera parameters."
+msgstr "カメラパラメータの初期値"
+
+#: alproj.optimize.bounds_to_array:5 of
+msgid "Parameters to be optimized."
+msgstr "最適化するパラメータ"
+
+#: alproj.optimize.bounds_to_array:7 of
+#, python-brace-format
+msgid ""
+"Width from initial value for each parameter (e.g., {\"fov\": 45, \"x\": "
+"30}). If None or parameter not specified, uses DEFAULT_BOUND_WIDTHS."
+msgstr ""
+"各パラメータの初期値からの幅（例：{\"fov\": 45, \"x\": "
+"30}）。Noneまたはパラメータが指定されていない場合、DEFAULT_BOUND_WIDTHSを使用"
+
+#: alproj.optimize.bounds_to_array:11 of
+msgid "**bounds** -- Bounds array with shape (len(target_params), 2)."
+msgstr "**bounds** -- 形状 (len(target_params), 2) の境界配列"
+
+#: ../../alproj.optimize.rst
+msgid "Return type"
+msgstr "戻り値の型"
+
+# compute_residuals function
+#: alproj.optimize.compute_residuals:1 of
+msgid "Compute residual vector for least_squares optimization."
+msgstr "least_squares最適化のための残差ベクトルを計算"
+
+#: alproj.optimize.compute_residuals:3 of
+msgid "Geographic coordinates of the Ground Control Points."
+msgstr "地上基準点の地理座標"
+
+#: alproj.optimize.compute_residuals:5 of
+msgid "Image coordinates of the Ground Control Points."
+msgstr "地上基準点の画像座標"
+
+#: alproj.optimize.compute_residuals:7 of
+msgid "Camera parameters."
+msgstr "カメラパラメータ"
+
+#: alproj.optimize.compute_residuals:10 of
+msgid "**residuals** -- Flattened residual vector (observed - projected)."
+msgstr "**residuals** -- 平坦化された残差ベクトル（観測値 - 投影値）"
+
+# extrinsic_mat function
 #: alproj.optimize.extrinsic_mat:1 of
 msgid ""
 "Makes an extrinsic camera matrix from given parameters. See "
 "https://learnopencv.com/geometry-of-image-formation/ ."
 msgstr ""
-"与えられたパラメータから外部カメラ行列を作成。"
-"https://learnopencv.com/geometry-of-image-formation/ を参照"
+"与えられたパラメータから外部カメラ行列を作成。https://learnopencv.com/geometry-of-image-"
+"formation/ を参照"
 
 #: alproj.optimize.extrinsic_mat:4 of
 msgid "Pan angle in degree."
@@ -176,17 +319,42 @@ msgstr "カメラ位置のZ軸座標"
 msgid "**mat** -- Extrinsic camera matrix."
 msgstr "**mat** -- 外部カメラ行列"
 
-#: ../../alproj.optimize.rst
-msgid "Return type"
-msgstr "戻り値の型"
+# huber_loss function
+#: alproj.optimize.huber_loss:1 of
+msgid "Calculate Huber loss for robust optimization."
+msgstr "ロバスト最適化のためのHuber損失を計算"
 
+#: alproj.optimize.huber_loss:3 of
+msgid ""
+"Huber loss is less sensitive to outliers than squared error loss. For "
+"residuals below f_scale, it behaves like L2 (squared) loss. For residuals"
+" above f_scale, it behaves like L1 (linear) loss."
+msgstr "Huber損失は二乗誤差損失より外れ値に対して鈍感です。f_scale以下の残差に対してはL2（二乗）損失として、f_scale以上の残差に対してはL1（線形）損失として動作します。"
+
+#: alproj.optimize.huber_loss:7 alproj.optimize.rmse:3 of
+msgid "Observed image coordinates with columns u, v."
+msgstr "列 u, v を持つ観測画像座標"
+
+#: alproj.optimize.huber_loss:9 alproj.optimize.rmse:5 of
+msgid "Projected image coordinates with columns u, v."
+msgstr "列 u, v を持つ投影画像座標"
+
+#: alproj.optimize.huber_loss:11 of
+msgid "Threshold in pixels. Residuals below f_scale use L2, above use L1."
+msgstr "ピクセル単位の閾値。f_scale以下の残差はL2、以上はL1を使用"
+
+#: alproj.optimize.huber_loss:14 of
+msgid "**loss** -- Mean Huber loss value."
+msgstr "**loss** -- 平均Huber損失値"
+
+# intrinsic_mat function
 #: alproj.optimize.intrinsic_mat:1 of
 msgid ""
 "Makes an intrinsic camera matrix (in OpenCV style) from given parameters."
 " See https://learnopencv.com/geometry-of-image-formation/ ."
 msgstr ""
-"与えられたパラメータから内部カメラ行列（OpenCV形式）を作成。"
-"https://learnopencv.com/geometry-of-image-formation/ を参照"
+"与えられたパラメータから内部カメラ行列（OpenCV形式）を作成。https://learnopencv.com/geometry-of-"
+"image-formation/ を参照"
 
 #: alproj.optimize.intrinsic_mat:4 of
 msgid "Field of View in degree."
@@ -205,13 +373,14 @@ msgid "X-coordinate of the principal point. If None, cx = w/2."
 msgstr "主点のX座標。Noneの場合、cx = w/2"
 
 #: alproj.optimize.intrinsic_mat:12 of
-msgid "Y-coordinate of the principal point. If None, y = h/2."
-msgstr "主点のY座標。Noneの場合、y = h/2"
+msgid "Y-coordinate of the principal point. If None, cy = h/2."
+msgstr "主点のY座標。Noneの場合、cy = h/2"
 
 #: alproj.optimize.intrinsic_mat:15 of
 msgid "**mat** -- Intrinsic matrix."
 msgstr "**mat** -- 内部行列"
 
+# project function
 #: alproj.optimize.project:1 of
 msgid ""
 "3D to 2D Perspective projection of given points with given camera "
@@ -220,19 +389,69 @@ msgstr "与えられたカメラパラメータによる点の3Dから2Dへの�
 
 #: alproj.optimize.project:3 of
 msgid ""
-"Coordinates of the points (usually GCPs) in 3D giographic coordinate "
-"system. The column names must be x,y,z."
-msgstr ""
-"3D地理座標系における点（通常はGCP）の座標。列名はx,y,zである必要があります。"
+"Coordinates of the points (usually GCPs) in 3D geographic coordinate "
+"system. The column names must be x, y, z."
+msgstr "3D地理座標系における点（通常はGCP）の座標。列名はx, y, zである必要があります。"
 
 #: alproj.optimize.project:6 of
-msgid "Camera parameters. See alproj.project.persp_proj()"
-msgstr "カメラパラメータ。alproj.project.persp_proj() を参照"
+msgid ""
+"Camera parameters. For detailed parameter descriptions, see "
+"alproj.project.persp_proj()."
+msgstr "カメラパラメータ。パラメータの詳細については、alproj.project.persp_proj() を参照"
 
 #: alproj.optimize.project:9 of
-msgid "**uv** -- 2D projected coordinates."
-msgstr "**uv** -- 2D投影座標"
+msgid "**uv** -- 2D projected coordinates with columns u, v."
+msgstr "**uv** -- 列 u, v を持つ2D投影座標"
 
+# rmse function
 #: alproj.optimize.rmse:1 of
 msgid "Calculate Root Mean Square Error of the projection."
 msgstr "投影の二乗平均平方根誤差（RMSE）を計算"
+
+#: alproj.optimize.rmse:8 of
+msgid "**rmse** -- Root mean square error in pixels."
+msgstr "**rmse** -- ピクセル単位の二乗平均平方根誤差"
+
+#~ msgid "numpy.ndarray"
+#~ msgstr "numpy.ndarray"
+
+# _distort function (internal)
+#~ msgid "Apply lens distortion to 2D points using the camera's distortion model."
+#~ msgstr "カメラの歪みモデルを使用して2D点にレンズ歪みを適用"
+
+#~ msgid "For detailed parameter descriptions, see alproj.project.persp_proj()."
+#~ msgstr "パラメータの詳細については、alproj.project.persp_proj() を参照"
+
+#~ msgid "float"
+#~ msgstr "float"
+
+#~ msgid "Attributes"
+#~ msgstr "属性"
+
+#~ msgid "list"
+#~ msgstr "list"
+
+#~ msgid "Create loss function with normalization."
+#~ msgstr "正規化付きの損失関数を作成"
+
+#~ msgid "Bounds array with shape (len(target_params), 2)."
+#~ msgstr "形状 (len(target_params), 2) の境界配列"
+
+#~ msgid ""
+#~ "Threshold for Huber loss in pixels. "
+#~ "If None, uses L2 loss (RMSE). If"
+#~ " specified, uses Huber loss with this"
+#~ " threshold."
+#~ msgstr "ピクセル単位のHuber損失の閾値。Noneの場合、L2損失（RMSE）を使用。指定した場合、この閾値でHuber損失を使用"
+
+#~ msgid "Create residual function for least_squares."
+#~ msgstr "least_squares用の残差関数を作成"
+
+#~ msgid ""
+#~ "**residual_func** -- Function that computes"
+#~ " residuals given parameter values."
+#~ msgstr "**residual_func** -- パラメータ値から残差を計算する関数"
+
+#~ msgid "callable"
+#~ msgstr "callable"
+

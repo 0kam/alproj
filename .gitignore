@@ -7,3 +7,7 @@ __pycache__/
 .claude/
 docs/_build/
 *.mo
+.DS_Store
+*.egg-info/
+*.bak
+codex.skill

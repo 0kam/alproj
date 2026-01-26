@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: alproj \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-23 13:08+0900\n"
-"PO-Revision-Date: 2026-01-23 11:38+0900\n"
+"POT-Creation-Date: 2026-01-26 17:18+0900\n"
+"PO-Revision-Date: 2026-01-26 17:00+0900\n"
 "Last-Translator: \n"
 "Language: ja\n"
 "Language-Team: ja <LL@li.org>\n"
@@ -24,61 +24,60 @@ msgstr "使い方"
 #: ../../usage.md:2
 msgid ""
 "Here I show an example of the geo-rectification process using a "
-"photograph of NIES' long-term monitoring taken at Tateyama Murodo-Sanso, "
-"Toyama prefecture, Japan."
-msgstr "ここでは、富山県立山室堂山荘で撮影された国立環境研究所の長期モニタリング写真を使用した幾何補正処理の例を示します。"
+"photograph of [NIES' long-term "
+"monitoring](https://db.cger.nies.go.jp/gem/ja/mountain/station.html?id=2)"
+" taken at Tateyama Murodo-Sanso, Toyama prefecture, Japan."
+msgstr "ここでは、富山県立山室堂山荘で撮影された[国立環境研究所の長期モニタリング](https://db.cger.nies.go.jp/gem/ja/mountain/station.html?id=2)写真を使用した幾何補正処理の例を示します。"
 
-#: ../../usage.md:12
+#: ../../usage.md:13
 msgid "Data Preparation"
 msgstr "データの準備"
 
-#: ../../usage.md:13
+#: ../../usage.md:14
 msgid "You should prepare below before starting."
 msgstr "開始前に以下を準備してください。"
 
-#: ../../usage.md:14
-msgid "The target landscape photograph."
-msgstr "対象となる景観写真。"
+#: ../../usage.md:15
+msgid "The target landscape photograph. ![](_static/ttym_2016.jpg)"
+msgstr "対象となる景観写真。 ![](_static/ttym_2016.jpg)"
 
-#: ../../usage.md:16
-msgid "An orthorectificated airborne photograph."
-msgstr "オルソ補正済みの航空写真。"
+#: ../../usage.md:17
+msgid "An orthorectificated airborne photograph. ![](_static/airborne.png)"
+msgstr "オルソ補正済みの航空写真。 ![](_static/airborne.png)"
 
-#: ../../usage.md:18
-msgid "A Digital Surface Model."
-msgstr "数値表層モデル（DSM）。"
+#: ../../usage.md:19
+msgid "A Digital Surface Model. ![](_static/dem.png)"
+msgstr "数値表層モデル（DSM）。 ![](_static/dem.png)"
 
-#: ../../usage.md:21
+#: ../../usage.md:22
 msgid ""
 "Both the airborne photograph and the DSM must cover hole the area where "
-"the target photograph covers. Both of them must be in the same planar "
+"the target photograph covers.  Both of them must be in the same planar "
 "Coordinate Reference System, e.g. Universal Transverse Mercator "
 "Coordinate System (UTM)."
 msgstr "航空写真とDSMは、対象写真がカバーする領域全体を含んでいる必要があります。また、両者は同じ平面座標系（例：UTM座標系）である必要があります。"
 
-#: ../../usage.md:24
+#: ../../usage.md:25
 msgid "Loading Raster Data"
 msgstr "ラスターデータの読み込み"
 
-#: ../../usage.md:25
+#: ../../usage.md:26
 msgid "First, load the airborne photograph and the DSM using rasterio."
 msgstr "まず、rasterioを使用して航空写真とDSMを読み込みます。"
 
-#: ../../usage.md:32
+#: ../../usage.md:33
 msgid "Define Initial Camera Parameters"
 msgstr "初期カメラパラメータの定義"
 
-#: ../../usage.md:33
-msgid ""
-"Setting initial camera parameters for optimization. Note that alproj does"
-" NOT support the estimation of camera location now."
-msgstr "最適化のための初期カメラパラメータを設定します。なお、alprojは現在カメラ位置の推定には対応していません。"
+#: ../../usage.md:34
+msgid "Setting initial camera parameters for optimization."
+msgstr "最適化のための初期カメラパラメータを設定します。"
 
 #: ../../usage.md:35
 msgid ""
 "x, y, z: A shooting point coordinate in the CRS of the aerial photograph "
-"/ DSM."
-msgstr "x, y, z: 航空写真/DSMの地理座標系における撮影地点の座標。"
+"/ DSM. These can also be optimized to correct GPS errors."
+msgstr "x, y, z: 航空写真/DSMの座標系における撮影地点の座標。GPSエラーを補正するために最適化することもできます。"
 
 #: ../../usage.md:36
 msgid "fov: A Field of View in degree."
@@ -89,8 +88,13 @@ msgid "pan, tilt, roll: A set of Euler angles of the camera in degree."
 msgstr "pan, tilt, roll: カメラのオイラー角（度）。"
 
 #: ../../usage.md:38
-msgid "a1 ~ s4: Distortion coefficients. See Algorithm for detail."
-msgstr "a1 ~ s4: 歪み係数。詳細はアルゴリズムを参照。"
+msgid ""
+"a1 ~ s4: Distortion coefficients. See "
+"[Algorithm](https://alproj.readthedocs.io/en/latest/overview.html#algorithm)"
+" for detail."
+msgstr ""
+"a1 ~ s4: "
+"歪み係数。詳細は[アルゴリズム](https://alproj.readthedocs.io/en/latest/overview.html#algorithm)を参照。"
 
 #: ../../usage.md:39
 msgid "w, h: The width and height of the target image in pixel."
@@ -115,8 +119,8 @@ msgid "First, get colored surface from aerial photograph and DSM."
 msgstr "まず、航空写真とDSMから色付きサーフェスを取得します。"
 
 #: ../../usage.md:58
-msgid "Then you'll get four np.arrays looks like below."
-msgstr "以下のような4つのnp.arrayが得られます。"
+msgid "Then you'll get four `np.array`s looks like below."
+msgstr "以下のような4つの`np.array`が得られます。"
 
 #: ../../usage.md:59
 msgid "vert"
@@ -148,71 +152,771 @@ msgstr "offsets"
 
 #: ../../usage.md:100
 msgid ""
-"Offset values for vertex coordinates. You need to pass this to sim_image "
-"and reverse_proj."
-msgstr "頂点座標のオフセット値。sim_imageとreverse_projに渡す必要があります。"
+"Offset values for vertex coordinates. You need to pass this to "
+"`sim_image` and `reverse_proj`."
+msgstr "頂点座標のオフセット値。`sim_image`と`reverse_proj`に渡す必要があります。"
 
 #: ../../usage.md:105
-msgid "Next, render a simulated landscape image."
-msgstr "次に、シミュレーション景観画像をレンダリングします。"
+msgid ""
+"Next, render a simulated landscape image. You can optionally use "
+"`min_distance` to mask pixels closer than a specified distance (useful "
+"for preventing mismatches with near-field objects)."
+msgstr "次に、シミュレーション景観画像をレンダリングします。オプションで`min_distance`を使用して、指定した距離より近いピクセルをマスクできます（近距離オブジェクトとのミスマッチ防止に有用です）。"
 
-#: ../../usage.md:113
+#: ../../usage.md:110
+msgid "![](_static/initial.png)"
+msgstr "![](_static/initial.png)"
+
+#: ../../usage.md:112
 msgid ""
 "Every pixel in this image has geographic coordinates. Then you can get a "
 "table of image coordinates and geographic coordinates of it."
 msgstr "この画像の各ピクセルは地理座標を持っています。画像座標と地理座標のテーブルを取得できます。"
 
-#: ../../usage.md:135
+#: ../../usage.md:134
 msgid "Finding Ground Contorol Points"
 msgstr "地上基準点の検出"
 
-#: ../../usage.md:136
+#: ../../usage.md:135
 msgid ""
 "Then, you can add some Ground Contorol Points (GCPs) in the target image "
-"by matching target image and simulated image. AKAZE local features and "
-"FLANN matcher is available."
-msgstr "対象画像とシミュレーション画像をマッチングすることで、対象画像に地上基準点（GCP）を追加できます。AKAZE局所特徴量とFLANNマッチャーが利用可能です。"
+"by matching target image and simulated image."
+msgstr "対象画像とシミュレーション画像をマッチングすることで、対象画像に地上基準点（GCP）を追加できます。"
 
-#: ../../usage.md:147
-msgid "Matching result."
-msgstr "マッチング結果。"
+#: ../../usage.md:142
+msgid "Recommended Matching Methods"
+msgstr "推奨マッチング手法"
 
-#: ../../usage.md:164
+#: ../../usage.md:144
+msgid "1. SIFT (Lightweight, No Extra Dependencies)"
+msgstr "1. SIFT（軽量、追加依存関係なし）"
+
+#: ../../usage.md:145
 msgid ""
-"Where u and v stands for the x and y axis coordinates in the image "
-"coordinate system."
-msgstr "uとvは画像座標系におけるx軸とy軸の座標を表します。"
+"[SIFT](https://docs.opencv.org/3.4/da/df5/tutorial_py_sift_intro.html) is"
+" a classic feature matching method that works with the core modules only."
+" It's lightweight and suitable for images with similar resolution and "
+"good texture."
+msgstr "[SIFT](https://docs.opencv.org/3.4/da/df5/tutorial_py_sift_intro.html)はコアモジュールのみで動作する古典的な特徴マッチング手法です。軽量で、解像度が近くテクスチャが豊富な画像に適しています。"
 
-#: ../../usage.md:166
+#: ../../usage.md:153
+msgid "2. SuperPoint-LightGlue (Robust to Resolution Differences, Lightweight)"
+msgstr "2. SuperPoint-LightGlue（解像度差にロバスト、軽量）"
+
+#: ../../usage.md:154
+msgid ""
+"[SuperPoint](https://arxiv.org/abs/1712.07629) with "
+"[LightGlue](https://arxiv.org/abs/2306.13643) provides robust matching "
+"even when the simulated image and real photograph have different "
+"resolutions. It's relatively lightweight and fast."
+msgstr "[SuperPoint](https://arxiv.org/abs/1712.07629)と[LightGlue](https://arxiv.org/abs/2306.13643)の組み合わせは、シミュレーション画像と実写真の解像度が異なる場合でもロバストなマッチングを提供します。比較的軽量で高速です。"
+
+#: ../../usage.md:156 ../../usage.md:170
+msgid "Requires the `imm` package:"
+msgstr "`imm`パッケージが必要です："
+
+#: ../../usage.md:167
+msgid "3. MiniMa-RoMa (High Performance, Computationally Heavy)"
+msgstr "3. MiniMa-RoMa（高性能、計算負荷大）"
+
+#: ../../usage.md:168
+msgid ""
+"[MiniMa-RoMa](https://arxiv.org/abs/2305.15404) is a dense matching "
+"method that achieves excellent performance on challenging image pairs. "
+"It's computationally heavy but provides the best matching quality for "
+"difficult cases."
+msgstr ""
+"[MiniMa-"
+"RoMa](https://arxiv.org/abs/2305.15404)は困難な画像ペアで優れた性能を発揮する密なマッチング手法です。計算負荷は重いですが、難しいケースでも最高のマッチング品質を提供します。"
+
+#: ../../usage.md:181
+msgid "Comparison of Matching Methods"
+msgstr "マッチング手法の比較"
+
+#: ../../usage.md:183
+msgid ""
+"The table below shows the comparison of all available methods on a "
+"5616x3744 pixel image pair (CPU on M4 Pro MBP)."
+msgstr "下表は5616x3744ピクセルの画像ペアにおける全手法の比較です（M4 Pro MBPのCPU）。"
+
+#: ../../usage.md:185
+msgid "**Built-in methods (no extra dependencies):**"
+msgstr "**組み込み手法（追加依存関係なし）：**"
+
+#: ../../usage.md
+msgid "Method"
+msgstr "手法"
+
+#: ../../usage.md
+msgid "Time"
+msgstr "時間"
+
+#: ../../usage.md
+msgid "Matches"
+msgstr "マッチ数"
+
+#: ../../usage.md
+msgid "Notes"
+msgstr "備考"
+
+#: ../../usage.md
+msgid "akaze"
+msgstr "akaze"
+
+#: ../../usage.md
+msgid "~1 sec"
+msgstr "~1秒"
+
+#: ../../usage.md
+msgid "205"
+msgstr "205"
+
+#: ../../usage.md
+msgid "Fastest, fewer matches"
+msgstr "最速、マッチ数少"
+
+#: ../../usage.md
+msgid "sift"
+msgstr "sift"
+
+#: ../../usage.md
+msgid "~3 sec"
+msgstr "~3秒"
+
+#: ../../usage.md
+msgid "333"
+msgstr "333"
+
+#: ../../usage.md
+msgid "Good balance for simple cases"
+msgstr "シンプルなケースに最適なバランス"
+
+#: ../../usage.md:192
+msgid "**LightGlue-based methods (lightweight, handles full resolution):**"
+msgstr "**LightGlueベースの手法（軽量、フル解像度対応）：**"
+
+#: ../../usage.md
+msgid "sift-lightglue"
+msgstr "sift-lightglue"
+
+#: ../../usage.md
+msgid "~2 sec"
+msgstr "~2秒"
+
+#: ../../usage.md
+msgid "503"
+msgstr "503"
+
+#: ../../usage.md
+msgid "SIFT features + LightGlue matcher"
+msgstr "SIFT特徴量 + LightGlueマッチャー"
+
+#: ../../usage.md
+msgid "superpoint-lightglue"
+msgstr "superpoint-lightglue"
+
+#: ../../usage.md
+msgid "965"
+msgstr "965"
+
+#: ../../usage.md
+msgid "Recommended for most cases"
+msgstr "多くのケースで推奨"
+
+#: ../../usage.md
+msgid "minima-superpoint-lightglue"
+msgstr "minima-superpoint-lightglue"
+
+#: ../../usage.md
+msgid "975"
+msgstr "975"
+
+#: ../../usage.md
+msgid "MiniMa preprocessing + SuperPoint"
+msgstr "MiniMa前処理 + SuperPoint"
+
+#: ../../usage.md:200
+msgid "**Dense matching methods (high match count, auto-resized to 640px):**"
+msgstr "**密なマッチング手法（マッチ数多、自動的に640pxにリサイズ）：**"
+
+#: ../../usage.md
+msgid "tiny-roma"
+msgstr "tiny-roma"
+
+#: ../../usage.md
+msgid "2046"
+msgstr "2046"
+
+#: ../../usage.md
+msgid "Fast dense matching"
+msgstr "高速な密マッチング"
+
+#: ../../usage.md
+msgid "minima-loftr"
+msgstr "minima-loftr"
+
+#: ../../usage.md
+msgid "2632"
+msgstr "2632"
+
+#: ../../usage.md
+msgid "MiniMa + LoFTR"
+msgstr "MiniMa + LoFTR"
+
+#: ../../usage.md
+msgid "loftr"
+msgstr "loftr"
+
+#: ../../usage.md
+msgid "2237"
+msgstr "2237"
+
+#: ../../usage.md
+msgid "Good for low-texture regions"
+msgstr "低テクスチャ領域に有効"
+
+#: ../../usage.md
+msgid "rdd"
+msgstr "rdd"
+
+#: ../../usage.md
+msgid "1510"
+msgstr "1510"
+
+#: ../../usage.md
+msgid "RDD matching"
+msgstr "RDDマッチング"
+
+#: ../../usage.md
+msgid "ufm"
+msgstr "ufm"
+
+#: ../../usage.md
+msgid "~12 sec"
+msgstr "~12秒"
+
+#: ../../usage.md
+msgid "2048"
+msgstr "2048"
+
+#: ../../usage.md
+msgid "UFM matching"
+msgstr "UFMマッチング"
+
+#: ../../usage.md
+msgid "master"
+msgstr "master"
+
+#: ../../usage.md
+msgid "~17 sec"
+msgstr "~17秒"
+
+#: ../../usage.md
+msgid "3497"
+msgstr "3497"
+
+#: ../../usage.md
+msgid "MASTER matching"
+msgstr "MASTERマッチング"
+
+#: ../../usage.md
+msgid "roma"
+msgstr "roma"
+
+#: ../../usage.md
+msgid "~21 sec"
+msgstr "~21秒"
+
+#: ../../usage.md
+msgid "RoMa dense matching"
+msgstr "RoMa密マッチング"
+
+#: ../../usage.md
+msgid "minima-roma"
+msgstr "minima-roma"
+
+#: ../../usage.md
+msgid "~25 sec"
+msgstr "~25秒"
+
+#: ../../usage.md
+msgid "9999"
+msgstr "9999"
+
+#: ../../usage.md
+msgid "Best quality, most matches"
+msgstr "最高品質、最多マッチ数"
+
+#: ../../usage.md:213
+msgid ""
+"**Note:** Dense matching methods (non-LightGlue) automatically resize "
+"images to 640px when `resize` is not specified to prevent out-of-memory "
+"errors. Keypoints are scaled back to original coordinates."
+msgstr ""
+"**注意：** "
+"密なマッチング手法（非LightGlue）は、メモリ不足エラーを防ぐため、`resize`が指定されていない場合は自動的に画像を640pxにリサイズします。キーポイントは元の座標にスケーリングされます。"
+
+#: ../../usage.md:215
+msgid ""
+"You can reproduce this comparison using the script "
+"`scripts/compare_matching_methods.py`."
+msgstr "この比較は`scripts/compare_matching_methods.py`スクリプトで再現できます。"
+
+#: ../../usage.md:217
+msgid "**SIFT result:** ![](_static/matched_sift.png)"
+msgstr "**SIFTの結果：** ![](_static/matched_sift.png)"
+
+#: ../../usage.md:220
+msgid ""
+"**SuperPoint-LightGlue result:** "
+"![](_static/matched_superpoint_lightglue.png)"
+msgstr "**SuperPoint-LightGlueの結果：** ![](_static/matched_superpoint_lightglue.png)"
+
+#: ../../usage.md:223
+msgid "**MiniMa-RoMa result:** ![](_static/matched_minima_roma.png)"
+msgstr "**MiniMa-RoMaの結果：** ![](_static/matched_minima_roma.png)"
+
+#: ../../usage.md:226
+msgid ""
+"For most cases, **SuperPoint-LightGlue** provides a good balance between "
+"speed and robustness. Use **SIFT** when you cannot install additional "
+"dependencies, or **MiniMa-RoMa** when you need the highest matching "
+"quality for difficult image pairs."
+msgstr ""
+"多くの場合、**SuperPoint-"
+"LightGlue**は速度とロバスト性のバランスが良好です。追加の依存関係をインストールできない場合は**SIFT**を、困難な画像ペアで最高のマッチング品質が必要な場合は"
+"**MiniMa-RoMa**を使用してください。"
+
+#: ../../usage.md:228
+msgid "Outlier Filtering"
+msgstr "外れ値フィルタリング"
+
+#: ../../usage.md:230
+msgid ""
+"By default, `image_match()` applies Fundamental Matrix filtering "
+"(`outlier_filter=\"fundamental\"`). You can also use Essential Matrix "
+"filtering when camera parameters are available:"
+msgstr "デフォルトでは、`image_match()`は基本行列フィルタリング（`outlier_filter=\"fundamental\"`）を適用します。カメラパラメータが利用可能な場合は、本質行列フィルタリングも使用できます："
+
+#: ../../usage.md:245
+msgid "**Outlier filtering methods:**"
+msgstr "**外れ値フィルタリング手法：**"
+
+#: ../../usage.md:246
+msgid ""
+"`\"fundamental\"`: Fundamental Matrix with MAGSAC++ (default, no camera "
+"intrinsics required)"
+msgstr "`\"fundamental\"`: MAGSAC++による基本行列（デフォルト、カメラ内部パラメータ不要）"
+
+#: ../../usage.md:247
+msgid ""
+"`\"essential\"`: Essential Matrix with MAGSAC++ (recommended when "
+"`params` with `fov` is provided)"
+msgstr "`\"essential\"`: MAGSAC++による本質行列（`fov`を含む`params`が提供される場合に推奨）"
+
+#: ../../usage.md:248
+msgid ""
+"`\"none\"`: No filtering. Use this when you plan to apply custom "
+"filtering later."
+msgstr "`\"none\"`: フィルタリングなし。後でカスタムフィルタリングを適用する場合に使用。"
+
+#: ../../usage.md:250
+msgid "Spatial Thinning"
+msgstr "空間的間引き"
+
+#: ../../usage.md:252
+msgid ""
+"When using dense matching methods like MiniMa-RoMa, matches may cluster "
+"in certain regions of the image. Use spatial thinning to ensure uniform "
+"distribution:"
+msgstr ""
+"MiniMa-"
+"RoMaのような密なマッチング手法を使用すると、マッチが画像の特定領域に集中することがあります。空間的間引きを使用して均一な分布を確保します："
+
+#: ../../usage.md:266
+msgid "![](_static/matched_minima_roma_thined.png)"
+msgstr "![](_static/matched_minima_roma_thined.png)"
+
+#: ../../usage.md:268
+msgid "**Selection methods:**"
+msgstr "**選択方法：**"
+
+#: ../../usage.md:269
+msgid "`\"first\"`: Keeps the first point by input order (fastest, deterministic)"
+msgstr "`\"first\"`: 入力順で最初の点を保持（最速、決定論的）"
+
+#: ../../usage.md:270
+msgid ""
+"`\"random\"`: Random selection (use `spatial_thin_random_state` for "
+"reproducibility)"
+msgstr "`\"random\"`: ランダム選択（再現性のために`spatial_thin_random_state`を使用）"
+
+#: ../../usage.md:271
+msgid ""
+"`\"center\"`: Keeps the point closest to the cell center (best for "
+"uniform distribution)"
+msgstr "`\"center\"`: セル中心に最も近い点を保持（均一分布に最適）"
+
+#: ../../usage.md:273
+msgid ""
+"Spatial thinning is applied AFTER geometric outlier filtering, so it "
+"samples from inliers only."
+msgstr "空間的間引きは幾何学的外れ値フィルタリングの後に適用されるため、インライアのみからサンプリングされます。"
+
+#: ../../usage.md:275
+msgid "Distance-based GCP Filtering"
+msgstr "距離ベースのGCPフィルタリング"
+
+#: ../../usage.md:277
+msgid ""
+"After creating GCPs with `set_gcp()`, you can filter them based on 3D "
+"distance from the camera:"
+msgstr "`set_gcp()`でGCPを作成した後、カメラからの3D距離に基づいてフィルタリングできます："
+
+#: ../../usage.md:289
+msgid "This is useful for:"
+msgstr "以下のような用途に有用です："
+
+#: ../../usage.md:290
+msgid "Excluding nearby foreground objects (min_distance)"
+msgstr "近距離の前景オブジェクトを除外する（min_distance）"
+
+#: ../../usage.md:291
+msgid "Excluding distant features with poor depth accuracy (max_distance)"
+msgstr "深度精度が低い遠方の特徴を除外する（max_distance）"
+
+#: ../../usage.md:293
+msgid ""
+"**Important:** Coordinates must be in a projected CRS (e.g., UTM) for "
+"accurate Euclidean distance. Using lat/lon directly will produce "
+"incorrect results."
+msgstr ""
+"**重要：** "
+"正確なユークリッド距離を得るには、座標は投影座標系（例：UTM）である必要があります。緯度/経度を直接使用すると不正確な結果になります。"
+
+#: ../../usage.md:295
+msgid "All Available Methods"
+msgstr "利用可能な全手法"
+
+#: ../../usage.md:296
+msgid "**Built-in (no extra dependencies):**"
+msgstr "**組み込み（追加依存関係なし）：**"
+
+#: ../../usage.md:297
+msgid ""
+"**akaze**: "
+"[AKAZE](https://docs.opencv.org/3.4/d0/de3/citelist.html#CITEREF_ANB13) "
+"local features"
+msgstr ""
+"**akaze**: "
+"[AKAZE](https://docs.opencv.org/3.4/d0/de3/citelist.html#CITEREF_ANB13)局所特徴量"
+
+#: ../../usage.md:298
+msgid ""
+"**sift**: "
+"[SIFT](https://docs.opencv.org/3.4/da/df5/tutorial_py_sift_intro.html) "
+"local features"
+msgstr ""
+"**sift**: "
+"[SIFT](https://docs.opencv.org/3.4/da/df5/tutorial_py_sift_intro.html)局所特徴量"
+
+#: ../../usage.md:300
+msgid "**With imm package (pip install alproj[imm]):**"
+msgstr "**immパッケージ使用時（pip install alproj[imm]）：**"
+
+#: ../../usage.md:301
+msgid ""
+"**sift-lightglue**, **superpoint-lightglue**, **minima-superpoint-"
+"lightglue**: LightGlue-based (lightweight)"
+msgstr ""
+"**sift-lightglue**, **superpoint-lightglue**, **minima-superpoint-"
+"lightglue**: LightGlueベース（軽量）"
+
+#: ../../usage.md:302
+msgid "**roma**, **tiny-roma**, **minima-roma**: RoMa variants (dense matching)"
+msgstr "**roma**, **tiny-roma**, **minima-roma**: RoMaバリアント（密マッチング）"
+
+#: ../../usage.md:303
+msgid "**loftr**, **minima-loftr**: LoFTR variants (good for low-texture regions)"
+msgstr "**loftr**, **minima-loftr**: LoFTRバリアント（低テクスチャ領域に有効）"
+
+#: ../../usage.md:304
+msgid "**ufm**, **rdd**, **master**: Other dense matching methods"
+msgstr "**ufm**, **rdd**, **master**: その他の密マッチング手法"
+
+#: ../../usage.md:323
+msgid ""
+"Where `u` and `v` stands for the x and y axis coordinates in the image "
+"coordinate system."
+msgstr "`u`と`v`は画像座標系におけるx軸とy軸の座標を表します。"
+
+#: ../../usage.md:325
 msgid "Optimization of Camera Parameters"
 msgstr "カメラパラメータの最適化"
 
-#: ../../usage.md:167
+#: ../../usage.md:326
 msgid ""
 "Finally, optimizing camera parameters using GCPs. Camera parameters are "
-"optimized by minimizing reproection errors with a CMA-ES optimizer.<br "
-"/>You can specify which parameters to be optimized."
+"optimized by minimizing [reproection errors](https://support.pix4d.com/hc"
+"/en-us/articles/202559369-Reprojection-error). You can specify which "
+"parameters to be optimized, including camera position (x, y, z)."
 msgstr ""
-"最後に、GCPを使用してカメラパラメータを最適化します。カメラパラメータはCMA-"
-"ES最適化器を使用して再投影誤差を最小化することで最適化されます。<br />最適化するパラメータを指定できます。"
+"最後に、GCPを使用してカメラパラメータを最適化します。カメラパラメータは[再投影誤差](https://support.pix4d.com/hc"
+"/en-us/articles/202559369-Reprojection-error)を最小化することで最適化されます。カメラ位置（x, y,"
+" z）を含め、最適化するパラメータを指定できます。"
 
-#: ../../usage.md:189
-msgid "The optimized camera parameters reproduces the target image exactly."
-msgstr "最適化されたカメラパラメータは対象画像を正確に再現します。"
+#: ../../usage.md:330
+msgid "Two optimizers are available:"
+msgstr "2つの最適化器が利用できます："
 
-#: ../../usage.md:197
-msgid "You can get geographic coordinates of each pixel of the target image."
-msgstr "対象画像の各ピクセルの地理座標を取得できます。"
+#: ../../usage.md:332
+msgid "CMAOptimizer (Recommended for Global Search)"
+msgstr "CMAOptimizer（広域探索に推奨）"
 
-#: ../../usage.md:222
+#: ../../usage.md:334
 msgid ""
-"You can also visualize the results with GIS tools. Here, I show an "
-"example using R's sf, stars, and terra package. Since the output of "
-"alproj is a point data as shown above, below R script performs "
-"raterization and interpolation to make it an orthoimage."
-msgstr "結果はGISツールで可視化することもできます。ここでは、Rのsf、stars、terraパッケージを使用した例を示します。alprojの出力は上記のような点データであるため、以下のRスクリプトはラスタライズと補間を行いオルソ画像を作成します。"
+"`CMAOptimizer` uses [CMA-ES](https://github.com/CyberAgent/cmaes) "
+"evolution strategy. Good for difficult cases when the initial guess is "
+"far from optimal. Supports Huber loss (`f_scale` parameter) for "
+"robustness against outliers."
+msgstr ""
+"`CMAOptimizer`は[CMA-"
+"ES](https://github.com/CyberAgent/cmaes)進化戦略を使用します。初期推定値が最適から遠い困難なケースに適しています。外れ値に対するロバスト性のためにHuber損失（`f_scale`パラメータ）をサポートします。"
 
-#: ../../usage.md:277
+#: ../../usage.md:354
+msgid ""
+"After Phase 1, you can perform image matching again with the improved "
+"parameters and optimize distortion parameters:"
+msgstr "フェーズ1の後、改善されたパラメータで再度画像マッチングを行い、歪みパラメータを最適化できます："
+
+#: ../../usage.md:368 ../../usage.md:391
+msgid "**Key parameters:**"
+msgstr "**主要なパラメータ：**"
+
+#: ../../usage.md:369
+msgid ""
+"`generation`: Number of generations to run (more = better convergence, "
+"slower)"
+msgstr "`generation`: 実行する世代数（多いほど収束が良いが遅い）"
+
+#: ../../usage.md:370
+msgid "`sigma`: Initial standard deviation in normalized [0, 1] space"
+msgstr "`sigma`: 正規化された[0, 1]空間での初期標準偏差"
+
+#: ../../usage.md:371
+msgid "`population_size`: Number of candidate solutions per generation"
+msgstr "`population_size`: 世代あたりの候補解の数"
+
+#: ../../usage.md:372
+msgid "`f_scale`: Huber loss threshold in pixels (if None, uses RMSE)"
+msgstr "`f_scale`: Huber損失の閾値（ピクセル単位、Noneの場合はRMSEを使用）"
+
+#: ../../usage.md:373
+msgid ""
+"`bound_widths`: Width from initial value for each parameter (default: "
+"±45° for angles, ±30m for position, ±0.2 for distortion)"
+msgstr "`bound_widths`: 各パラメータの初期値からの幅（デフォルト：角度は±45度、位置は±30m、歪みは±0.2）"
+
+#: ../../usage.md:375
+msgid "LsqOptimizer (Fast Local Refinement)"
+msgstr "LsqOptimizer（高速な局所精緻化）"
+
+#: ../../usage.md:377
+msgid ""
+"`LsqOptimizer` uses scipy's `least_squares` with Trust Region Reflective "
+"algorithm. Much faster than CMA-ES but requires a good initial guess. "
+"Supports robust loss functions."
+msgstr ""
+"`LsqOptimizer`はscipyの`least_squares`をTrust Region Reflectiveアルゴリズムで使用します"
+"。CMA-ESよりはるかに高速ですが、良好な初期推定値が必要です。ロバスト損失関数をサポートします。"
+
+#: ../../usage.md:392
+msgid ""
+"`method`: Algorithm to use (\"trf\" recommended, \"lm\" does not support "
+"bounds/robust loss)"
+msgstr "`method`: 使用するアルゴリズム（\"trf\"推奨、\"lm\"は境界/ロバスト損失をサポートしない）"
+
+#: ../../usage.md:393
+msgid "`loss`: Loss function (\"huber\" and \"soft_l1\" are robust to outliers)"
+msgstr "`loss`: 損失関数（\"huber\"と\"soft_l1\"は外れ値にロバスト）"
+
+#: ../../usage.md:394
+msgid ""
+"`f_scale`: Soft threshold for residuals (larger = more tolerance to "
+"outliers)"
+msgstr "`f_scale`: 残差のソフト閾値（大きいほど外れ値への許容度が高い）"
+
+#: ../../usage.md:402
+msgid "![](_static/optimized.png)"
+msgstr "![](_static/optimized.png)"
+
+#: ../../usage.md:404
+msgid "Reverse Projection"
+msgstr "逆投影"
+
+#: ../../usage.md:406
+msgid "Now you can get geographic coordinates of each pixel of the target image."
+msgstr "これで対象画像の各ピクセルの地理座標を取得できます。"
+
+#: ../../usage.md:430
+msgid "Exporting to GeoTIFF"
+msgstr "GeoTIFFへのエクスポート"
+
+#: ../../usage.md:432
+msgid ""
+"You can convert the reverse projection output directly to a GeoTIFF using"
+" the built-in `to_geotiff()` function:"
+msgstr "組み込みの`to_geotiff()`関数を使用して、逆投影出力を直接GeoTIFFに変換できます："
+
+#: ../../usage.md:451
+msgid "You can also export to CSV for use with other tools:"
+msgstr "他のツールで使用するためにCSVにエクスポートすることもできます："
+
+#: ../../usage.md:456
 msgid "Result Plot"
 msgstr "結果プロット"
+
+#: ../../usage.md:458
+msgid "![](_static/ortho.png)"
+msgstr "![](_static/ortho.png)"
+
+#~ msgid "| Method | Time | Matches | Notes |"
+#~ msgstr "| 手法 | 時間 | マッチ数 | 備考 |"
+
+#~ msgid "|--------|------|---------|-------|"
+#~ msgstr "|--------|------|---------|-------|"
+
+#~ msgid "| akaze | ~1 sec | 205 | Fastest, fewer matches |"
+#~ msgstr "| akaze | ~1秒 | 205 | 最速、マッチ数少 |"
+
+#~ msgid "| superpoint-lightglue | ~3 sec | 965 | Recommended for most cases |"
+#~ msgstr "| superpoint-lightglue | ~3秒 | 965 | 多くのケースで推奨 |"
+
+#~ msgid ""
+#~ "| minima-superpoint-lightglue | ~3 "
+#~ "sec | 975 | MiniMa preprocessing +"
+#~ " SuperPoint |"
+#~ msgstr "| minima-superpoint-lightglue | ~3秒 | 975 | MiniMa前処理 + SuperPoint |"
+
+#~ msgid "| tiny-roma | ~2 sec | 2046 | Fast dense matching |"
+#~ msgstr "| tiny-roma | ~2秒 | 2046 | 高速な密マッチング |"
+
+#~ msgid "| minima-loftr | ~2 sec | 2632 | MiniMa + LoFTR |"
+#~ msgstr "| minima-loftr | ~2秒 | 2632 | MiniMa + LoFTR |"
+
+#~ msgid "| rdd | ~3 sec | 1510 | RDD matching |"
+#~ msgstr "| rdd | ~3秒 | 1510 | RDDマッチング |"
+
+#~ msgid "| ufm | ~12 sec | 2048 | UFM matching |"
+#~ msgstr "| ufm | ~12秒 | 2048 | UFMマッチング |"
+
+#~ msgid "| master | ~17 sec | 3497 | MASTER matching |"
+#~ msgstr "| master | ~17秒 | 3497 | MASTERマッチング |"
+
+#~ msgid "| roma | ~21 sec | 2048 | RoMa dense matching |"
+#~ msgstr "| roma | ~21秒 | 2048 | RoMa密マッチング |"
+
+#~ msgid "| minima-roma | ~25 sec | 9999 | Best quality, most matches |"
+#~ msgstr "| minima-roma | ~25秒 | 9999 | 最高品質、最多マッチ数 |"
+
+#~ msgid "**SIFT result:**"
+#~ msgstr "**SIFTの結果：**"
+
+#~ msgid ""
+#~ "# Essential Matrix filtering (recommended "
+#~ "when params with fov is available)"
+#~ msgstr "# 本質行列フィルタリング（fovを含むparamsが利用可能な場合に推奨）"
+
+#~ msgid ""
+#~ "outlier_filter=\"essential\",  # \"essential\", "
+#~ "\"fundamental\", or \"none\""
+#~ msgstr ""
+#~ "outlier_filter=\"essential\",  # \"essential\", "
+#~ "\"fundamental\", または \"none\""
+
+#~ msgid ""
+#~ "params=params,               # camera params "
+#~ "with fov, w, h (focal length "
+#~ "computed automatically)"
+#~ msgstr "params=params,               # fov, w, hを含むカメラパラメータ（焦点距離は自動計算）"
+
+#~ msgid "threshold=10.0,              # MAGSAC threshold in pixels"
+#~ msgstr "threshold=10.0,              # MAGSACの閾値（ピクセル単位）"
+
+#~ msgid ""
+#~ "# Match with spatial thinning (keeps "
+#~ "at most 1 point per 100x100 pixel"
+#~ " region)"
+#~ msgstr "# 空間的間引きを使用したマッチング（100x100ピクセル領域あたり最大1点を保持）"
+
+#~ msgid "spatial_thin_grid=50,           # Grid cell size in pixels"
+#~ msgstr "spatial_thin_grid=50,           # グリッドセルサイズ（ピクセル単位）"
+
+#~ msgid ""
+#~ "spatial_thin_selection=\"center\", # \"first\", "
+#~ "\"random\", or \"center\""
+#~ msgstr ""
+#~ "spatial_thin_selection=\"center\", # \"first\", "
+#~ "\"random\", または \"center\""
+
+#~ msgid "# Filter: exclude points closer than 100m or farther than 2000m"
+#~ msgstr "# フィルタリング: 100m以内または2000m以遠の点を除外"
+
+#~ msgid "# Phase 1: Optimize position, orientation, fov, and aspect ratio"
+#~ msgstr "# フェーズ1: 位置、向き、視野角、アスペクト比を最適化"
+
+#~ msgid "f_scale=10.0  # Huber loss threshold in pixels (robust to outliers)"
+#~ msgstr "f_scale=10.0  # Huber損失の閾値（ピクセル単位、外れ値にロバスト）"
+
+#~ msgid "# Phase 2: Optimize distortion parameters with refined matches"
+#~ msgstr "# フェーズ2: 精緻化されたマッチで歪みパラメータを最適化"
+
+#~ msgid "method=\"trf\",        # \"trf\", \"dogbox\", or \"lm\""
+#~ msgstr "method=\"trf\",        # \"trf\", \"dogbox\", または \"lm\""
+
+#~ msgid ""
+#~ "loss=\"huber\",        # \"linear\", \"huber\", "
+#~ "\"soft_l1\", \"cauchy\", \"arctan\""
+#~ msgstr ""
+#~ "loss=\"huber\",        # \"linear\", \"huber\", "
+#~ "\"soft_l1\", \"cauchy\", \"arctan\""
+
+#~ msgid "f_scale=10.0,        # threshold for robust loss functions"
+#~ msgstr "f_scale=10.0,        # ロバスト損失関数の閾値"
+
+#~ msgid "max_nfev=1000        # maximum number of function evaluations"
+#~ msgstr "max_nfev=1000        # 関数評価の最大回数"
+
+#~ msgid "The optimized camera parameters reproduces the target image exactly."
+#~ msgstr "最適化されたカメラパラメータは対象画像を正確に再現します。"
+
+#~ msgid "# Convert to GeoTIFF with automatic rasterization and interpolation"
+#~ msgstr "# 自動ラスタライズと補間でGeoTIFFに変換"
+
+#~ msgid ""
+#~ "resolution=1.0,           # Pixel resolution "
+#~ "in coordinate units (e.g., meters)"
+#~ msgstr "resolution=1.0,           # 座標単位でのピクセル解像度（例：メートル）"
+
+#~ msgid "crs=\"EPSG:6690\",          # Coordinate Reference System"
+#~ msgstr "crs=\"EPSG:6690\",          # 座標参照系"
+
+#~ msgid "bands=[\"R\", \"G\", \"B\"],    # Which columns to use as bands"
+#~ msgstr "bands=[\"R\", \"G\", \"B\"],    # バンドとして使用する列"
+
+#~ msgid "interpolate=True,         # Fill small gaps using focal statistics"
+#~ msgstr "interpolate=True,         # フォーカル統計を使用して小さなギャップを埋める"
+
+#~ msgid "max_dist=1.0,             # Maximum interpolation distance"
+#~ msgstr "max_dist=1.0,             # 最大補間距離"
+
+#~ msgid ""
+#~ "agg_func=\"mean\",          # Aggregation function:"
+#~ " \"mean\", \"median\", \"max\", \"min\""
+#~ msgstr ""
+#~ "agg_func=\"mean\",          # 集約関数: \"mean\", "
+#~ "\"median\", \"max\", \"min\""
+
+#~ msgid "nodata=255                # NoData value for missing pixels"
+#~ msgstr "nodata=255                # 欠損ピクセルのNoData値"
 

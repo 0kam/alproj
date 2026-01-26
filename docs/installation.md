@@ -1,18 +1,37 @@
 # Installation
-```
+
+**Requires Python 3.9-3.12**
+
+## Basic Installation
+```bash
 pip install git+https://github.com/0kam/alproj
 ```
-## Dependencies
+
+## Optional Dependencies
+
+### Advanced Image Matching (imm)
+For advanced deep learning-based image matching methods (RoMa, LoFTR, LightGlue, etc.), install with the imm option:
+
+```bash
+pip install "alproj[imm] @ git+https://github.com/0kam/alproj"
 ```
-numpy
-pandas
-datatable
-opencv-python
-pillow
-moderngl
-cmaes
-tqdm
+
+This installs the [imm](https://github.com/gmberton/image-matching-models) package along with PyTorch and other dependencies.
+
+These methods can provide more robust matching for challenging images with different resolutions, lighting conditions, or low-texture regions. GPU (CUDA) is recommended for best performance.
+
+## Dependencies
+Core dependencies (automatically installed):
+```
+numpy>=1.20,<3
+pandas>=1.3
+rasterio>=1.2
+opencv-python>=4.5
+moderngl>=5.6
+cmaes>=0.8
+tqdm>=4.60
+scipy>=1.7
 ```
 
 ## Tested environments
-- Ubuntu 20.04LTS with Python 3.8.5
+- Ubuntu 20.04 LTS / Ubuntu24.04 LTS / macOS with Python 3.9-3.12

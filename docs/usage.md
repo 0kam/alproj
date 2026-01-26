@@ -1,13 +1,14 @@
 # Usage
-Here I show an example of the geo-rectification process using a photograph of [NIES' long-term monitoring]((https://db.cger.nies.go.jp/gem/ja/mountain/station.html?id=2)) taken at Tateyama Murodo-Sanso, Toyama prefecture, Japan.
+Here I show an example of the geo-rectification process using a photograph of [NIES' long-term monitoring](https://db.cger.nies.go.jp/gem/ja/mountain/station.html?id=2) taken at Tateyama Murodo-Sanso, Toyama prefecture, Japan.
 
 ```python
 # Loading requirements
 from alproj.surface import get_colored_surface
-from alproj.project import sim_image, reverse_proj
-from alproj.gcp import akaze_match, set_gcp
-from alproj.optimize import CMAOptimizer
+from alproj.project import sim_image, reverse_proj, to_geotiff
+from alproj.gcp import image_match, set_gcp, filter_gcp_distance
+from alproj.optimize import CMAOptimizer, LsqOptimizer
 import rasterio
+import cv2
 ```
 ## Data Preparation
 You should prepare below before starting.
@@ -31,8 +32,7 @@ dsm = rasterio.open("dsm.tif")
 
 ## Define Initial Camera Parameters
 Setting initial camera parameters for optimization.
-Note that `alproj` does NOT support the estimation of camera location now.
-- x, y, z: A shooting point coordinate in the CRS of the aerial photograph / DSM.
+- x, y, z: A shooting point coordinate in the CRS of the aerial photograph / DSM. These can also be optimized to correct GPS errors.
 - fov: A Field of View in degree.
 - pan, tilt, roll: A set of Euler angles of the camera in degree.
 - a1 ~ s4: Distortion coefficients. See [Algorithm](https://alproj.readthedocs.io/en/latest/overview.html#algorithm) for detail.
@@ -53,7 +53,7 @@ First, get colored surface from aerial photograph and DSM.
 ```python
 distance = 3000 # Distance from shooting point in meters
 
-vert, col, ind, offsets = get_colored_surface(aerial, dsm, shooting_point=params, distance=distance) # This takes some minutes.
+vert, col, ind, offsets = get_colored_surface(aerial, dsm, shooting_point=params, distance=distance, res=res) # This takes some minutes.
 ```
 Then you'll get four `np.array`s looks like below.
 - vert
@@ -102,11 +102,10 @@ Then you'll get four `np.array`s looks like below.
   >>> offsets
   array([7.31942032e+05, 2.15609204e+03, 4.04854197e+06])
   ```
-Next, render a simulated landscape image.
+Next, render a simulated landscape image. You can optionally use `min_distance` to mask pixels closer than a specified distance (useful for preventing mismatches with near-field objects).
 ```python
-import cv2
-sim = sim_image(vert, col, ind, params, offsets)
-cv2.imwrite("devel_data/initial.png", sim)
+sim = sim_image(vert, col, ind, params, offsets, min_distance=100)  # mask closer than 100m
+cv2.imwrite("sim_initial.png", sim)
 ```
 ![](_static/initial.png)
 
@@ -134,144 +133,324 @@ df = reverse_proj(sim, vert, ind, params, offsets)
 
 ## Finding Ground Contorol Points
 Then, you can add some Ground Contorol Points (GCPs) in the target image by matching target image and simulated image.
-[AKAZE](https://docs.opencv.org/3.4/d0/de3/citelist.html#CITEREF_ANB13) local features and [FLANN](https://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_feature2d/py_matcher/py_matcher.html#flann-based-matcher) matcher is available.
 
 ```python
-path_org = "target.jpg"
-path_sim = "init.png"
+path_org = "target_image.jpg"
+path_sim = "sim_initial.png"
+```
 
-match, plot = akaze_match(path_org, path_sim, ransac_th=200, plot_result=True)
+### Recommended Matching Methods
+
+#### 1. SIFT (Lightweight, No Extra Dependencies)
+[SIFT](https://docs.opencv.org/3.4/da/df5/tutorial_py_sift_intro.html) is a classic feature matching method that works with the core modules only. It's lightweight and suitable for images with similar resolution and good texture.
+
+```python
+match, plot = image_match(path_org, path_sim, method="sift", plot_result=True)
 cv2.imwrite("matched.png", plot)
 gcps = set_gcp(match, df)
 ```
-Matching result.
-![](_static/matched.png)
+
+#### 2. SuperPoint-LightGlue (Robust to Resolution Differences, Lightweight)
+[SuperPoint](https://arxiv.org/abs/1712.07629) with [LightGlue](https://arxiv.org/abs/2306.13643) provides robust matching even when the simulated image and real photograph have different resolutions. It's relatively lightweight and fast.
+
+Requires the `imm` package:
+```bash
+pip install alproj[imm]
+```
+
+```python
+match, plot = image_match(path_org, path_sim, method="superpoint-lightglue", plot_result=True)
+cv2.imwrite("matched.png", plot)
+gcps = set_gcp(match, df)
+```
+
+#### 3. MiniMa-RoMa (High Performance, Computationally Heavy)
+[MiniMa-RoMa](https://arxiv.org/abs/2305.15404) is a dense matching method that achieves excellent performance on challenging image pairs. It's computationally heavy but provides the best matching quality for difficult cases.
+
+Requires the `imm` package:
+```bash
+pip install alproj[imm]
+```
+
+```python
+match, plot = image_match(path_org, path_sim, method="minima-roma", plot_result=True)
+cv2.imwrite("matched.png", plot)
+gcps = set_gcp(match, df)
+```
+
+### Comparison of Matching Methods
+
+The table below shows the comparison of all available methods on a 5616x3744 pixel image pair (CPU on M4 Pro MBP).
+
+**Built-in methods (no extra dependencies):**
+
+| Method | Time | Matches | Notes |
+|--------|------|---------|-------|
+| akaze | ~1 sec | 205 | Fastest, fewer matches |
+| sift | ~3 sec | 333 | Good balance for simple cases |
+
+**LightGlue-based methods (lightweight, handles full resolution):**
+
+| Method | Time | Matches | Notes |
+|--------|------|---------|-------|
+| sift-lightglue | ~2 sec | 503 | SIFT features + LightGlue matcher |
+| superpoint-lightglue | ~3 sec | 965 | Recommended for most cases |
+| minima-superpoint-lightglue | ~3 sec | 975 | MiniMa preprocessing + SuperPoint |
+
+**Dense matching methods (high match count, auto-resized to 640px):**
+
+| Method | Time | Matches | Notes |
+|--------|------|---------|-------|
+| tiny-roma | ~2 sec | 2046 | Fast dense matching |
+| minima-loftr | ~2 sec | 2632 | MiniMa + LoFTR |
+| loftr | ~3 sec | 2237 | Good for low-texture regions |
+| rdd | ~3 sec | 1510 | RDD matching |
+| ufm | ~12 sec | 2048 | UFM matching |
+| master | ~17 sec | 3497 | MASTER matching |
+| roma | ~21 sec | 2048 | RoMa dense matching |
+| minima-roma | ~25 sec | 9999 | Best quality, most matches |
+
+**Note:** Dense matching methods (non-LightGlue) automatically resize images to 640px when `resize` is not specified to prevent out-of-memory errors. Keypoints are scaled back to original coordinates.
+
+You can reproduce this comparison using the script `scripts/compare_matching_methods.py`.
+
+**SIFT result:**
+![](_static/matched_sift.png)
+
+**SuperPoint-LightGlue result:**
+![](_static/matched_superpoint_lightglue.png)
+
+**MiniMa-RoMa result:**
+![](_static/matched_minima_roma.png)
+
+For most cases, **SuperPoint-LightGlue** provides a good balance between speed and robustness. Use **SIFT** when you cannot install additional dependencies, or **MiniMa-RoMa** when you need the highest matching quality for difficult image pairs.
+
+### Outlier Filtering
+
+By default, `image_match()` applies Fundamental Matrix filtering (`outlier_filter="fundamental"`).
+You can also use Essential Matrix filtering when camera parameters are available:
+
+```python
+# Essential Matrix filtering (recommended when params with fov is available)
+match, plot = image_match(
+    path_org, path_sim,
+    method="minima-roma",
+    outlier_filter="essential",  # "essential", "fundamental", or "none"
+    params=params,               # camera params with fov, w, h (focal length computed automatically)
+    threshold=10.0,              # MAGSAC threshold in pixels
+    plot_result=True
+)
+```
+
+**Outlier filtering methods:**
+- `"fundamental"`: Fundamental Matrix with MAGSAC++ (default, no camera intrinsics required)
+- `"essential"`: Essential Matrix with MAGSAC++ (recommended when `params` with `fov` is provided)
+- `"none"`: No filtering. Use this when you plan to apply custom filtering later.
+
+### Spatial Thinning
+
+When using dense matching methods like MiniMa-RoMa, matches may cluster in certain regions of the image. Use spatial thinning to ensure uniform distribution:
+
+```python
+# Match with spatial thinning (keeps at most 1 point per 100x100 pixel region)
+match, plot = image_match(
+    path_org, path_sim,
+    method="minima-roma",
+    spatial_thin_grid=50,           # Grid cell size in pixels
+    spatial_thin_selection="center", # "first", "random", or "center"
+    device="cuda",
+    plot_result=True
+)
+```
+
+![](_static/matched_minima_roma_thined.png)
+
+**Selection methods:**
+- `"first"`: Keeps the first point by input order (fastest, deterministic)
+- `"random"`: Random selection (use `spatial_thin_random_state` for reproducibility)
+- `"center"`: Keeps the point closest to the cell center (best for uniform distribution)
+
+Spatial thinning is applied AFTER geometric outlier filtering, so it samples from inliers only.
+
+### Distance-based GCP Filtering
+
+After creating GCPs with `set_gcp()`, you can filter them based on 3D distance from the camera:
+
+```python
+from alproj.gcp import image_match, set_gcp, filter_gcp_distance
+
+# Create GCPs from matches
+gcps = set_gcp(match, df)
+
+# Filter: exclude points closer than 100m or farther than 2000m
+gcps = filter_gcp_distance(gcps, params, min_distance=100, max_distance=2000)
+```
+
+This is useful for:
+- Excluding nearby foreground objects (min_distance)
+- Excluding distant features with poor depth accuracy (max_distance)
+
+**Important:** Coordinates must be in a projected CRS (e.g., UTM) for accurate Euclidean distance. Using lat/lon directly will produce incorrect results.
+
+### All Available Methods
+**Built-in (no extra dependencies):**
+- **akaze**: [AKAZE](https://docs.opencv.org/3.4/d0/de3/citelist.html#CITEREF_ANB13) local features
+- **sift**: [SIFT](https://docs.opencv.org/3.4/da/df5/tutorial_py_sift_intro.html) local features
+
+**With imm package (pip install alproj[imm]):**
+- **sift-lightglue**, **superpoint-lightglue**, **minima-superpoint-lightglue**: LightGlue-based (lightweight)
+- **roma**, **tiny-roma**, **minima-roma**: RoMa variants (dense matching)
+- **loftr**, **minima-loftr**: LoFTR variants (good for low-texture regions)
+- **ufm**, **rdd**, **master**: Other dense matching methods
+
 ```
 >>> gcps
-        u     v            x           y            z
-0    2585  1127  733720.2500  4051094.25  2648.573486
-1    3566   631  734078.1250  4050727.00  2912.292969
-2    3502   689  733951.8750  4050792.75  2849.661865
-3    3745   723  733976.0625  4050697.25  2848.271729
-4    3833   766  733996.1250  4050657.25  2841.155518
-..    ...   ...          ...         ...          ...
-147  3355  1126  733688.0625  4050916.50  2648.639893
-148  4618  1190  733593.2500  4050619.00  2622.293457
-149  2195  1243  733770.3750  4051216.00  2626.165527
-150  2533  1777  733437.5625  4051142.25  2474.067383
-151  3351  1072  733726.8750  4050907.00  2668.884766
+         u     v              x             y            z
+0     1468  2751  733134.120287  4.051270e+06  2367.014130
+1     2362  1271  733733.878100  4.051172e+06  2613.651184
+2     5116  2709  732801.371752  4.051120e+06  2441.953796
+3      644  2253  733323.715014  4.051434e+06  2401.383240
+4     3944   953  733846.427660  4.050684e+06  2738.904907
+...    ...   ...            ...           ...          ...
+1122  2850  1748  733444.243822  4.051082e+06  2480.453796
+1123  3950  1132  733707.379809  4.050744e+06  2655.842163
+1124  1043  1969  733419.895678  4.051407e+06  2440.836182
+1125   750  1765  733541.844896  4.051506e+06  2479.430786
+1126  3454   824  733863.009447  4.050836e+06  2778.318420
+
+[1127 rows x 5 columns]
 ```
 Where `u` and `v` stands for the x and y axis coordinates in the image coordinate system.
 
 ## Optimization of Camera Parameters
 Finally, optimizing camera parameters using GCPs.
-Camera parameters are optimized by minimizing [reproection errors](https://support.pix4d.com/hc/en-us/articles/202559369-Reprojection-error) with a [CMA-ES](https://github.com/CyberAgent/cmaes) optimizer.  
-You can specify which parameters to be optimized.
+Camera parameters are optimized by minimizing [reproection errors](https://support.pix4d.com/hc/en-us/articles/202559369-Reprojection-error).
+You can specify which parameters to be optimized, including camera position (x, y, z).
+
+Two optimizers are available:
+
+### CMAOptimizer (Recommended for Global Search)
+
+`CMAOptimizer` uses [CMA-ES](https://github.com/CyberAgent/cmaes) evolution strategy.
+Good for difficult cases when the initial guess is far from optimal.
+Supports Huber loss (`f_scale` parameter) for robustness against outliers.
 
 ```python
-obj_points = gcps[["x","y","z"]] # Object points in a geographic coordinate system
-img_points = gcps[["u","v"]] # Image points in an image coordinate system 
-params_init = params # Initial parameters
-target_params = ["fov", "pan", "tilt", "roll", "a1", "a2", "k1", "k2", "k3", "k4", "k5", "k6", "p1", "p2", "s1", "s2", "s3", "s4"] # Parameters to be optimized
-cma_optimizer = CMAOptimizer(obj_points, img_points, params_init) # Create an optimizer instance.
-cma_optimizer.set_target(target_params)
-params_optim, error = cma_optimizer.optimize(generation = 300, bounds = None, sigma = 1.0, population_size=50) # Executing optimization
+obj_points = gcps[["x","y","z"]]
+img_points = gcps[["u","v"]]
+
+# Phase 1: Optimize position, orientation, fov, and aspect ratio
+cma_optimizer = CMAOptimizer(obj_points, img_points, params)
+cma_optimizer.set_target(["x", "y", "z", "fov", "pan", "tilt", "roll", "a1", "a2"])
+params_optim, error = cma_optimizer.optimize(
+    generation=300,
+    sigma=1.0,
+    population_size=50,
+    f_scale=10.0  # Huber loss threshold in pixels (robust to outliers)
+)
+print("Error:", error)
 ```
 
+After Phase 1, you can perform image matching again with the improved parameters and optimize distortion parameters:
+
+```python
+# Phase 2: Optimize distortion parameters with refined matches
+cma_optimizer = CMAOptimizer(gcps[["x","y","z"]], gcps[["u","v"]], params_optim)
+cma_optimizer.set_target(["k1", "k2", "k3", "k4", "k5", "k6", "p1", "p2", "s1", "s2", "s3", "s4"])
+params_optim, error = cma_optimizer.optimize(
+    generation=300,
+    sigma=1.0,
+    population_size=50,
+    f_scale=10.0
+)
 ```
->>> params_optim, error = cma_optimizer.optimize(generation = 1000, bounds = None, sigma = 1.0, population_size=10)
-100%|██████████████████████████████| 300/300 [00:34<00:00,  8.70it/s]
->>> error
-4.8703777893270335
->>> params_optim
-{'x': 732731, 'y': 4051171, 'z': 2458, 'w': 5616, 'h': 3744, 'cx': 2808.0, 'cy': 1872.0, 'fov': 72.7290644465022, 'pan': 96.61170204959896, 'tilt': -0.11552408078299625, 'roll': 0.13489679466899157, 'a1': -0.06632296375509533, 'a2': 0.017306226071500935, 'k1': -0.19848898326165829, 'k2': 0.054213972377095715, 'k3': 0.03875795616853486, 'k4': -0.08828147417948777, 'k5': -0.06425366365767886, 'k6': 0.05423288516486188, 'p1': 0.001605487393669105, 'p2': 0.0028034675418415864, 's1': -0.034626019251498615, 's2': 0.05211054664935553, 's3': 0.001925502186032381, 's4': -0.002550219390348231}
+
+**Key parameters:**
+- `generation`: Number of generations to run (more = better convergence, slower)
+- `sigma`: Initial standard deviation in normalized [0, 1] space
+- `population_size`: Number of candidate solutions per generation
+- `f_scale`: Huber loss threshold in pixels (if None, uses RMSE)
+- `bound_widths`: Width from initial value for each parameter (default: ±45° for angles, ±30m for position, ±0.2 for distortion)
+
+### LsqOptimizer (Fast Local Refinement)
+
+`LsqOptimizer` uses scipy's `least_squares` with Trust Region Reflective algorithm.
+Much faster than CMA-ES but requires a good initial guess. Supports robust loss functions.
+
+```python
+lsq_optimizer = LsqOptimizer(obj_points, img_points, params)
+lsq_optimizer.set_target(["k1", "k2", "k3", "k4", "k5", "k6", "p1", "p2", "s1", "s2", "s3", "s4"])
+params_optim, error = lsq_optimizer.optimize(
+    method="trf",        # "trf", "dogbox", or "lm"
+    loss="huber",        # "linear", "huber", "soft_l1", "cauchy", "arctan"
+    f_scale=10.0,        # threshold for robust loss functions
+    max_nfev=1000        # maximum number of function evaluations
+)
+```
+
+**Key parameters:**
+- `method`: Algorithm to use ("trf" recommended, "lm" does not support bounds/robust loss)
+- `loss`: Loss function ("huber" and "soft_l1" are robust to outliers)
+- `f_scale`: Soft threshold for residuals (larger = more tolerance to outliers)
+
 ```
 The optimized camera parameters reproduces the target image exactly.
 ```python
-sim2 = sim_image(vert, col, ind, params_optim, offsets)
-cv2.imwrite("optimized.png", sim2)
+sim_optim = sim_image(vert, col, ind, params_optim, offsets)
+cv2.imwrite("sim_optimized.png", sim_optim)
 ```
 ![](_static/optimized.png)
-![](_static/ttym_2016.jpg)
 
-You can get geographic coordinates of each pixel of the target image.
+## Reverse Projection
+
+Now you can get geographic coordinates of each pixel of the target image.
 ```python
-original = cv2.imread("ttym_2016.jpg")
+original = cv2.imread("target_image.jpg")
 georectified = reverse_proj(original, vert, ind, params_optim, offsets)
 ```
 
 ```
 >>> georectified
-             u     v            x           y            z      B      G      R
-3047434   3562   542  734196.7500  4050689.00  2987.948242  176.0  160.0  148.0
-3047435   3563   542  734194.6875  4050689.25  2987.231934  171.0  155.0  143.0
-3047436   3564   542  734193.3125  4050689.25  2986.759521  175.0  159.0  146.0
-3047437   3565   542  734192.6250  4050689.00  2986.516602  185.0  169.0  156.0
-3047438   3566   542  734192.1250  4050688.75  2986.366943  191.0  179.0  161.0
-...        ...   ...          ...         ...          ...    ...    ...    ...
-21026299  5611  3743  732739.0000  4051163.50  2453.503174   98.0  153.0  156.0
-21026300  5612  3743  732739.0000  4051163.50  2453.503174   92.0  151.0  153.0
-21026301  5613  3743  732739.0000  4051163.50  2453.503174   88.0  152.0  153.0
-21026302  5614  3743  732739.0000  4051163.50  2453.503418   89.0  153.0  157.0
-21026303  5615  3743  732739.0000  4051163.50  2453.503418   89.0  156.0  159.0
+             u     v              x             y            z      B      G      R
+3030570   3546   539  734196.643725  4.050693e+06  2987.922119  193.0  153.0  128.0
+3030571   3547   539  734195.270678  4.050693e+06  2987.445068  195.0  155.0  130.0
+3030572   3548   539  734193.905932  4.050693e+06  2986.971313  192.0  154.0  124.0
+3030573   3549   539  734192.899340  4.050693e+06  2986.625610  187.0  149.0  119.0
+3030574   3550   539  734192.235033  4.050693e+06  2986.404175  186.0  149.0  115.0
+...        ...   ...            ...           ...          ...    ...    ...    ...
+20655647  5615  3677  732743.775072  4.051166e+06  2452.745117  130.0  174.0  191.0
+20661260  5612  3678  732743.765063  4.051166e+06  2452.746643  115.0  161.0  179.0
+20661261  5613  3678  732743.764086  4.051166e+06  2452.746887  115.0  161.0  179.0
+20661262  5614  3678  732743.764086  4.051166e+06  2452.746887  119.0  165.0  182.0
+20661263  5615  3678  732743.762987  4.051166e+06  2452.747192  124.0  170.0  187.0
 
-[16456070 rows x 8 columns]
->>> 
+[15678803 rows x 8 columns]
 ```
 
-You can also visualize the results with GIS tools. Here, I show an example using R's [sf](https://r-spatial.github.io/sf/), [stars](https://r-spatial.github.io/stars/), and [terra](https://rspatial.org/terra/) package. Since the output of alproj is a point data as shown above, below R script performs raterization and interpolation to make it an orthoimage.   
+## Exporting to GeoTIFF
 
-```r
-library(sf)
-library(tidyverse)
-library(stars)
-library(terra)
-library(stringr)
-setwd("~/VegetationMapPaper/")
+You can convert the reverse projection output directly to a GeoTIFF using the built-in `to_geotiff()` function:
 
-interpolate <- function(in_path, out_path, res, max_dist, fun=terra::modal) {
-  print(str_c("Reading ", in_path, " ......"))
-  points <- read_csv(
-    in_path
-  ) %>%
-    st_as_sf(coords = c("x", "y")) %>%
-    st_set_crs(6690) %>%
-    mutate(z = as.integer(z)) %>%
-    select(-c(u, v, z))
-  
-  print("Rasterizing point data ......")
-  ras <- st_rasterize(points, dx = res, dy = res)
-  rm(points)
-  gc()
-  
-  ras <- ras %>% 
-    as("Raster") %>%
-    terra::rast()
-  
-  times <- ceiling(max_dist / res)
-  for (i in 1:times) {
-    print(str_c("Interpolating ......", i, " of ", times, " iterations"))
-    ras <- ras %>%
-      terra::focal(3, fun, na.policy="only", na.rm=TRUE)
-  }
-  print(str_c("Saving file to ", out_path, " ......"))
-  terra::writeRaster(ras, out_path, overwrite=TRUE)
-  rm(ras)
-  gc()
-  print("Finished !")
-}
+```python
+from alproj.project import to_geotiff
 
-file <- "data/georectified.csv"
-out_path <- stringr::str_replace(file, "csv", "tiff")
-
-interpolate(
-  file, 
-  out_path, 
-  0.5, 
-  1.0, 
-  fun = mean
+# Convert to GeoTIFF with automatic rasterization and interpolation
+to_geotiff(
+    georectified,
+    "output.tif",
+    resolution=1.0,           # Pixel resolution in coordinate units (e.g., meters)
+    crs="EPSG:6690",          # Coordinate Reference System
+    bands=["R", "G", "B"],    # Which columns to use as bands
+    interpolate=True,         # Fill small gaps using focal statistics
+    max_dist=1.0,             # Maximum interpolation distance
+    agg_func="mean",          # Aggregation function: "mean", "median", "max", "min"
+    nodata=255                # NoData value for missing pixels
 )
+```
 
+You can also export to CSV for use with other tools:
+```python
+georectified.to_csv("georectified.csv", index=False)
 ```
 
 Result Plot

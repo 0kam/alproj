@@ -107,7 +107,7 @@ def get_colored_surface(aerial, dsm, shooting_point, distance=2000, res=1.0, res
         A Digital SurfaceModel opend by rasterio.open(), should be in the same CRS as the aerial.
     shooting_point : dict
         Shooting point. Must contain keys "x" and "y". Should be in the same coordinate reference system as the DSM.
-    distance : float default 3000
+    distance : float default 2000
         Distance from shooting point to the edge of the rectangle.
     res : float default 1.0
         Resolution of the output raster in m.
@@ -173,7 +173,7 @@ def get_colored_surface(aerial, dsm, shooting_point, distance=2000, res=1.0, res
     a = a.flatten()
     ind = np.vstack((a, a + h, a + h + 1, a, a + h + 1, a + 1))
     ind = np.transpose(ind).reshape([-1, 3])
-    if ind.max() <= (vert.shape[0] - 1):
+    if ind.max() > (vert.shape[0] - 1):
         warnings.warn("Some triangles are outside the bounds of the raster. Consider using a smaller distance.")
     assert vert.shape == col.shape
     offsets = vert.min(axis=0)

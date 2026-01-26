@@ -24,55 +24,22 @@
 Now, every pixel in the photograph has its geographic coordinates!
 ![](_static/result.jpg)
 
-You can visualize the results with GIS tools. Here, I show an example using R's [sf](https://r-spatial.github.io/sf/) and [stars](https://r-spatial.github.io/stars/) package.
-```r
-library(sf)
-library(stars)
-library(tidyverse)
+You can export the results as a GeoTIFF using the built-in `to_geotiff` function:
 
-# Read result csv file
-points <- read_csv(
-  "georectificated.csv",
-  col_types = cols_only(x = "d", y = "d", R = "d", G = "d", B = "d")
-) %>%
-  mutate(R = as.integer(R), G = as.integer(G), B = as.integer(B))
+```python
+from alproj.project import to_geotiff
 
-# Converting the dataframe to points. 
-points <- points %>% 
-  st_as_sf(coords = c("x", "y"))
-
-# Rsaterize
-R <- points %>%
-  select(R) %>%
-  st_rasterize(dx = 5, dy = 5) 
-
-G <- points %>%
-  select(G) %>%
-  st_rasterize(dx = 5, dy = 5) 
-
-B <- points %>%
-  select(B) %>%
-  st_rasterize(dx = 5, dy = 5) 
-
-rm(points)
-
-gc()
-
-raster <- c(R, G, B) %>%
-  merge() %>%
-  `st_crs<-`(6690)
-
-# Plotting
-
-ggplot() +
-  geom_stars(data = st_rgb(raster)) +
-  scale_fill_identity()
-
-# Saving raster data as a GeoTiff file.
-write_stars(raster, "ortholike.tif")
+to_geotiff(
+    georectified,          # Result of reverse_proj()
+    "ortholike.tif",
+    resolution=1.0,        # Pixel resolution in meters
+    crs="EPSG:6690",       # Coordinate Reference System
+    bands=["R", "G", "B"], # Bands to export
+    interpolate=True       # Fill small gaps
+)
 ```
 
-You can open the created GeoTiff file with GIS software such as QGIS and ArcGIS.
+You can open the created GeoTIFF file with GIS software such as QGIS and ArcGIS.
 
 ![](_static/ortho.png)
 

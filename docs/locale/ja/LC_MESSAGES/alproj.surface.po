@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: alproj \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-23 11:38+0900\n"
-"PO-Revision-Date: 2026-01-23 11:38+0900\n"
+"POT-Creation-Date: 2026-01-26 17:18+0900\n"
+"PO-Revision-Date: 2026-01-26 12:00+0900\n"
 "Last-Translator: \n"
 "Language: ja\n"
 "Language-Team: ja <LL@li.org>\n"
@@ -33,22 +33,19 @@ msgstr "パラメータ"
 msgid ""
 "An aerial photograph opend by rasterio.open(), should be in a CRS that "
 "has units of meters, and have values of 0-255."
-msgstr ""
-"rasterio.open()で開いた航空写真。メートル単位のCRSで、値は0-255である必要があります。"
+msgstr "rasterio.open()で開いた航空写真。メートル単位のCRSで、値は0-255である必要があります。"
 
 #: alproj.surface.get_colored_surface:5 of
 msgid ""
 "A Digital SurfaceModel opend by rasterio.open(), should be in the same "
 "CRS as the aerial."
-msgstr ""
-"rasterio.open()で開いた数値表層モデル。航空写真と同じCRSである必要があります。"
+msgstr "rasterio.open()で開いた数値表層モデル。航空写真と同じCRSである必要があります。"
 
 #: alproj.surface.get_colored_surface:7 of
 msgid ""
 "Shooting point. Must contain keys \"x\" and \"y\". Should be in the same "
 "coordinate reference system as the DSM."
-msgstr ""
-"撮影地点。キー\"x\"と\"y\"を含む必要があります。DSMと同じ座標参照系である必要があります。"
+msgstr "撮影地点。キー\"x\"と\"y\"を含む必要があります。DSMと同じ座標参照系である必要があります。"
 
 #: alproj.surface.get_colored_surface:9 of
 msgid "Distance from shooting point to the edge of the rectangle."
@@ -63,8 +60,8 @@ msgid ""
 "Resampling method. See "
 "https://rasterio.readthedocs.io/en/latest/api/rasterio.enums.html#rasterio.enums.Resampling"
 msgstr ""
-"リサンプリング方法。"
-"https://rasterio.readthedocs.io/en/latest/api/rasterio.enums.html#rasterio.enums.Resampling を参照"
+"リサンプリング方法。https://rasterio.readthedocs.io/en/latest/api/rasterio.enums.html#rasterio.enums.Resampling"
+" を参照"
 
 #: alproj.surface.get_colored_surface:15 of
 msgid "Distance in m for filling nodata in DSM."
@@ -81,9 +78,9 @@ msgid ""
 "for each triangle. * **offset** (*numpy.ndarray*) -- Offset for vertex "
 "coordinates. You need to add this to vert to get the correct coordinates."
 msgstr ""
-"* **vert** (*numpy.ndarray*) -- 頂点座標 * **col** (*numpy.ndarray*) -- 頂点カラー "
-"* **ind** (*numpy.ndarray*) -- 各三角形のインデックス "
-"* **offset** (*numpy.ndarray*) -- 頂点座標のオフセット。正しい座標を得るにはvertに加算する必要があります。"
+"* **vert** (*numpy.ndarray*) -- 頂点座標 * **col** (*numpy.ndarray*) -- 頂点カラー"
+" * **ind** (*numpy.ndarray*) -- 各三角形のインデックス * **offset** "
+"(*numpy.ndarray*) -- 頂点座標のオフセット。正しい座標を得るにはvertに加算する必要があります。"
 
 #: alproj.surface.get_colored_surface:18 of
 msgid "**vert** (*numpy.ndarray*) -- Vertex coordinates."
@@ -101,6 +98,32 @@ msgstr "**ind** (*numpy.ndarray*) -- 各三角形のインデックス"
 msgid ""
 "**offset** (*numpy.ndarray*) -- Offset for vertex coordinates. You need "
 "to add this to vert to get the correct coordinates."
-msgstr ""
-"**offset** (*numpy.ndarray*) -- 頂点座標のオフセット。"
-"正しい座標を得るにはvertに加算する必要があります。"
+msgstr "**offset** (*numpy.ndarray*) -- 頂点座標のオフセット。正しい座標を得るにはvertに加算する必要があります。"
+
+#~ msgid "Get window of a rectangle centered at shooting point."
+#~ msgstr "撮影地点を中心とした矩形のウィンドウを取得"
+
+#~ msgid "A raster opend by rasterio.open()"
+#~ msgstr "rasterio.open()で開いたラスター"
+
+#~ msgid "Get bounds of a rectangle centered at shooting point."
+#~ msgstr "撮影地点を中心とした矩形の境界を取得"
+
+#~ msgid "Merge two rasters in the same coordinate reference system."
+#~ msgstr "同じ座標参照系の2つのラスターをマージ"
+
+#~ msgid "An aerial photograph opend by rasterio.open()"
+#~ msgstr "rasterio.open()で開いた航空写真"
+
+#~ msgid "A Digital SurfaceModel opend by rasterio.open()"
+#~ msgstr "rasterio.open()で開いた数値表層モデル"
+
+#~ msgid "(left, bottom, right, top) in the same coordinate reference system."
+#~ msgstr "同じ座標参照系での（left, bottom, right, top）"
+
+#~ msgid "**merged** (*numpy.ndarray*) -- Merged raster."
+#~ msgstr "**merged** (*numpy.ndarray*) -- マージされたラスター"
+
+#~ msgid "**transform** (*affine.Affine*) -- Affine transformation matrix."
+#~ msgstr "**transform** (*affine.Affine*) -- アフィン変換行列"
+
