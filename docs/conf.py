@@ -17,6 +17,12 @@ import sys
 
 sys.path.insert(0, os.path.abspath('../src/'))
 
+# Mock imports for Read the Docs build (avoid heavy dependencies)
+autodoc_mock_imports = [
+    'numpy', 'pandas', 'rasterio', 'cv2', 'moderngl', 'glcontext',
+    'cmaes', 'tqdm', 'scipy', 'imm'
+]
+
 
 # -- Project information -----------------------------------------------------
 
@@ -27,7 +33,7 @@ author = 'Ryotaro Okamoto'
 # The short X.Y version
 version = ''
 # The full version, including alpha/beta/rc tags
-release = 'v0.1.0'
+release = 'v1.0.0'
 
 
 # -- General configuration ---------------------------------------------------
