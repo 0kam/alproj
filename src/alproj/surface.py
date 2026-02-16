@@ -1,46 +1,10 @@
 import rasterio
 from rasterio.merge import merge
 from rasterio.enums import Resampling
-from rasterio.windows import Window
 from rasterio.fill import fillnodata
-from rasterio.io import MemoryFile
 import numpy as np
 import math
 import warnings
-
-def _get_window(raster: rasterio.DatasetReader, shooting_point: dict, distance: float):
-    """
-    Get window of a rectangle centered at shooting point.
-    
-    Parameters
-    ----------
-    raster : rasterio.DatasetReader
-        A raster opend by rasterio.open()
-    shooting_point : dict
-        Shooting point. Must contain keys "x" and "y". Should be in the same coordinate reference system as the DSM.
-    distance : float
-        Distance from shooting point to the edge of the rectangle.
-    """
-    raster_directions = (raster.transform[0] > 0, raster.transform[4] > 0)
-    if raster_directions[0]:
-        left = shooting_point["x"] - distance
-        right = shooting_point["x"] + distance
-    else:
-        left = shooting_point["x"] + distance
-        right = shooting_point["x"] - distance
-    if raster_directions[1]:
-        bottom = shooting_point["y"] - distance
-        top = shooting_point["y"] + distance
-    else:
-        bottom = shooting_point["y"] + distance
-        top = shooting_point["y"] - distance
-    lb = raster.index(left, bottom)
-    rt = raster.index(right, top)
-    min_value = min(lb[0], lb[1], rt[0], rt[1])
-    if min_value < 0:
-        too_large = math.ceil(abs(min_value) * raster.res[0] + 1)
-        raise ValueError(f"Distance is too large. Consider using a smaller distance less than {distance - too_large} m.")
-    return Window.from_slices((lb[0], rt[0]), (lb[1], rt[1]))
 
 def _get_bounds(shooting_point: dict, distance: float):
     """
@@ -58,6 +22,49 @@ def _get_bounds(shooting_point: dict, distance: float):
     bottom = shooting_point["y"] - distance
     top = shooting_point["y"] + distance
     return (left, bottom, right, top)
+
+def _normalize_aerial(data, source_dtype, color_max=None):
+    """
+    Normalize aerial photo color values to [0, 1] range.
+
+    Parameters
+    ----------
+    data : numpy.ndarray
+        Color data array (float, after merge).
+    source_dtype : numpy.dtype
+        Original dtype of the aerial raster before merging.
+    color_max : float or None
+        Explicit maximum value for normalization. If None, determined automatically from source_dtype.
+
+    Returns
+    -------
+    numpy.ndarray
+        Normalized array with values clipped to [0, 1].
+    """
+    data = data.astype(np.float64)
+    if color_max is not None:
+        data /= color_max
+    elif np.issubdtype(source_dtype, np.unsignedinteger):
+        data /= np.iinfo(source_dtype).max
+    elif np.issubdtype(source_dtype, np.signedinteger):
+        data /= np.iinfo(source_dtype).max
+    elif np.issubdtype(source_dtype, np.floating):
+        max_val = data.max()
+        if max_val <= 1.0:
+            pass  # Already normalized
+        elif max_val <= 255.0:
+            data /= 255.0
+        else:
+            warnings.warn(
+                f"Float aerial photo has max value {max_val:.1f} (> 255). "
+                "Dividing by 255; consider passing color_max explicitly."
+            )
+            data /= 255.0
+    else:
+        data /= 255.0
+    np.clip(data, 0, 1, out=data)
+    return data
+
 
 def _merge_rasters(aerial, dsm, bounds=None, res=1.0, resampling=Resampling.cubic_spline):
     """
@@ -78,31 +85,50 @@ def _merge_rasters(aerial, dsm, bounds=None, res=1.0, resampling=Resampling.cubi
     
     Returns
     -------
-    merged : numpy.ndarray
-        Merged raster.
+    aerial2 : numpy.ndarray
+        Merged aerial raster.
+    dsm2 : numpy.ndarray
+        Merged DSM raster.
     transform : affine.Affine
         Affine transformation matrix.
+    nodata_mask : numpy.ndarray
+        2D boolean mask where True indicates nodata pixels in the DSM.
     """
     if bounds is None:
         bounds = aerial.bounds
     aerial2, transform_a = merge([aerial], bounds=bounds, res=res, resampling=resampling)
     dsm2, transform_d = merge([dsm], bounds=bounds, res=res, resampling=resampling)
-    aerial2[np.isnan(aerial2)] = 0
-    dsm2[np.isnan(dsm2)] = 0
-    if transform_a == transform_d:
-        transform = transform_a
+    # Handle nodata for aerial (integer dtypes don't support NaN)
+    if np.issubdtype(aerial2.dtype, np.floating):
+        aerial2[np.isnan(aerial2)] = 0
     else:
-        print("error in merging aerial photo and DSM")
-    return aerial2, dsm2, transform
+        if aerial.nodata is not None:
+            aerial2[aerial2 == aerial.nodata] = 0
 
-def get_colored_surface(aerial, dsm, shooting_point, distance=2000, res=1.0, resampling=Resampling.cubic_spline, fill_dsm_dist=300):
+    # Handle nodata for DSM
+    if np.issubdtype(dsm2.dtype, np.floating):
+        nodata_mask = np.isnan(dsm2[0])
+        dsm2[np.isnan(dsm2)] = 0
+    else:
+        if dsm.nodata is not None:
+            nodata_mask = (dsm2[0] == dsm.nodata)
+            dsm2[dsm2 == dsm.nodata] = 0
+        else:
+            nodata_mask = np.zeros(dsm2.shape[1:], dtype=bool)
+    if transform_a != transform_d:
+        raise ValueError("Transform mismatch between aerial photo and DSM after merging.")
+    transform = transform_a
+    return aerial2, dsm2, transform, nodata_mask
+
+def get_colored_surface(aerial, dsm, shooting_point, distance=2000, res=1.0, resampling=Resampling.cubic_spline, fill_dsm_dist=300, color_max=None):
     """
     Get colored surface.
-    
+
     Parameters
     ----------
     aerial : rasterio.DatasetReader
-        An aerial photograph opend by rasterio.open(), should be in a CRS that has units of meters, and have values of 0-255.
+        An aerial photograph opend by rasterio.open(), should be in a CRS that has units of meters.
+        Supports uint8, uint16, and float32 dtypes (normalization is automatic).
     dsm : rasterio.DatasetReader
         A Digital SurfaceModel opend by rasterio.open(), should be in the same CRS as the aerial.
     shooting_point : dict
@@ -115,6 +141,8 @@ def get_colored_surface(aerial, dsm, shooting_point, distance=2000, res=1.0, res
         Resampling method. See https://rasterio.readthedocs.io/en/latest/api/rasterio.enums.html#rasterio.enums.Resampling
     fill_dsm_dist : float default 300
         Distance in m for filling nodata in DSM.
+    color_max : float or None default None
+        Explicit maximum color value for normalization. If None, determined automatically from the aerial dtype.
 
     Returns
     -------
@@ -127,22 +155,21 @@ def get_colored_surface(aerial, dsm, shooting_point, distance=2000, res=1.0, res
     offset : numpy.ndarray
         Offset for vertex coordinates. You need to add this to vert to get the correct coordinates.
     """
+    source_dtype = aerial.dtypes[0]
     bounds = _get_bounds(shooting_point, distance=distance)
-    window_dsm = _get_window(dsm, shooting_point, distance=distance)
-    window_aerial = _get_window(aerial, shooting_point, distance=distance)
+    total_pixels = (2 * distance / res) ** 2
+    if total_pixels > 100_000_000:
+        warnings.warn(
+            f"Requested area is very large ({total_pixels:.0f} pixels). "
+            "Consider using a larger res or smaller distance."
+        )
+    aerial2, dsm2, transform, nodata_mask = _merge_rasters(
+        aerial, dsm, bounds=bounds, res=res, resampling=resampling)
+    aerial2 = aerial2[:3, :, :]
+    dsm_max_height = dsm2[0][~nodata_mask].max() if (~nodata_mask).any() else 0
 
-    with MemoryFile() as dsm_memfile, MemoryFile() as aerial_memfile:
-        with dsm_memfile.open(driver="GTiff", width=window_dsm.width, height=window_dsm.height, count=1, dtype=dsm.dtypes[0], crs=dsm.crs, transform=dsm.window_transform(window_dsm)) as dst:
-            dst.write(dsm.read(window=window_dsm))
-        dsm2 = dsm_memfile.open()
-        dsm_max_height = dsm2.read().max()
-        with aerial_memfile.open(driver="GTiff", width=window_aerial.width, height=window_aerial.height, count=3, dtype=aerial.dtypes[0], crs=aerial.crs, transform=aerial.window_transform(window_aerial)) as dst:
-            dst.write(aerial.read(window=window_aerial)[:3,:,:])
-        aerial2 = aerial_memfile.open()
-        aerial2, dsm2, transform = _merge_rasters(aerial2, dsm2, res=res, resampling=resampling)
-    
-    dsm_mask = dsm2 > 0
-    dsm2 = fillnodata(dsm2, dsm_mask, max_search_distance=math.ceil(fill_dsm_dist*res))
+    dsm2 = fillnodata(dsm2[0], ~nodata_mask, max_search_distance=math.ceil(fill_dsm_dist / res))
+    dsm2 = dsm2[np.newaxis, :, :]
     if dsm2.min() < 0:
         warnings.warn("DSM still has negative elevation values. Consider using a larger fill_dsm_dist. Negative values will be filled with 0.")
     dsm2[dsm2 < 0] = 0
@@ -161,9 +188,8 @@ def get_colored_surface(aerial, dsm, shooting_point, distance=2000, res=1.0, res
     B = aerial2[2,:,:]
     vert = np.vstack((xx,zz,yy)).reshape([3, -1])
     vert = np.transpose(vert)
-    col = np.vstack((R,G,B)).reshape([3, -1]) / 255
-    col[col>1] = 1
-    col[col<0] = 0
+    col = np.vstack((R,G,B)).reshape([3, -1])
+    col = _normalize_aerial(col, np.dtype(source_dtype), color_max=color_max)
     col = np.transpose(col)
     # Vertex index for each triangle
     ai = np.arange(0, w-1)
@@ -173,7 +199,13 @@ def get_colored_surface(aerial, dsm, shooting_point, distance=2000, res=1.0, res
     a = a.flatten()
     ind = np.vstack((a, a + h, a + h + 1, a, a + h + 1, a + 1))
     ind = np.transpose(ind).reshape([-1, 3])
-    if ind.max() > (vert.shape[0] - 1):
+    # Filter out triangles that reference nodata vertices
+    valid_vertex = ~nodata_mask.flatten()
+    valid_tri = valid_vertex[ind].all(axis=1)
+    ind = ind[valid_tri]
+    if ind.size == 0:
+        warnings.warn("All triangles were filtered out (all vertices are nodata).")
+    elif ind.max() > (vert.shape[0] - 1):
         warnings.warn("Some triangles are outside the bounds of the raster. Consider using a smaller distance.")
     assert vert.shape == col.shape
     offsets = vert.min(axis=0)
