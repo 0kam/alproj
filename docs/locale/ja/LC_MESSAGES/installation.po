@@ -22,6 +22,10 @@ msgid "Installation"
 msgstr "インストール"
 
 #: ../../installation.md:3
+msgid "If you prefer a graphical interface, try [alproj-gui](https://github.com/0kam/alproj-gui) — a desktop GUI application for georectification powered by alproj, built with Tauri. No Python coding required."
+msgstr "GUIをお好みの場合は、[alproj-gui](https://github.com/0kam/alproj-gui) をお試しください。alprojを利用したTauri製の幾何補正デスクトップアプリで、Pythonのコーディングは不要です。"
+
+#: ../../installation.md:7
 msgid "**Requires Python 3.9-3.12**"
 msgstr "**Python 3.9-3.12 が必要です**"
 

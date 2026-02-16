@@ -5,6 +5,10 @@ A simple georectification tool for alpine landscape photographs.
 [日本語ドキュメント](https://alproj.readthedocs.io/ja/latest/index.html)
 [paper](https://doi.org/10.1002/rse2.364)
 
+## GUI Version
+
+For an interactive experience without writing code, check out [alproj-gui](https://github.com/0kam/alproj-gui) — a desktop GUI application for georectification powered by alproj, built with Tauri.
+
 ## Overview
 `alproj` is a simple python package for geo-rectification of alpine landscape photographs.   
 `alproj` has 3 steps for geo-rectification of landscape photograph.  

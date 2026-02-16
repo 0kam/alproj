@@ -77,6 +77,10 @@ msgstr ""
 "山岳景観・生態系・雪氷圏の未知の変化を明らかにする貴重な地理空間データとして"
 "蘇らせることを目指しています！"
 
+#: ../../index.rst:22
+msgid "Looking for a GUI? Try `alproj-gui <https://github.com/0kam/alproj-gui>`_ — a desktop application for georectification, no coding required."
+msgstr "GUIをお探しですか？ `alproj-gui <https://github.com/0kam/alproj-gui>`_ をお試しください。コーディング不要で幾何補正ができるデスクトップアプリケーションです。"
+
 #: ../../index.rst:39
 msgid "Indices and tables"
 msgstr "索引とテーブル"

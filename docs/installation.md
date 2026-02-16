@@ -1,5 +1,9 @@
 # Installation
 
+```{tip}
+If you prefer a graphical interface, try [alproj-gui](https://github.com/0kam/alproj-gui) — a desktop GUI application for georectification powered by alproj, built with Tauri. No Python coding required.
+```
+
 **Requires Python 3.9-3.12**
 
 ## Basic Installation

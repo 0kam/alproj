@@ -17,6 +17,10 @@ Welcome to alproj's documentation!
 
 This project aims to revive alpine landscape photographs in your photo albams, as valuable geospatial data that may reveal the unknown changes of alpine landscape, ecosystem and cryosphere!
 
+.. tip::
+
+   Looking for a GUI? Try `alproj-gui <https://github.com/0kam/alproj-gui>`_ — a desktop application for georectification, no coding required.
+
 
 .. toctree::
    :maxdepth: 2
