@@ -9,9 +9,9 @@ import cv2
 # Step1: Load data
 ## ------------------------------------------------------------------------------
 res = 1.0 # resolution in m
-airborne = rasterio.open("devel_data/airborne.tif")
-dsm = rasterio.open("devel_data/dsm.tif")
-target_image_path = "devel_data/target_image.jpg"
+airborne = rasterio.open("devel_data/tateyama/airborne.tif")
+dsm = rasterio.open("devel_data/tateyama/dsm.tif")
+target_image_path = "devel_data/tateyama/target_image.jpg"
 
 # Step2: Simulate initial image
 ## ------------------------------------------------------------------------------
@@ -23,10 +23,10 @@ params_init = {"x":732731,"y":4051171, "z":2458, "fov":75, "pan":95, "tilt":0, "
 
 ## Generate colored surface
 vert, col, ind, offsets = get_colored_surface(
-    airborne, dsm, shooting_point=params_init, distance=2000, res=res) # This takes some minites.
+    airborne, dsm, shooting_point=params_init, distance=4000, res=res) # This takes some minites.
 ## Simulate image
 sim = sim_image(vert, col, ind, params_init, offsets, min_distance=100) # mask closer area than 100m for preventing missmatch in image matching
-cv2.imwrite("devel_data/sim_init.png", sim)
+cv2.imwrite("devel_data/tateyama/sim_init.png", sim)
 ## Reverse projection
 df = reverse_proj(sim, vert, ind, params_init, offsets)
 
@@ -35,11 +35,11 @@ df = reverse_proj(sim, vert, ind, params_init, offsets)
 ## Image matching between the original and simulated images
 ## Use spatial_thin_grid to ensure uniform distribution of matches
 match, plot = image_match(
-    target_image_path, "devel_data/sim_init.png",
+    target_image_path, "devel_data/tateyama/sim_init.png",
     method="minima-roma", plot_result=True, outlier_filter="fundamental", params=params_init, resize=800, threshold=30.0,
     spatial_thin_grid=100, spatial_thin_selection="center")
 
-cv2.imwrite("devel_data/matched_1st.png", plot)
+cv2.imwrite("devel_data/tateyama/matched_1st.png", plot)
 
 ## Set ground control points
 gcps = set_gcp(match, df)
@@ -55,17 +55,17 @@ params_2nd, error = cma_optimizer.optimize(
 print("Error:", error)
 
 sim2 = sim_image(vert, col, ind, params_2nd, offsets, min_distance=100)
-cv2.imwrite("devel_data/sim_2nd.png", sim2)
+cv2.imwrite("devel_data/tateyama/sim_2nd.png", sim2)
 df2 = reverse_proj(sim2, vert, ind, params_2nd, offsets)
 
 ## Optimize camera parameters (Phase 2: adjust distortion parameters)
 ### ------------------------------------------------------------------------------
 match, plot = image_match(
-    target_image_path, "devel_data/sim_2nd.png",
+    target_image_path, "devel_data/tateyama/sim_2nd.png",
     method="minima-roma", plot_result=True, outlier_filter="essential", params=params_2nd, resize=800, threshold=30.0,
     spatial_thin_grid=50, spatial_thin_selection="center")
 
-cv2.imwrite("devel_data/matched_2nd.png", plot)
+cv2.imwrite("devel_data/tateyama/matched_2nd.png", plot)
 gcps = set_gcp(match, df2)
 
 ## Filter GCPs by distance (exclude points closer than 100m)
@@ -86,16 +86,16 @@ print("Error:", error)
 
 # Save optimized parameters
 import json
-with open("devel_data/optimized_params.json", "w") as f:
+with open("devel_data/tateyama/optimized_params.json", "w") as f:
     json.dump(params_optim, f, indent=4)
 
 # Load optimized parameters
-with open("devel_data/optimized_params.json", "r") as f:
+with open("devel_data/tateyama/optimized_params.json", "r") as f:
     params_optim = json.load(f)
 
 # Simulate optimized image
 sim_optimized = sim_image(vert, col, ind, params_optim, offsets)
-cv2.imwrite("devel_data/sim_optimized.png", sim_optimized)
+cv2.imwrite("devel_data/tateyama/sim_optimized.png", sim_optimized)
 
 # Step4: Generate georectified image
 ## ------------------------------------------------------------------------------
@@ -105,7 +105,7 @@ georectified = reverse_proj(original, vert, ind, params_optim, offsets)
 # Convert to GeoTIFF with automatic rasterization and interpolation
 to_geotiff(
     georectified,
-    "devel_data/georectified.tif",
+    "devel_data/tateyama/georectified.tif",
     resolution=1.0,           # Pixel resolution in coordinate units (e.g., meters)
     crs="EPSG:6690",          # Coordinate Reference System
     bands=["R", "G", "B"],    # Which columns to use as bands

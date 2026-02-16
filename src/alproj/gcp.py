@@ -571,7 +571,8 @@ def image_match(path_org, path_sim, method="akaze", outlier_filter="fundamental"
         return pts, None
 
 
-def plot_matches(image, matches, color=(180, 105, 255), thickness=20, tip_length=0.3):
+def plot_matches(image, matches, color=(180, 105, 255), thickness=None,
+                 tip_length=0.3, font_scale=None, font_thickness=None):
     """
     Plot feature matches on an image.
 
@@ -583,10 +584,14 @@ def plot_matches(image, matches, color=(180, 105, 255), thickness=20, tip_length
         Match coordinates with columns u_org, v_org, u_sim, v_sim.
     color : tuple, default (180, 105, 255)
         Arrow color in BGR.
-    thickness : int, default 20
-        Arrow thickness.
+    thickness : int or None, default None
+        Arrow thickness. If None, automatically scaled based on image size.
     tip_length : float, default 0.3
         Arrow tip length as fraction of arrow length.
+    font_scale : float or None, default None
+        Font size for the label text. If None, automatically scaled based on image size.
+    font_thickness : int or None, default None
+        Font stroke thickness. If None, automatically scaled based on image size.
 
     Returns
     -------
@@ -597,6 +602,15 @@ def plot_matches(image, matches, color=(180, 105, 255), thickness=20, tip_length
 
     if len(matches) == 0:
         return plot_img
+
+    # Scale drawing parameters relative to a 3744px reference height
+    scale = min(image.shape[:2]) / 3744
+    if thickness is None:
+        thickness = max(1, int(20 * scale))
+    if font_scale is None:
+        font_scale = max(0.5, 5 * scale)
+    if font_thickness is None:
+        font_thickness = max(1, int(5 * scale))
 
     pts1 = matches[["u_org", "v_org"]].to_numpy().astype(np.int32)
     pts2 = matches[["u_sim", "v_sim"]].to_numpy().astype(np.int32)
@@ -610,7 +624,7 @@ def plot_matches(image, matches, color=(180, 105, 255), thickness=20, tip_length
     plot_img = cv2.putText(
         plot_img, f"simulated <- original ({len(pts1)} matches)",
         (int(plot_img.shape[1] * 0.15), int(plot_img.shape[0] * 0.05)),
-        cv2.FONT_HERSHEY_TRIPLEX, 5, (0, 0, 0), 5, cv2.LINE_AA
+        cv2.FONT_HERSHEY_TRIPLEX, font_scale, (0, 0, 0), font_thickness, cv2.LINE_AA
     )
 
     return plot_img

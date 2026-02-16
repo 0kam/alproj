@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from alproj.gcp import _filter_spatial, filter_gcp_distance
+from alproj.gcp import _filter_spatial, filter_gcp_distance, plot_matches
 
 
 class TestFilterSpatial:
@@ -286,3 +286,57 @@ class TestFilterGcpDistance:
         result = filter_gcp_distance(gcp, params, min_distance=150)
 
         assert list(result.index) == [0, 1]  # Reset index
+
+
+class TestPlotMatches:
+    """Tests for plot_matches function."""
+
+    def _make_image(self, h, w):
+        return np.zeros((h, w, 3), dtype=np.uint8)
+
+    def _make_matches(self, n=3):
+        return pd.DataFrame({
+            'u_org': np.random.randint(0, 100, n),
+            'v_org': np.random.randint(0, 100, n),
+            'u_sim': np.random.randint(0, 100, n),
+            'v_sim': np.random.randint(0, 100, n),
+        })
+
+    def test_empty_matches_returns_copy(self):
+        """Test that empty matches returns a copy of the image."""
+        img = self._make_image(100, 100)
+        matches = pd.DataFrame(columns=['u_org', 'v_org', 'u_sim', 'v_sim'])
+        result = plot_matches(img, matches)
+        np.testing.assert_array_equal(result, img)
+        assert result is not img
+
+    def test_auto_scaling_small_image(self):
+        """Test that auto-scaling produces reasonable values for small images."""
+        img = self._make_image(374, 500)  # 1/10 of reference size
+        matches = self._make_matches()
+        # Should not raise; thickness/font should be scaled down
+        result = plot_matches(img, matches)
+        assert result.shape == img.shape
+
+    def test_auto_scaling_large_image(self):
+        """Test that auto-scaling works for reference-size images."""
+        img = self._make_image(3744, 5616)
+        matches = self._make_matches(1)
+        result = plot_matches(img, matches)
+        assert result.shape == img.shape
+
+    def test_explicit_params_override_scaling(self):
+        """Test that explicit parameters override auto-scaling."""
+        img = self._make_image(100, 100)
+        matches = self._make_matches(1)
+        # Explicit values should be used as-is
+        result = plot_matches(img, matches, thickness=3, font_scale=1.0, font_thickness=1)
+        assert result.shape == img.shape
+
+    def test_original_image_not_modified(self):
+        """Test that the original image is not modified."""
+        img = self._make_image(200, 200)
+        original = img.copy()
+        matches = self._make_matches()
+        plot_matches(img, matches)
+        np.testing.assert_array_equal(img, original)
