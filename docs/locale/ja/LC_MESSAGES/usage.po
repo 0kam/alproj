@@ -212,8 +212,8 @@ msgid ""
 msgstr "[SuperPoint](https://arxiv.org/abs/1712.07629)と[LightGlue](https://arxiv.org/abs/2306.13643)の組み合わせは、シミュレーション画像と実写真の解像度が異なる場合でもロバストなマッチングを提供します。比較的軽量で高速です。"
 
 #: ../../usage.md:156 ../../usage.md:170
-msgid "Requires the `imm` package:"
-msgstr "`imm`パッケージが必要です："
+msgid "Requires the `vismatch` package:"
+msgstr "`vismatch`パッケージが必要です："
 
 #: ../../usage.md:167
 msgid "3. MiniMa-RoMa (High Performance, Computationally Heavy)"
@@ -268,8 +268,8 @@ msgid "~1 sec"
 msgstr "~1秒"
 
 #: ../../usage.md
-msgid "205"
-msgstr "205"
+msgid "176"
+msgstr "176"
 
 #: ../../usage.md
 msgid "Fastest, fewer matches"
@@ -284,8 +284,8 @@ msgid "~3 sec"
 msgstr "~3秒"
 
 #: ../../usage.md
-msgid "333"
-msgstr "333"
+msgid "331"
+msgstr "331"
 
 #: ../../usage.md
 msgid "Good balance for simple cases"
@@ -304,8 +304,8 @@ msgid "~2 sec"
 msgstr "~2秒"
 
 #: ../../usage.md
-msgid "503"
-msgstr "503"
+msgid "518"
+msgstr "518"
 
 #: ../../usage.md
 msgid "SIFT features + LightGlue matcher"
@@ -316,8 +316,8 @@ msgid "superpoint-lightglue"
 msgstr "superpoint-lightglue"
 
 #: ../../usage.md
-msgid "965"
-msgstr "965"
+msgid "962"
+msgstr "962"
 
 #: ../../usage.md
 msgid "Recommended for most cases"
@@ -328,8 +328,8 @@ msgid "minima-superpoint-lightglue"
 msgstr "minima-superpoint-lightglue"
 
 #: ../../usage.md
-msgid "975"
-msgstr "975"
+msgid "973"
+msgstr "973"
 
 #: ../../usage.md
 msgid "MiniMa preprocessing + SuperPoint"
@@ -344,8 +344,8 @@ msgid "tiny-roma"
 msgstr "tiny-roma"
 
 #: ../../usage.md
-msgid "2046"
-msgstr "2046"
+msgid "2047"
+msgstr "2047"
 
 #: ../../usage.md
 msgid "Fast dense matching"
@@ -356,8 +356,8 @@ msgid "minima-loftr"
 msgstr "minima-loftr"
 
 #: ../../usage.md
-msgid "2632"
-msgstr "2632"
+msgid "2629"
+msgstr "2629"
 
 #: ../../usage.md
 msgid "MiniMa + LoFTR"
@@ -368,8 +368,8 @@ msgid "loftr"
 msgstr "loftr"
 
 #: ../../usage.md
-msgid "2237"
-msgstr "2237"
+msgid "2198"
+msgstr "2198"
 
 #: ../../usage.md
 msgid "Good for low-texture regions"
@@ -380,8 +380,8 @@ msgid "rdd"
 msgstr "rdd"
 
 #: ../../usage.md
-msgid "1510"
-msgstr "1510"
+msgid "1494"
+msgstr "1494"
 
 #: ../../usage.md
 msgid "RDD matching"
@@ -412,12 +412,12 @@ msgid "~17 sec"
 msgstr "~17秒"
 
 #: ../../usage.md
-msgid "3497"
-msgstr "3497"
+msgid "3515"
+msgstr "3515"
 
 #: ../../usage.md
-msgid "MASTER matching"
-msgstr "MASTERマッチング"
+msgid "MASTER matching (large model)"
+msgstr "MASTERマッチング（大規模モデル）"
 
 #: ../../usage.md
 msgid "roma"
@@ -444,8 +444,8 @@ msgid "9999"
 msgstr "9999"
 
 #: ../../usage.md
-msgid "Best quality, most matches"
-msgstr "最高品質、最多マッチ数"
+msgid "Best quality, large model requires CUDA"
+msgstr "最高品質、largeモデルはCUDA必須"
 
 #: ../../usage.md:213
 msgid ""
@@ -621,28 +621,61 @@ msgstr ""
 "[SIFT](https://docs.opencv.org/3.4/da/df5/tutorial_py_sift_intro.html)局所特徴量"
 
 #: ../../usage.md:300
-msgid "**With imm package (pip install alproj[imm]):**"
-msgstr "**immパッケージ使用時（pip install alproj[imm]）：**"
-
-#: ../../usage.md:301
-msgid ""
-"**sift-lightglue**, **superpoint-lightglue**, **minima-superpoint-"
-"lightglue**: LightGlue-based (lightweight)"
-msgstr ""
-"**sift-lightglue**, **superpoint-lightglue**, **minima-superpoint-"
-"lightglue**: LightGlueベース（軽量）"
+msgid "**With vismatch package (pip install alproj[vismatch]):**"
+msgstr "**vismatchパッケージ使用時（pip install alproj[vismatch]）：**"
 
 #: ../../usage.md:302
-msgid "**roma**, **tiny-roma**, **minima-roma**: RoMa variants (dense matching)"
-msgstr "**roma**, **tiny-roma**, **minima-roma**: RoMaバリアント（密マッチング）"
-
-#: ../../usage.md:303
-msgid "**loftr**, **minima-loftr**: LoFTR variants (good for low-texture regions)"
-msgstr "**loftr**, **minima-loftr**: LoFTRバリアント（低テクスチャ領域に有効）"
+msgid ""
+"Any method supported by [vismatch](https://github.com/gmberton/vismatch) "
+"(70+ models) can be used. Some popular choices:"
+msgstr ""
+"[vismatch](https://github.com/gmberton/vismatch)がサポートする任意の手法（70以上のモデル）を"
+"使用できます。主な手法："
 
 #: ../../usage.md:304
-msgid "**ufm**, **rdd**, **master**: Other dense matching methods"
-msgstr "**ufm**, **rdd**, **master**: その他の密マッチング手法"
+msgid ""
+"**sift-lightglue**, **superpoint-lightglue**, **disk-lightglue**, "
+"**aliked-lightglue**, **dedode-lightglue**: LightGlue-based "
+"(lightweight, handles full resolution)"
+msgstr ""
+"**sift-lightglue**, **superpoint-lightglue**, **disk-lightglue**, "
+"**aliked-lightglue**, **dedode-lightglue**: LightGlueベース"
+"（軽量、フル解像度対応）"
+
+#: ../../usage.md:305
+msgid ""
+"**xfeat**, **xfeat-lightglue**, **xfeat-star**: XFeat variants "
+"(fast and lightweight)"
+msgstr ""
+"**xfeat**, **xfeat-lightglue**, **xfeat-star**: XFeatバリアント"
+"（高速・軽量）"
+
+#: ../../usage.md:306
+msgid ""
+"**roma**, **romav2**, **tiny-roma**, **minima-roma**: RoMa variants "
+"(dense matching)"
+msgstr ""
+"**roma**, **romav2**, **tiny-roma**, **minima-roma**: RoMaバリアント"
+"（密マッチング）"
+
+#: ../../usage.md:307
+msgid ""
+"**loftr**, **eloftr**, **minima-loftr**: LoFTR variants "
+"(good for low-texture regions)"
+msgstr ""
+"**loftr**, **eloftr**, **minima-loftr**: LoFTRバリアント"
+"（低テクスチャ領域に有効）"
+
+#: ../../usage.md:308
+msgid "**ufm**, **rdd**, **master**, **duster**, **edm**: Other dense matching methods"
+msgstr "**ufm**, **rdd**, **master**, **duster**, **edm**: その他の密マッチング手法"
+
+#: ../../usage.md:310
+msgid ""
+"See the [vismatch README](https://github.com/gmberton/vismatch) for "
+"the full list."
+msgstr ""
+"全リストは[vismatch README](https://github.com/gmberton/vismatch)を参照。"
 
 #: ../../usage.md:323
 msgid ""

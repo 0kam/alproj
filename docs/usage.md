@@ -153,9 +153,9 @@ gcps = set_gcp(match, df)
 #### 2. SuperPoint-LightGlue (Robust to Resolution Differences, Lightweight)
 [SuperPoint](https://arxiv.org/abs/1712.07629) with [LightGlue](https://arxiv.org/abs/2306.13643) provides robust matching even when the simulated image and real photograph have different resolutions. It's relatively lightweight and fast.
 
-Requires the `imm` package:
+Requires the `vismatch` package:
 ```bash
-pip install alproj[imm]
+pip install alproj[vismatch]
 ```
 
 ```python
@@ -167,9 +167,9 @@ gcps = set_gcp(match, df)
 #### 3. MiniMa-RoMa (High Performance, Computationally Heavy)
 [MiniMa-RoMa](https://arxiv.org/abs/2305.15404) is a dense matching method that achieves excellent performance on challenging image pairs. It's computationally heavy but provides the best matching quality for difficult cases.
 
-Requires the `imm` package:
+Requires the `vismatch` package:
 ```bash
-pip install alproj[imm]
+pip install alproj[vismatch]
 ```
 
 ```python
@@ -186,29 +186,37 @@ The table below shows the comparison of all available methods on a 5616x3744 pix
 
 | Method | Time | Matches | Notes |
 |--------|------|---------|-------|
-| akaze | ~1 sec | 205 | Fastest, fewer matches |
-| sift | ~3 sec | 333 | Good balance for simple cases |
+| akaze | ~1 sec | 176 | Fastest, fewer matches |
+| sift | ~4 sec | 331 | Good balance for simple cases |
 
 **LightGlue-based methods (lightweight, handles full resolution):**
 
 | Method | Time | Matches | Notes |
 |--------|------|---------|-------|
-| sift-lightglue | ~2 sec | 503 | SIFT features + LightGlue matcher |
-| superpoint-lightglue | ~3 sec | 965 | Recommended for most cases |
-| minima-superpoint-lightglue | ~3 sec | 975 | MiniMa preprocessing + SuperPoint |
+| sift-lightglue | ~3 sec | 518 | SIFT features + LightGlue matcher |
+| superpoint-lightglue | ~4 sec | 962 | Recommended for most cases |
+| aliked-lightglue | ~6 sec | 815 | ALIKED features + LightGlue matcher |
+| minima-superpoint-lightglue | ~29 sec | 973 | MiniMa preprocessing + SuperPoint |
+
+**Semi-dense methods:**
+
+| Method | Time | Matches | Notes |
+|--------|------|---------|-------|
+| xfeat-star | ~14 sec | 112 | XFeat semi-dense matching |
 
 **Dense matching methods (high match count, auto-resized to 640px):**
 
 | Method | Time | Matches | Notes |
 |--------|------|---------|-------|
-| tiny-roma | ~2 sec | 2046 | Fast dense matching |
-| minima-loftr | ~2 sec | 2632 | MiniMa + LoFTR |
-| loftr | ~3 sec | 2237 | Good for low-texture regions |
-| rdd | ~3 sec | 1510 | RDD matching |
-| ufm | ~12 sec | 2048 | UFM matching |
-| master | ~17 sec | 3497 | MASTER matching |
-| roma | ~21 sec | 2048 | RoMa dense matching |
-| minima-roma | ~25 sec | 9999 | Best quality, most matches |
+| tiny-roma | ~2 sec | 2047 | Fast dense matching |
+| loftr | ~2 sec | 2198 | Good for low-texture regions |
+| minima-loftr | ~3 sec | 2629 | MiniMa + LoFTR |
+| ufm | ~10 sec | 2048 | UFM matching |
+| rdd | ~14 sec | 1494 | RDD matching |
+| roma | ~23 sec | 2048 | RoMa dense matching |
+| master | ~327 sec | 3515 | MASTER matching (large model) |
+| minima-roma | GPU only | - | Best quality, large model requires CUDA |
+| minima-roma-tiny | ~2 sec (est.) | - | CPU-compatible variant of MiniMa-RoMa |
 
 **Note:** Dense matching methods (non-LightGlue) automatically resize images to 640px when `resize` is not specified to prevent out-of-memory errors. Keypoints are scaled back to original coordinates.
 
@@ -297,11 +305,17 @@ This is useful for:
 - **akaze**: [AKAZE](https://docs.opencv.org/3.4/d0/de3/citelist.html#CITEREF_ANB13) local features
 - **sift**: [SIFT](https://docs.opencv.org/3.4/da/df5/tutorial_py_sift_intro.html) local features
 
-**With imm package (pip install alproj[imm]):**
-- **sift-lightglue**, **superpoint-lightglue**, **minima-superpoint-lightglue**: LightGlue-based (lightweight)
-- **roma**, **tiny-roma**, **minima-roma**: RoMa variants (dense matching)
-- **loftr**, **minima-loftr**: LoFTR variants (good for low-texture regions)
-- **ufm**, **rdd**, **master**: Other dense matching methods
+**With vismatch package (pip install alproj[vismatch]):**
+
+Any method supported by [vismatch](https://github.com/gmberton/vismatch) (70+ models) can be used. Some popular choices:
+
+- **sift-lightglue**, **superpoint-lightglue**, **disk-lightglue**, **aliked-lightglue**, **dedode-lightglue**: LightGlue-based (lightweight, handles full resolution)
+- **xfeat**, **xfeat-lightglue**, **xfeat-star**: XFeat variants (fast and lightweight)
+- **roma**, **romav2**, **tiny-roma**, **minima-roma**: RoMa variants (dense matching)
+- **loftr**, **eloftr**, **minima-loftr**: LoFTR variants (good for low-texture regions)
+- **ufm**, **rdd**, **master**, **duster**, **edm**: Other dense matching methods
+
+See the [vismatch README](https://github.com/gmberton/vismatch) for the full list.
 
 ```
 >>> gcps

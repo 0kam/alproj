@@ -20,7 +20,7 @@ sys.path.insert(0, os.path.abspath('../src/'))
 # Mock imports for Read the Docs build (avoid heavy dependencies)
 autodoc_mock_imports = [
     'numpy', 'pandas', 'rasterio', 'cv2', 'moderngl', 'glcontext',
-    'cmaes', 'tqdm', 'scipy', 'imm'
+    'cmaes', 'tqdm', 'scipy', 'vismatch'
 ]
 
 

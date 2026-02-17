@@ -3,7 +3,7 @@
 # For installation as a library, use: pip install git+https://github.com/0kam/alproj
 #
 # Optional: For advanced image matching methods (RoMa, LoFTR, LightGlue, etc.),
-# install with: pip install "alproj[imm] @ git+https://github.com/0kam/alproj"
+# install with: pip install "alproj[vismatch] @ git+https://github.com/0kam/alproj"
 
 numpy==2.4.1
 pandas==3.0.0

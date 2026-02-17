@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: alproj \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-26 17:18+0900\n"
-"PO-Revision-Date: 2026-01-26 17:00+0900\n"
+"POT-Creation-Date: 2026-02-17 12:00+0900\n"
+"PO-Revision-Date: 2026-02-17 12:00+0900\n"
 "Last-Translator: \n"
 "Language: ja\n"
 "Language-Team: ja <LL@li.org>\n"
@@ -31,8 +31,12 @@ msgstr ""
 " Pro MBP）で生成されました。"
 
 #: ../../matching_gallery.md:5
-msgid "See [Usage](usage.md) for details on how to use each method."
-msgstr "各手法の使用方法の詳細は[使い方](usage.md)を参照してください。"
+msgid ""
+"Any method supported by [vismatch](https://github.com/gmberton/vismatch) "
+"(70+ models) can be used. See [Usage](usage.md) for details."
+msgstr ""
+"[vismatch](https://github.com/gmberton/vismatch)がサポートする任意の手法（70以上のモデル）を"
+"使用できます。詳細は[使い方](usage.md)を参照してください。"
 
 #: ../../matching_gallery.md:7
 msgid "Built-in Methods (No Extra Dependencies)"
@@ -43,8 +47,8 @@ msgid "AKAZE"
 msgstr "AKAZE"
 
 #: ../../matching_gallery.md:10
-msgid "**Time:** ~1 sec | **Matches:** 205"
-msgstr "**処理時間:** 約1秒 | **マッチ数:** 205"
+msgid "**Time:** ~1 sec | **Matches:** 176"
+msgstr "**処理時間:** 約1秒 | **マッチ数:** 176"
 
 #: ../../matching_gallery.md:12
 msgid "![](_static/matched_akaze.png)"
@@ -55,8 +59,8 @@ msgid "SIFT"
 msgstr "SIFT"
 
 #: ../../matching_gallery.md:15
-msgid "**Time:** ~3 sec | **Matches:** 333"
-msgstr "**処理時間:** 約3秒 | **マッチ数:** 333"
+msgid "**Time:** ~4 sec | **Matches:** 331"
+msgstr "**処理時間:** 約4秒 | **マッチ数:** 331"
 
 #: ../../matching_gallery.md:17
 msgid "![](_static/matched_sift.png)"
@@ -75,8 +79,8 @@ msgid "SIFT-LightGlue"
 msgstr "SIFT-LightGlue"
 
 #: ../../matching_gallery.md:24
-msgid "**Time:** ~2 sec | **Matches:** 503"
-msgstr "**処理時間:** 約2秒 | **マッチ数:** 503"
+msgid "**Time:** ~3 sec | **Matches:** 518"
+msgstr "**処理時間:** 約3秒 | **マッチ数:** 518"
 
 #: ../../matching_gallery.md:26
 msgid "![](_static/matched_sift_lightglue.png)"
@@ -87,128 +91,185 @@ msgid "SuperPoint-LightGlue"
 msgstr "SuperPoint-LightGlue"
 
 #: ../../matching_gallery.md:29
-msgid "**Time:** ~3 sec | **Matches:** 965"
-msgstr "**処理時間:** 約3秒 | **マッチ数:** 965"
+msgid "**Time:** ~4 sec | **Matches:** 962"
+msgstr "**処理時間:** 約4秒 | **マッチ数:** 962"
 
 #: ../../matching_gallery.md:31
 msgid "![](_static/matched_superpoint_lightglue.png)"
 msgstr "![](_static/matched_superpoint_lightglue.png)"
 
 #: ../../matching_gallery.md:33
+msgid "ALIKED-LightGlue"
+msgstr "ALIKED-LightGlue"
+
+#: ../../matching_gallery.md:34
+msgid "**Time:** ~6 sec | **Matches:** 815"
+msgstr "**処理時間:** 約6秒 | **マッチ数:** 815"
+
+#: ../../matching_gallery.md:36
+msgid "![](_static/matched_aliked_lightglue.png)"
+msgstr "![](_static/matched_aliked_lightglue.png)"
+
+#: ../../matching_gallery.md:38
 msgid "MiniMa-SuperPoint-LightGlue"
 msgstr "MiniMa-SuperPoint-LightGlue"
 
-#: ../../matching_gallery.md:34
-msgid "**Time:** ~3 sec | **Matches:** 975"
-msgstr "**処理時間:** 約3秒 | **マッチ数:** 975"
+#: ../../matching_gallery.md:39
+msgid "**Time:** ~29 sec | **Matches:** 973"
+msgstr "**処理時間:** 約29秒 | **マッチ数:** 973"
 
-#: ../../matching_gallery.md:36
+#: ../../matching_gallery.md:41
 msgid "![](_static/matched_minima_superpoint_lightglue.png)"
 msgstr "![](_static/matched_minima_superpoint_lightglue.png)"
 
-#: ../../matching_gallery.md:38
+#: ../../matching_gallery.md:43
 msgid "Dense Matching Methods (High Match Count)"
 msgstr "密なマッチング手法（マッチ数多）"
 
-#: ../../matching_gallery.md:40
+#: ../../matching_gallery.md:52
 msgid ""
 "These methods automatically resize images to 640px when `resize` is not "
 "specified to prevent out-of-memory errors."
 msgstr "これらの手法は、メモリ不足エラーを防ぐため、`resize`が指定されていない場合は自動的に画像を640pxにリサイズします。"
 
-#: ../../matching_gallery.md:42
+#: ../../matching_gallery.md:54
 msgid "Tiny-RoMa"
 msgstr "Tiny-RoMa"
 
-#: ../../matching_gallery.md:43
-msgid "**Time:** ~2 sec | **Matches:** 2046"
-msgstr "**処理時間:** 約2秒 | **マッチ数:** 2046"
+#: ../../matching_gallery.md:55
+msgid "**Time:** ~2 sec | **Matches:** 2047"
+msgstr "**処理時間:** 約2秒 | **マッチ数:** 2047"
 
-#: ../../matching_gallery.md:45
+#: ../../matching_gallery.md:57
 msgid "![](_static/matched_tiny_roma.png)"
 msgstr "![](_static/matched_tiny_roma.png)"
 
-#: ../../matching_gallery.md:47
+#: ../../matching_gallery.md:59
 msgid "LoFTR"
 msgstr "LoFTR"
 
-#: ../../matching_gallery.md:48
-msgid "**Time:** ~3 sec | **Matches:** 2237"
-msgstr "**処理時間:** 約3秒 | **マッチ数:** 2237"
+#: ../../matching_gallery.md:60
+msgid "**Time:** ~2 sec | **Matches:** 2198"
+msgstr "**処理時間:** 約2秒 | **マッチ数:** 2198"
 
-#: ../../matching_gallery.md:50
+#: ../../matching_gallery.md:62
 msgid "![](_static/matched_loftr.png)"
 msgstr "![](_static/matched_loftr.png)"
 
-#: ../../matching_gallery.md:52
+#: ../../matching_gallery.md:64
 msgid "MiniMa-LoFTR"
 msgstr "MiniMa-LoFTR"
 
-#: ../../matching_gallery.md:53
-msgid "**Time:** ~2 sec | **Matches:** 2632"
-msgstr "**処理時間:** 約2秒 | **マッチ数:** 2632"
+#: ../../matching_gallery.md:65
+msgid "**Time:** ~3 sec | **Matches:** 2629"
+msgstr "**処理時間:** 約3秒 | **マッチ数:** 2629"
 
-#: ../../matching_gallery.md:55
-msgid "![](_static/matched_minima_loftr.png)s"
-msgstr "![](_static/matched_minima_loftr.png)s"
+#: ../../matching_gallery.md:67
+msgid "![](_static/matched_minima_loftr.png)"
+msgstr "![](_static/matched_minima_loftr.png)"
 
-#: ../../matching_gallery.md:57
-msgid "RDD"
-msgstr "RDD"
-
-#: ../../matching_gallery.md:58
-msgid "**Time:** ~3 sec | **Matches:** 1510"
-msgstr "**処理時間:** 約3秒 | **マッチ数:** 1510"
-
-#: ../../matching_gallery.md:60
-msgid "![](_static/matched_rdd.png)"
-msgstr "![](_static/matched_rdd.png)"
-
-#: ../../matching_gallery.md:62
+#: ../../matching_gallery.md:69
 msgid "UFM"
 msgstr "UFM"
 
-#: ../../matching_gallery.md:63
-msgid "**Time:** ~12 sec | **Matches:** 2048"
-msgstr "**処理時間:** 約12秒 | **マッチ数:** 2048"
+#: ../../matching_gallery.md:70
+msgid "**Time:** ~10 sec | **Matches:** 2048"
+msgstr "**処理時間:** 約10秒 | **マッチ数:** 2048"
 
-#: ../../matching_gallery.md:65
+#: ../../matching_gallery.md:72
 msgid "![](_static/matched_ufm.png)"
 msgstr "![](_static/matched_ufm.png)"
 
-#: ../../matching_gallery.md:67
-msgid "MAST3R"
-msgstr "MAST3R"
+#: ../../matching_gallery.md:74
+msgid "RDD"
+msgstr "RDD"
 
-#: ../../matching_gallery.md:68
-msgid "**Time:** ~17 sec | **Matches:** 3497"
-msgstr "**処理時間:** 約17秒 | **マッチ数:** 3497"
+#: ../../matching_gallery.md:75
+msgid "**Time:** ~14 sec | **Matches:** 1494"
+msgstr "**処理時間:** 約14秒 | **マッチ数:** 1494"
 
-#: ../../matching_gallery.md:70
-msgid "![](_static/matched_master.png)"
-msgstr "![](_static/matched_master.png)"
+#: ../../matching_gallery.md:77
+msgid "![](_static/matched_rdd.png)"
+msgstr "![](_static/matched_rdd.png)"
 
-#: ../../matching_gallery.md:72
+#: ../../matching_gallery.md:79
 msgid "RoMa"
 msgstr "RoMa"
 
-#: ../../matching_gallery.md:73
-msgid "**Time:** ~21 sec | **Matches:** 2048"
-msgstr "**処理時間:** 約21秒 | **マッチ数:** 2048"
+#: ../../matching_gallery.md:80
+msgid "**Time:** ~23 sec | **Matches:** 2048"
+msgstr "**処理時間:** 約23秒 | **マッチ数:** 2048"
 
-#: ../../matching_gallery.md:75
+#: ../../matching_gallery.md:82
 msgid "![](_static/matched_roma.png)"
 msgstr "![](_static/matched_roma.png)"
 
-#: ../../matching_gallery.md:77
+#: ../../matching_gallery.md:84
+msgid "MAST3R"
+msgstr "MAST3R"
+
+#: ../../matching_gallery.md:85
+msgid "**Time:** ~327 sec | **Matches:** 3515"
+msgstr "**処理時間:** 約327秒 | **マッチ数:** 3515"
+
+#: ../../matching_gallery.md:87
+msgid "![](_static/matched_master.png)"
+msgstr "![](_static/matched_master.png)"
+
+#: ../../matching_gallery.md:89
 msgid "MiniMa-RoMa"
 msgstr "MiniMa-RoMa"
 
-#: ../../matching_gallery.md:78
-msgid "**Time:** ~25 sec | **Matches:** 9999"
-msgstr "**処理時間:** 約25秒 | **マッチ数:** 9999"
+#: ../../matching_gallery.md:90
+msgid "**Requires CUDA** (large model). Use `minima-roma-tiny` for CPU."
+msgstr "**CUDA必須**（largeモデル）。CPUでは`minima-roma-tiny`を使用してください。"
 
-#: ../../matching_gallery.md:80
+#: ../../matching_gallery.md:92
 msgid "![](_static/matched_minima_roma.png)"
 msgstr "![](_static/matched_minima_roma.png)"
 
+#: ../../matching_gallery.md:94
+msgid "Cross-Modal Methods (Robust to Appearance Changes)"
+msgstr "クロスモーダル手法（外観変化に頑健）"
+
+#: ../../matching_gallery.md:96
+msgid ""
+"These methods are designed for matching across different modalities, "
+"seasons, and resolutions."
+msgstr "これらの手法は、異なるモダリティ・季節・解像度間のマッチングに対応するよう設計されています。"
+
+#: ../../matching_gallery.md:98
+msgid "MatchAnything-ELoFTR"
+msgstr "MatchAnything-ELoFTR"
+
+#: ../../matching_gallery.md:99
+msgid "**Time:** ~2 sec | **Matches:** 2547"
+msgstr "**処理時間:** 約2秒 | **マッチ数:** 2547"
+
+#: ../../matching_gallery.md:101
+msgid "![](_static/matched_matchanything_eloftr.png)"
+msgstr "![](_static/matched_matchanything_eloftr.png)"
+
+#: ../../matching_gallery.md:103
+msgid "MatchAnything-RoMa"
+msgstr "MatchAnything-RoMa"
+
+#: ../../matching_gallery.md:104
+msgid "**Time:** ~23 sec | **Matches:** 4999"
+msgstr "**処理時間:** 約23秒 | **マッチ数:** 4999"
+
+#: ../../matching_gallery.md:106
+msgid "![](_static/matched_matchanything_roma.png)"
+msgstr "![](_static/matched_matchanything_roma.png)"
+
+#: ../../matching_gallery.md:108
+msgid "GIM-DKM"
+msgstr "GIM-DKM"
+
+#: ../../matching_gallery.md:109
+msgid "**Time:** ~34 sec | **Matches:** 2048"
+msgstr "**処理時間:** 約34秒 | **マッチ数:** 2048"
+
+#: ../../matching_gallery.md:111
+msgid "![](_static/matched_gim_dkm.png)"
+msgstr "![](_static/matched_gim_dkm.png)"

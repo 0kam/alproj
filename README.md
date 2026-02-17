@@ -37,7 +37,7 @@ pip install git+https://github.com/0kam/alproj
 
 Key changes:
 - `akaze_match()` deprecated: Use new unified `image_match()` function instead
-- Deep learning matching methods now available via `imm` package (RoMa, LoFTR, LightGlue, etc.)
+- Deep learning matching methods now available via `vismatch` package (RoMa, LoFTR, LightGlue, etc.)
 - `image_match()`: Essential/Fundamental Matrix filtering (`outlier_filter` parameter)
 - `image_match()`: Spatial thinning for uniform GCP distribution (`spatial_thin_grid`)
 - `CMAOptimizer.optimize()`: Added `f_scale` parameter for Huber loss
@@ -59,7 +59,7 @@ pip install git+https://github.com/0kam/alproj
 For deep learning-based image matching methods (RoMa, LoFTR, LightGlue, etc.):
 
 ```bash
-pip install "alproj[imm] @ git+https://github.com/0kam/alproj"
+pip install "alproj[vismatch] @ git+https://github.com/0kam/alproj"
 ```
 
 ## Quick Start

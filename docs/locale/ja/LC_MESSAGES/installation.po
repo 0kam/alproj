@@ -38,23 +38,23 @@ msgid "Optional Dependencies"
 msgstr "オプション依存関係"
 
 #: ../../installation.md:12
-msgid "Advanced Image Matching (imm)"
-msgstr "高度な画像マッチング (imm)"
+msgid "Advanced Image Matching (vismatch)"
+msgstr "高度な画像マッチング (vismatch)"
 
 #: ../../installation.md:13
 msgid ""
 "For advanced deep learning-based image matching methods (RoMa, LoFTR, "
-"LightGlue, etc.), install with the imm option:"
+"LightGlue, etc.), install with the vismatch option:"
 msgstr ""
 "高度な深層学習ベースの画像マッチング手法（RoMa、LoFTR、LightGlue等）を使用する場合は、"
-"immオプションでインストールしてください："
+"vismatchオプションでインストールしてください："
 
 #: ../../installation.md:19
 msgid ""
-"This installs the [imm](https://github.com/gmberton/image-matching-models) "
+"This installs the [vismatch](https://github.com/gmberton/vismatch) "
 "package along with PyTorch and other dependencies."
 msgstr ""
-"これにより、[imm](https://github.com/gmberton/image-matching-models)パッケージと"
+"これにより、[vismatch](https://github.com/gmberton/vismatch)パッケージと"
 "PyTorchなどの依存関係がインストールされます。"
 
 #: ../../installation.md:21

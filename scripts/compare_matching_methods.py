@@ -2,7 +2,7 @@
 """
 Compare all available matching methods for documentation.
 
-This script compares all available matching methods (built-in and imm-based)
+This script compares all available matching methods (built-in and vismatch-based)
 and outputs timing and match count results for documentation.
 
 Output images are saved to docs/_static/ for inclusion in the documentation.
@@ -17,15 +17,23 @@ from pathlib import Path
 import cv2
 import torch
 
-from alproj.gcp import image_match, IMM_METHODS
+from alproj.gcp import image_match
 
 # Suppress all warnings for cleaner output
 warnings.filterwarnings("ignore")
 
 
-# All available methods
+# Methods to compare (add/remove as needed)
 BUILTIN_METHODS = ["akaze", "sift"]
-ALL_METHODS = BUILTIN_METHODS + IMM_METHODS
+VISMATCH_METHODS = [
+    "sift-lightglue", "superpoint-lightglue", "aliked-lightglue",
+    "minima-superpoint-lightglue",
+    "roma", "tiny-roma", "minima-roma",
+    "loftr", "minima-loftr",
+    "ufm", "rdd", "master",
+    "matchanything-roma", "matchanything-eloftr", "gim-dkm",
+]
+ALL_METHODS = BUILTIN_METHODS + VISMATCH_METHODS
 
 # Output image size for web display
 OUTPUT_IMAGE_SIZE = 640

@@ -14,7 +14,7 @@ source .venv/bin/activate
 pip install -e .
 
 # Install with deep learning matching methods
-pip install -e ".[imm]"
+pip install -e ".[vismatch]"
 
 # Run tests
 pytest tests/
@@ -56,7 +56,7 @@ The package follows a 4-step georectification pipeline:
 ### Matching Methods
 
 - **Built-in** (no extra deps): `akaze`, `sift`
-- **With imm package**: `minima-roma`, `superpoint-lightglue`, `roma`, `loftr`, etc.
+- **With vismatch package**: `minima-roma`, `superpoint-lightglue`, `roma`, `loftr`, etc.
 
 ## Code Conventions
 

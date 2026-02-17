@@ -13,14 +13,14 @@ pip install git+https://github.com/0kam/alproj
 
 ## Optional Dependencies
 
-### Advanced Image Matching (imm)
-For advanced deep learning-based image matching methods (RoMa, LoFTR, LightGlue, etc.), install with the imm option:
+### Advanced Image Matching (vismatch)
+For advanced deep learning-based image matching methods (RoMa, LoFTR, LightGlue, etc.), install with the vismatch option:
 
 ```bash
-pip install "alproj[imm] @ git+https://github.com/0kam/alproj"
+pip install "alproj[vismatch] @ git+https://github.com/0kam/alproj"
 ```
 
-This installs the [imm](https://github.com/gmberton/image-matching-models) package along with PyTorch and other dependencies.
+This installs the [vismatch](https://github.com/gmberton/vismatch) package along with PyTorch and other dependencies.
 
 These methods can provide more robust matching for challenging images with different resolutions, lighting conditions, or low-texture regions. GPU (CUDA) is recommended for best performance.
 

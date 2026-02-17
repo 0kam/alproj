@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "alproj"
-version = "1.0.1"
+version = "1.1.0"
 description = "A georectification tool for alpine landscape photographs, written in Python"
 readme = "README.md"
 license = "GPL-3.0-or-later"
@@ -46,8 +46,8 @@ docs = [
     "sphinx>=4.0",
     "sphinx-rtd-theme>=1.0",
 ]
-imm = [
-    "imm @ git+https://github.com/gmberton/image-matching-models",
+vismatch = [
+    "vismatch",
 ]
 
 [project.urls]

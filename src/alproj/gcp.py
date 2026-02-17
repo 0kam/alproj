@@ -8,27 +8,12 @@ import pandas as pd
 # Default Lowe's ratio test threshold
 _DEFAULT_LOWE_RATIO = 0.7
 
-# List of methods that require the imm package
-IMM_METHODS = [
-    "sift-lightglue",
-    "superpoint-lightglue",
-    "minima-superpoint-lightglue",
-    "roma",
-    "tiny-roma",
-    "minima-roma",
-    "loftr",
-    "minima-loftr",
-    "ufm",
-    "rdd",
-    "master"
-]
+# Built-in methods that use OpenCV only
+_BUILTIN_METHODS = ["akaze", "sift"]
 
-# Lightweight methods (LightGlue-based) that can handle full-resolution images
-_LIGHTGLUE_METHODS = [
-    "sift-lightglue",
-    "superpoint-lightglue",
-    "minima-superpoint-lightglue",
-]
+# Lightweight methods that can handle full-resolution images without auto-resize.
+# Matched by suffix/keyword: methods containing these patterns are considered lightweight.
+_LIGHTWEIGHT_PATTERNS = ["lightglue", "-nn", "superglue", "xfeat", "sphereglue", "-subpx"]
 
 # Default resize for memory-intensive methods
 _DEFAULT_RESIZE_HEAVY = 640
@@ -87,9 +72,9 @@ def _opencv_match(im_org, im_sim, detector_type="akaze", ratio=_DEFAULT_LOWE_RAT
     return pts1, pts2
 
 
-def _imm_match(path_org, path_sim, method, device, resize=None, **kwargs):
+def _vismatch_match(path_org, path_sim, method, device, resize=None, **kwargs):
     """
-    Internal imm-based matching implementation (no Homography RANSAC).
+    Internal vismatch-based matching implementation (no Homography RANSAC).
 
     Parameters
     ----------
@@ -98,13 +83,13 @@ def _imm_match(path_org, path_sim, method, device, resize=None, **kwargs):
     path_sim : str
         Path to simulated image.
     method : str
-        IMM matching method name.
+        Vismatch matching method name.
     device : str
         Device for computation ("cpu" or "cuda").
     resize : int, optional
         Resize images to this size.
     **kwargs
-        Additional arguments for imm's get_matcher.
+        Additional arguments for vismatch's get_matcher.
 
     Returns
     -------
@@ -112,11 +97,11 @@ def _imm_match(path_org, path_sim, method, device, resize=None, **kwargs):
         Matched point pairs, shape (N, 2).
     """
     try:
-        from imm import get_matcher
+        from vismatch import get_matcher
     except ImportError:
         raise ImportError(
-            f"Method '{method}' requires the 'imm' package. "
-            "Install with: pip install alproj[imm]"
+            f"Method '{method}' requires the 'vismatch' package. "
+            "Install with: pip install alproj[vismatch]"
         )
 
     # Get original image sizes for coordinate scaling
@@ -395,9 +380,10 @@ def image_match(path_org, path_sim, method="akaze", outlier_filter="fundamental"
         Path for simulated landscape image.
     method : str, default "akaze"
         Matching method to use. Built-in methods: "akaze", "sift".
-        With imm package installed: "sift-lightglue", "superpoint-lightglue",
-        "minima-superpoint-lightglue", "roma", "tiny-roma", "minima-roma",
-        "loftr", "minima-loftr", "ufm", "rdd", "master".
+        With vismatch package installed, any method supported by vismatch
+        can be used (e.g., "superpoint-lightglue", "roma", "minima-roma",
+        "loftr", "dedode-lightglue", "xfeat", etc.). See
+        https://github.com/gmberton/vismatch for the full list of 70+ methods.
     outlier_filter : str, default "fundamental"
         Outlier filtering method:
 
@@ -439,9 +425,9 @@ def image_match(path_org, path_sim, method="akaze", outlier_filter="fundamental"
     plot_result : bool, default False
         Whether to return a result plot.
     device : str, default "cpu"
-        Device to use for imm methods ("cpu" or "cuda"). Ignored for built-in methods.
+        Device to use for vismatch methods ("cpu" or "cuda"). Ignored for built-in methods.
     resize : int, optional
-        Resize images to this size for imm methods.
+        Resize images to this size for vismatch methods.
         Keypoints are automatically scaled back to original coordinates.
 
         .. note::
@@ -453,7 +439,7 @@ def image_match(path_org, path_sim, method="akaze", outlier_filter="fundamental"
             and do not auto-resize.
 
     **kwargs
-        Additional keyword arguments passed to imm's get_matcher (e.g., max_num_keypoints).
+        Additional keyword arguments passed to vismatch's get_matcher (e.g., max_num_keypoints).
 
     Returns
     -------
@@ -498,27 +484,22 @@ def image_match(path_org, path_sim, method="akaze", outlier_filter="fundamental"
         im_org = cv2.imread(path_org)
         im_sim = cv2.imread(path_sim)
         pts1, pts2 = _opencv_match(im_org, im_sim, detector_type="sift")
-    elif method_lower in [m.lower() for m in IMM_METHODS]:
-        # Auto-resize for memory-intensive methods (non-LightGlue)
-        effective_resize = resize
-        if method_lower not in [m.lower() for m in _LIGHTGLUE_METHODS]:
-            if resize is None:
-                effective_resize = _DEFAULT_RESIZE_HEAVY
-                warnings.warn(
-                    f"Method '{method}' is memory-intensive. "
-                    f"Automatically resizing images to {_DEFAULT_RESIZE_HEAVY}px "
-                    f"to prevent out-of-memory errors. "
-                    f"Set 'resize' explicitly to override this behavior.",
-                    UserWarning,
-                    stacklevel=2
-                )
-        pts1, pts2 = _imm_match(path_org, path_sim, method, device, resize=effective_resize, **kwargs)
-        im_org = cv2.imread(path_org)
     else:
-        available = ["akaze", "sift"] + IMM_METHODS
-        raise ValueError(
-            f"Unknown method '{method}'. Available methods: {available}"
-        )
+        # Delegate to vismatch for all non-builtin methods
+        is_lightweight = any(p in method_lower for p in _LIGHTWEIGHT_PATTERNS)
+        effective_resize = resize
+        if not is_lightweight and resize is None:
+            effective_resize = _DEFAULT_RESIZE_HEAVY
+            warnings.warn(
+                f"Method '{method}' may be memory-intensive. "
+                f"Automatically resizing images to {_DEFAULT_RESIZE_HEAVY}px "
+                f"to prevent out-of-memory errors. "
+                f"Set 'resize' explicitly to override this behavior.",
+                UserWarning,
+                stacklevel=2
+            )
+        pts1, pts2 = _vismatch_match(path_org, path_sim, method, device, resize=effective_resize, **kwargs)
+        im_org = cv2.imread(path_org)
 
     # Get image size for filtering
     image_size = (im_org.shape[1], im_org.shape[0]) if im_org is not None else None
