@@ -26,40 +26,20 @@ For an interactive experience without writing code, check out [alproj-gui](https
 
 This project aims to revive alpine landscape photographs in your photo albams, as valuable geospatial data that may reveal the unknown changes of alpine landscape, ecosystem and cryosphere!
 
-## Breaking Changes (v1.0.0)
-
-**Important:** This version includes significant API changes. If you are upgrading from a previous version, please reinstall:
-
-```bash
-pip uninstall alproj
-pip install git+https://github.com/0kam/alproj
-```
-
-Key changes:
-- `akaze_match()` deprecated: Use new unified `image_match()` function instead
-- Deep learning matching methods now available via `vismatch` package (RoMa, LoFTR, LightGlue, etc.)
-- `image_match()`: Essential/Fundamental Matrix filtering (`outlier_filter` parameter)
-- `image_match()`: Spatial thinning for uniform GCP distribution (`spatial_thin_grid`)
-- `CMAOptimizer.optimize()`: Added `f_scale` parameter for Huber loss
-- New `LsqOptimizer` class for fast local refinement
-- New `filter_gcp_distance()` function for distance-based GCP filtering
-- New `to_geotiff()` function for direct GeoTIFF export
-- `sim_image()` / `persp_proj()`: Added `min_distance` parameter for near-field masking
-
 ## Installation
 
 **Requires Python 3.9-3.12**
 
 ```bash
-pip install git+https://github.com/0kam/alproj
+pip install "alproj[vismatch]"
 ```
 
-### Optional: Advanced Image Matching
+This installs alproj with [vismatch](https://github.com/gmberton/vismatch) for deep learning-based matching (70+ methods including RoMa, LoFTR, LightGlue, MatchAnything, etc.).
 
-For deep learning-based image matching methods (RoMa, LoFTR, LightGlue, etc.):
+For a minimal installation without deep learning dependencies (only AKAZE/SIFT matching):
 
 ```bash
-pip install "alproj[vismatch] @ git+https://github.com/0kam/alproj"
+pip install alproj
 ```
 
 ## Quick Start
