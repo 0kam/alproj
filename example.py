@@ -36,7 +36,7 @@ df = reverse_proj(sim, vert, ind, params_init, offsets)
 ## Use spatial_thin_grid to ensure uniform distribution of matches
 match, plot = image_match(
     target_image_path, "devel_data/tateyama/sim_init.png",
-    method="minima-roma", plot_result=True, outlier_filter="fundamental", params=params_init, resize=800, threshold=30.0,
+    method="roma", plot_result=True, outlier_filter="fundamental", params=params_init, resize=800, threshold=30.0,
     spatial_thin_grid=100, spatial_thin_selection="center")
 
 cv2.imwrite("devel_data/tateyama/matched_1st.png", plot)
@@ -62,7 +62,7 @@ df2 = reverse_proj(sim2, vert, ind, params_2nd, offsets)
 ### ------------------------------------------------------------------------------
 match, plot = image_match(
     target_image_path, "devel_data/tateyama/sim_2nd.png",
-    method="minima-roma", plot_result=True, outlier_filter="essential", params=params_2nd, resize=800, threshold=30.0,
+    method="roma", plot_result=True, outlier_filter="essential", params=params_2nd, resize=800, threshold=30.0,
     spatial_thin_grid=50, spatial_thin_selection="center")
 
 cv2.imwrite("devel_data/tateyama/matched_2nd.png", plot)
