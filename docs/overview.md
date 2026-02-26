@@ -52,6 +52,20 @@ $$ \begin{bmatrix} x'' \\\\ y'' \end{bmatrix} = \begin{bmatrix} x' \frac{1 + k_1
 
 I added `a1` and `a2` to express inequal aspect ratios of image pixels.
 
+### Equidistant Fisheye Model
+
+For wide-angle monitoring cameras, `alproj` also supports an equidistant fisheye projection model. Set `"model": "fisheye"` in the camera parameters to use it. The fisheye model projects 3D points using:
+
+$$ r = f \cdot \theta_d, \quad f = w / \mathrm{fov_{rad}} $$
+
+where $\theta$ is the angle between the ray and the optical axis, and $\theta_d$ is the distorted angle:
+
+$$ \theta_d = \theta (1 + k_1 \theta^2 + k_2 \theta^4 + k_3 \theta^6 + k_4 \theta^8) $$
+
+This model uses only 4 distortion coefficients (k1–k4) operating in angle space, compared to the pinhole model's 14 image-space coefficients. It typically provides better accuracy for cameras with significant barrel distortion.
+
+**Note:** The fisheye simulation (`sim_image`, `reverse_proj`) internally renders a wide rectilinear image and remaps it. Because rectilinear projection cannot exceed ~140° FOV, fisheye simulation works best for FOV ≤ 120°. Higher FOV values will trigger a warning and edge regions may use interpolated values. The point projection (`project`) has no such limitation.
+
 ## Future applications in alpine ecology, geology, and glaciology
 - Drawing vegetation maps from landscape photographs taken by hikers.
 - Analysing snow melting with webcams attached at mountain huts.

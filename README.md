@@ -42,6 +42,15 @@ For a minimal installation without deep learning dependencies (only AKAZE/SIFT m
 pip install alproj
 ```
 
+## Camera Models
+
+`alproj` supports two camera models:
+
+- **Pinhole** (default): Rectilinear projection with 14 distortion coefficients (aspect ratio, radial, tangential, and prism). Best for standard lenses.
+- **Fisheye** (`"model": "fisheye"`): Equidistant fisheye projection with 4 angle-space distortion coefficients (k1-k4). Better accuracy for wide-angle monitoring cameras (FOV up to ~120°).
+
+To use the fisheye model, set `"model": "fisheye"` in the camera parameters dict. Omitting the `"model"` key defaults to pinhole for backward compatibility. See [example.py](example.py) for usage of both models.
+
 ## Quick Start
 See [example.py](example.py) for usage.
 

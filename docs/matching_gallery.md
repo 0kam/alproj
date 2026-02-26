@@ -35,11 +35,6 @@ These methods can handle full-resolution images efficiently.
 
 ![](_static/matched_aliked_lightglue.png)
 
-### MiniMa-SuperPoint-LightGlue
-- **Time:** ~29 sec | **Matches:** 973
-
-![](_static/matched_minima_superpoint_lightglue.png)
-
 ## Dense Matching Methods (High Match Count)
 
 These methods automatically resize images to 640px when `resize` is not specified to prevent out-of-memory errors.
@@ -53,11 +48,6 @@ These methods automatically resize images to 640px when `resize` is not specifie
 - **Time:** ~2 sec | **Matches:** 2198
 
 ![](_static/matched_loftr.png)
-
-### MiniMa-LoFTR
-- **Time:** ~3 sec | **Matches:** 2629
-
-![](_static/matched_minima_loftr.png)
 
 ### UFM
 - **Time:** ~10 sec | **Matches:** 2048
@@ -79,14 +69,24 @@ These methods automatically resize images to 640px when `resize` is not specifie
 
 ![](_static/matched_master.png)
 
+## Cross-Modal Methods (Robust to Appearance Changes)
+
+These methods are designed for matching across different modalities, seasons, and resolutions. This includes MiniMa-based and MatchAnything-based methods.
+
+### MiniMa-SuperPoint-LightGlue
+- **Time:** ~29 sec | **Matches:** 973
+
+![](_static/matched_minima_superpoint_lightglue.png)
+
+### MiniMa-LoFTR
+- **Time:** ~3 sec | **Matches:** 2629
+
+![](_static/matched_minima_loftr.png)
+
 ### MiniMa-RoMa
 - **Requires CUDA** (large model). Use `minima-roma-tiny` for CPU.
 
 ![](_static/matched_minima_roma.png)
-
-## Cross-Modal Methods (Robust to Appearance Changes)
-
-These methods are designed for matching across different modalities, seasons, and resolutions.
 
 ### MatchAnything-ELoFTR
 - **Time:** ~2 sec | **Matches:** 2547

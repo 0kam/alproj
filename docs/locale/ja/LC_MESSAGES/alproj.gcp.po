@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: alproj \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-26 17:18+0900\n"
+"POT-Creation-Date: 2026-02-25 19:08+0900\n"
 "PO-Revision-Date: 2026-01-26 10:00+0900\n"
 "Last-Translator: \n"
 "Language: ja\n"
@@ -95,7 +95,7 @@ msgstr "正確なユークリッド距離のために、座標は投影CRS（例
 msgid "Rows with NaN in x, y, or z are excluded from the result."
 msgstr "x, y, zにNaNがある行は結果から除外されます。"
 
-#: alproj.gcp.filter_gcp_distance:29 alproj.gcp.image_match:75 of
+#: alproj.gcp.filter_gcp_distance:29 alproj.gcp.image_match:76 of
 msgid "Examples"
 msgstr "使用例"
 
@@ -141,19 +141,19 @@ msgstr "シミュレーション景観画像のパス。"
 
 #: alproj.gcp.image_match:14 of
 msgid ""
-"Matching method to use. Built-in methods: \"akaze\", \"sift\". "
-"With vismatch package installed, any method supported by vismatch "
-"can be used (e.g., \"superpoint-lightglue\", \"roma\", \"minima-roma\", "
-"\"loftr\", \"dedode-lightglue\", \"xfeat\", etc.). See "
+"Matching method to use. Built-in methods: \"akaze\", \"sift\". With "
+"vismatch package installed, any method supported by vismatch can be used "
+"(e.g., \"superpoint-lightglue\", \"roma\", \"minima-roma\", \"loftr\", "
+"\"dedode-lightglue\", \"xfeat\", etc.). See "
 "https://github.com/gmberton/vismatch for the full list of 70+ methods."
 msgstr ""
-"使用するマッチング手法。組み込み手法: \"akaze\", \"sift\"。"
-"vismatchパッケージがインストールされている場合、vismatchがサポートする任意の手法を使用できます"
-"（例: \"superpoint-lightglue\", \"roma\", \"minima-roma\", \"loftr\", "
-"\"dedode-lightglue\", \"xfeat\"等）。70以上の手法の全リストは "
+"使用するマッチング手法。組み込み手法: \"akaze\", "
+"\"sift\"。vismatchパッケージがインストールされている場合、vismatchがサポートする任意の手法を使用できます（例: "
+"\"superpoint-lightglue\", \"roma\", \"minima-roma\", \"loftr\", \"dedode-"
+"lightglue\", \"xfeat\"等）。70以上の手法の全リストは "
 "https://github.com/gmberton/vismatch を参照。"
 
-#: alproj.gcp.image_match:19 of
+#: alproj.gcp.image_match:20 of
 msgid ""
 "Outlier filtering method:  - \"fundamental\": Fundamental Matrix "
 "filtering (default). Use when camera   intrinsics are unknown. Requires "
@@ -162,33 +162,34 @@ msgid ""
 "matches. - \"none\": No geometric filtering. Use this when you plan to   "
 "apply custom filtering later."
 msgstr ""
-"外れ値フィルタリング手法：- \"fundamental\": 基本行列フィルタリング（デフォルト）。カメラの内部パラメータが不明な場合に使用。最低8組のマッチが必要。"
-"- \"essential\": 本質行列フィルタリング。fovを含むparamsが提供される場合に推奨。最低5組のマッチが必要。"
-"- \"none\": 幾何学的フィルタリングなし。後でカスタムフィルタリングを適用する予定の場合に使用。"
+"外れ値フィルタリング手法：- \"fundamental\": "
+"基本行列フィルタリング（デフォルト）。カメラの内部パラメータが不明な場合に使用。最低8組のマッチが必要。- \"essential\": "
+"本質行列フィルタリング。fovを含むparamsが提供される場合に推奨。最低5組のマッチが必要。- \"none\": "
+"幾何学的フィルタリングなし。後でカスタムフィルタリングを適用する予定の場合に使用。"
 
-#: alproj.gcp.image_match:19 of
+#: alproj.gcp.image_match:20 of
 msgid "Outlier filtering method:"
 msgstr "外れ値フィルタリング手法："
 
-#: alproj.gcp.image_match:21 of
+#: alproj.gcp.image_match:22 of
 msgid ""
 "\"fundamental\": Fundamental Matrix filtering (default). Use when camera "
 "intrinsics are unknown. Requires at least 8 matches."
 msgstr "\"fundamental\": 基本行列フィルタリング（デフォルト）。カメラ内部パラメータが不明な場合に使用。最低8組のマッチが必要。"
 
-#: alproj.gcp.image_match:23 of
+#: alproj.gcp.image_match:24 of
 msgid ""
 "\"essential\": Essential Matrix filtering. Recommended when params with "
 "fov is provided. Requires at least 5 matches."
 msgstr "\"essential\": 本質行列フィルタリング。fovを含むparamsが提供される場合に推奨。最低5組のマッチが必要。"
 
-#: alproj.gcp.image_match:25 of
+#: alproj.gcp.image_match:26 of
 msgid ""
 "\"none\": No geometric filtering. Use this when you plan to apply custom "
 "filtering later."
 msgstr "\"none\": 幾何学的フィルタリングなし。後でカスタムフィルタリングを適用する予定の場合に使用。"
 
-#: alproj.gcp.image_match:28 of
+#: alproj.gcp.image_match:29 of
 msgid ""
 "Camera parameters dict containing fov, w, h, and optionally cx, cy. Used "
 "to compute focal_length and principal_point for \"essential\" filter. "
@@ -198,44 +199,42 @@ msgstr ""
 "cyを含むカメラパラメータ辞書。\"essential\"フィルタ用のfocal_lengthとprincipal_pointの計算に使用。focal_lengthは以下で計算:"
 " (w / 2) / tan(fov * pi / 180 / 2)"
 
-#: alproj.gcp.image_match:32 of
+#: alproj.gcp.image_match:33 of
 msgid ""
 "Outlier threshold in pixels for Essential/Fundamental filtering. Higher "
 "values are more permissive (allow more matches through)."
 msgstr "本質行列/基本行列フィルタリングの外れ値しきい値（ピクセル）。値が大きいほど許容範囲が広くなります（より多くのマッチが通過します）。"
 
-#: alproj.gcp.image_match:35 of
+#: alproj.gcp.image_match:36 of
 msgid ""
 "RANSAC variant for geometric filtering:  - \"RANSAC\": Standard RANSAC - "
 "\"LMEDS\": Least-Median of Squares - \"USAC_MAGSAC\": MAGSAC++ (most "
 "robust, recommended) - \"USAC_DEFAULT\": Default USAC configuration"
 msgstr ""
-"幾何学的フィルタリング用のRANSAC変種：- \"RANSAC\": 標準RANSAC "
-"- \"LMEDS\": 最小二乗中央値法 "
-"- \"USAC_MAGSAC\": MAGSAC++（最も堅牢、推奨）"
-"- \"USAC_DEFAULT\": デフォルトのUSAC設定"
+"幾何学的フィルタリング用のRANSAC変種：- \"RANSAC\": 標準RANSAC - \"LMEDS\": 最小二乗中央値法 - "
+"\"USAC_MAGSAC\": MAGSAC++（最も堅牢、推奨）- \"USAC_DEFAULT\": デフォルトのUSAC設定"
 
-#: alproj.gcp.image_match:35 of
+#: alproj.gcp.image_match:36 of
 msgid "RANSAC variant for geometric filtering:"
 msgstr "幾何学的フィルタリング用のRANSAC変種："
 
-#: alproj.gcp.image_match:37 of
+#: alproj.gcp.image_match:38 of
 msgid "\"RANSAC\": Standard RANSAC"
 msgstr "\"RANSAC\": 標準RANSAC"
 
-#: alproj.gcp.image_match:38 of
+#: alproj.gcp.image_match:39 of
 msgid "\"LMEDS\": Least-Median of Squares"
 msgstr "\"LMEDS\": 最小二乗中央値法"
 
-#: alproj.gcp.image_match:39 of
+#: alproj.gcp.image_match:40 of
 msgid "\"USAC_MAGSAC\": MAGSAC++ (most robust, recommended)"
 msgstr "\"USAC_MAGSAC\": MAGSAC++（最も堅牢、推奨）"
 
-#: alproj.gcp.image_match:40 of
+#: alproj.gcp.image_match:41 of
 msgid "\"USAC_DEFAULT\": Default USAC configuration"
 msgstr "\"USAC_DEFAULT\": デフォルトのUSAC設定"
 
-#: alproj.gcp.image_match:42 of
+#: alproj.gcp.image_match:43 of
 msgid ""
 "Grid cell size in pixels for spatial thinning. If specified, keeps at "
 "most one match per grid cell. Example: 100 keeps ~1 point per 100x100 px "
@@ -244,111 +243,114 @@ msgstr ""
 "空間的間引き用のグリッドセルサイズ（ピクセル単位）。指定すると、各グリッドセルに最大1つのマッチを保持。例: 100で100x100 "
 "px領域あたり約1点を保持。幾何学的外れ値フィルタリングの後に適用。"
 
-#: alproj.gcp.image_match:46 of
+#: alproj.gcp.image_match:47 of
 msgid ""
 "Selection method for spatial thinning:  - \"first\": First point by input"
 " order (deterministic, fastest) - \"random\": Random selection (use "
 "spatial_thin_random_state for reproducibility) - \"center\": Point "
 "closest to cell center"
 msgstr ""
-"空間的間引きの選択方法：- \"first\": 入力順で最初の点（決定論的、最速）"
-"- \"random\": ランダム選択（再現性にはspatial_thin_random_stateを使用）"
-"- \"center\": セル中心に最も近い点"
+"空間的間引きの選択方法：- \"first\": 入力順で最初の点（決定論的、最速）- \"random\": "
+"ランダム選択（再現性にはspatial_thin_random_stateを使用）- \"center\": セル中心に最も近い点"
 
-#: alproj.gcp.image_match:46 of
+#: alproj.gcp.image_match:47 of
 msgid "Selection method for spatial thinning:"
 msgstr "空間的間引きの選択方法："
 
-#: alproj.gcp.image_match:48 of
+#: alproj.gcp.image_match:49 of
 msgid "\"first\": First point by input order (deterministic, fastest)"
 msgstr "\"first\": 入力順で最初の点（決定論的、最速）"
 
-#: alproj.gcp.image_match:49 of
+#: alproj.gcp.image_match:50 of
 msgid ""
 "\"random\": Random selection (use spatial_thin_random_state for "
 "reproducibility)"
 msgstr "\"random\": ランダム選択（再現性にはspatial_thin_random_stateを使用）"
 
-#: alproj.gcp.image_match:50 of
+#: alproj.gcp.image_match:51 of
 msgid "\"center\": Point closest to cell center"
 msgstr "\"center\": セル中心に最も近い点"
 
-#: alproj.gcp.image_match:52 of
+#: alproj.gcp.image_match:53 of
 msgid "Random seed when spatial_thin_selection=\"random\"."
 msgstr "spatial_thin_selection=\"random\"の場合のランダムシード。"
 
-#: alproj.gcp.image_match:54 of
+#: alproj.gcp.image_match:55 of
 msgid "Whether to return a result plot."
 msgstr "結果プロットを返すかどうか。"
 
-#: alproj.gcp.image_match:56 of
+#: alproj.gcp.image_match:57 of
 msgid ""
-"Device to use for vismatch methods (\"cpu\" or \"cuda\"). Ignored for built-in"
-" methods."
+"Device to use for vismatch methods (\"cpu\" or \"cuda\"). Ignored for "
+"built-in methods."
 msgstr "vismatch手法で使用するデバイス（\"cpu\"または\"cuda\"）。組み込み手法では無視されます。"
 
-#: alproj.gcp.image_match:58 of
+#: alproj.gcp.image_match:59 of
+#, fuzzy
 msgid ""
-"Resize images to this size for vismatch methods. Keypoints are automatically "
-"scaled back to original coordinates.  .. note::     For memory-intensive "
-"methods, if resize is None, images are     automatically resized to "
-"640px to prevent out-of-memory errors.     Lightweight methods (those "
-"containing \"lightglue\", \"xfeat\", etc.) can "
-"handle full-resolution images     and do not auto-resize."
+"Resize images to this size for vismatch methods. Keypoints are "
+"automatically scaled back to original coordinates.  .. note::     For "
+"memory-intensive methods (roma, tiny-roma, minima-roma, loftr,     "
+"minima-loftr, ufm, rdd, master), if resize is None, images are     "
+"automatically resized to 640px to prevent out-of-memory errors.     "
+"LightGlue-based methods (sift-lightglue, superpoint-lightglue,     "
+"minima-superpoint-lightglue) can handle full-resolution images     and do"
+" not auto-resize."
 msgstr ""
-"vismatch手法用に画像をこのサイズにリサイズします。キーポイントは自動的に元の座標にスケール変換されます。  "
-".. note:: メモリ集約型の手法の場合、resizeがNoneであれば、メモリ不足エラーを防ぐために画像は自動的に640pxにリサイズされます。"
-"軽量な手法（\"lightglue\"、\"xfeat\"等を含む手法）はフル解像度の画像を処理でき、自動リサイズは行われません。"
+"vismatch手法用に画像をこのサイズにリサイズします。キーポイントは自動的に元の座標にスケール変換されます。  .. note:: "
+"メモリ集約型の手法の場合、resizeがNoneであれば、メモリ不足エラーを防ぐために画像は自動的に640pxにリサイズされます。軽量な手法（\"lightglue\"、\"xfeat\"等を含む手法）はフル解像度の画像を処理でき、自動リサイズは行われません。"
 
-#: alproj.gcp.image_match:58 of
+#: alproj.gcp.image_match:59 of
 msgid ""
-"Resize images to this size for vismatch methods. Keypoints are automatically "
-"scaled back to original coordinates."
+"Resize images to this size for vismatch methods. Keypoints are "
+"automatically scaled back to original coordinates."
 msgstr "vismatch手法用に画像をこのサイズにリサイズします。キーポイントは自動的に元の座標にスケール変換されます。"
 
-#: alproj.gcp.image_match:62 of
+#: alproj.gcp.image_match:63 of
+#, fuzzy
 msgid ""
-"For memory-intensive methods, if resize is None, images are "
+"For memory-intensive methods (roma, tiny-roma, minima-roma, loftr, "
+"minima-loftr, ufm, rdd, master), if resize is None, images are "
 "automatically resized to 640px to prevent out-of-memory errors. "
-"Lightweight methods (those containing \"lightglue\", \"xfeat\", etc.) "
-"can handle full-resolution images and do not auto-"
+"LightGlue-based methods (sift-lightglue, superpoint-lightglue, minima-"
+"superpoint-lightglue) can handle full-resolution images and do not auto-"
 "resize."
-msgstr ""
-"メモリ集約型の手法の場合、resizeがNoneであれば、メモリ不足エラーを防ぐために画像は自動的に640pxにリサイズされます。"
-"軽量な手法（\"lightglue\"、\"xfeat\"等を含む手法）はフル解像度の画像を処理でき、自動リサイズは行われません。"
+msgstr "メモリ集約型の手法の場合、resizeがNoneであれば、メモリ不足エラーを防ぐために画像は自動的に640pxにリサイズされます。軽量な手法（\"lightglue\"、\"xfeat\"等を含む手法）はフル解像度の画像を処理でき、自動リサイズは行われません。"
 
-#: alproj.gcp.image_match:69 of
+#: alproj.gcp.image_match:70 of
 msgid ""
 "Additional keyword arguments passed to vismatch's get_matcher (e.g., "
 "max_num_keypoints)."
 msgstr "vismatchのget_matcherに渡す追加のキーワード引数（例: max_num_keypoints）。"
 
-#: alproj.gcp.image_match:71 of
+#: alproj.gcp.image_match:72 of
 msgid ""
 "* **points** (*pd.DataFrame*) -- The coordinates of matched points. "
 "(Left-Top origin) * **plot** (*np.array or None*) -- An OpenCV image of "
 "result plot if plot_result=True, otherwise None."
 msgstr ""
-"* **points** (*pd.DataFrame*) -- マッチした点の座標（左上原点）。"
-"* **plot** (*np.array or None*) -- plot_result=Trueの場合は結果プロットのOpenCV画像、そうでなければNone。"
+"* **points** (*pd.DataFrame*) -- マッチした点の座標（左上原点）。* **plot** (*np.array or"
+" None*) -- plot_result=Trueの場合は結果プロットのOpenCV画像、そうでなければNone。"
 
-#: alproj.gcp.image_match:71 of
+#: alproj.gcp.image_match:72 of
 msgid ""
 "**points** (*pd.DataFrame*) -- The coordinates of matched points. (Left-"
 "Top origin)"
 msgstr "**points** (*pd.DataFrame*) -- マッチした点の座標（左上原点）。"
 
-#: alproj.gcp.image_match:72 of
+#: alproj.gcp.image_match:73 of
 msgid ""
 "**plot** (*np.array or None*) -- An OpenCV image of result plot if "
 "plot_result=True, otherwise None."
-msgstr "**plot** (*np.array or None*) -- plot_result=Trueの場合は結果プロットのOpenCV画像、そうでなければNone。"
+msgstr ""
+"**plot** (*np.array or None*) -- "
+"plot_result=Trueの場合は結果プロットのOpenCV画像、そうでなければNone。"
 
-#: alproj.gcp.image_match:76 of
+#: alproj.gcp.image_match:77 of
 msgid "Basic matching with Fundamental Matrix filtering (default):"
 msgstr "基本行列フィルタリングによる基本的なマッチング（デフォルト）:"
 
-#: alproj.gcp.image_match:80 of
+#: alproj.gcp.image_match:81 of
 msgid "Matching with Essential Matrix filtering using params:"
 msgstr "paramsを使用した本質行列フィルタリングによるマッチング:"
 
@@ -371,14 +373,24 @@ msgid "Arrow color in BGR."
 msgstr "矢印の色（BGR形式）。"
 
 #: alproj.gcp.plot_matches:9 of
-msgid "Arrow thickness."
-msgstr "矢印の太さ。"
+msgid "Arrow thickness. If None, automatically scaled based on image size."
+msgstr ""
 
 #: alproj.gcp.plot_matches:11 of
 msgid "Arrow tip length as fraction of arrow length."
 msgstr "矢印の先端の長さ（矢印の長さに対する割合）。"
 
-#: alproj.gcp.plot_matches:14 of
+#: alproj.gcp.plot_matches:13 of
+msgid ""
+"Font size for the label text. If None, automatically scaled based on "
+"image size."
+msgstr ""
+
+#: alproj.gcp.plot_matches:15 of
+msgid "Font stroke thickness. If None, automatically scaled based on image size."
+msgstr ""
+
+#: alproj.gcp.plot_matches:18 of
 msgid "**plot** -- Image with arrows drawn."
 msgstr "**plot** -- 矢印が描画された画像。"
 
@@ -409,10 +421,9 @@ msgid ""
 "float     Z coordinates (elevation) of GCPs in the same unit (e.g., "
 "meters)."
 msgstr ""
-"**gcp** -- 5列のデータフレーム  u : int 元の写真上のGCPのx軸座標（左上原点）。v : int GCPのy軸座標。"
-"x : float 投影座標系（例: UTM、単位メートル）におけるGCPのX座標。"
-"y : float 同じ投影座標系におけるGCPのY座標。"
-"z : float 同じ単位（例: メートル）でのGCPのZ座標（標高）。"
+"**gcp** -- 5列のデータフレーム  u : int 元の写真上のGCPのx軸座標（左上原点）。v : int GCPのy軸座標。x : "
+"float 投影座標系（例: UTM、単位メートル）におけるGCPのX座標。y : float 同じ投影座標系におけるGCPのY座標。z : "
+"float 同じ単位（例: メートル）でのGCPのZ座標（標高）。"
 
 #: alproj.gcp.set_gcp:10 of
 msgid "**gcp** -- A dataframe with 5 columns"
@@ -778,4 +789,7 @@ msgstr "同じ単位（例: メートル）でのGCPのZ座標（標高）。"
 
 #~ msgid "optional"
 #~ msgstr "オプション"
+
+#~ msgid "Arrow thickness."
+#~ msgstr "矢印の太さ。"
 

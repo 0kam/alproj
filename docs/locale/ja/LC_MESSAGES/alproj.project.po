@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: alproj \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-26 17:18+0900\n"
+"POT-Creation-Date: 2026-02-25 19:08+0900\n"
 "PO-Revision-Date: 2026-01-26 12:00+0900\n"
 "Last-Translator: \n"
 "Language: ja\n"
@@ -21,36 +21,6 @@ msgstr ""
 msgid "alproj.project module"
 msgstr "alproj.project モジュール"
 
-#: alproj.project.distort:1 of
-msgid "Distorts an image with given distortion coefficients."
-msgstr "与えられた歪み係数で画像を歪ませます。"
-
-#: ../../alproj.project.rst alproj.project.to_geotiff of
-msgid "Parameters"
-msgstr "パラメータ"
-
-#: alproj.project.distort:3 of
-msgid "An image to be distorted."
-msgstr "歪ませる画像。"
-
-#: alproj.project.distort:5 of
-msgid ""
-"Distortion coefficients. The order of the coefficients must be: a1, a2, "
-"k1, k2, k3, k4, k5, k6, p1, p2, s1, s2, s3, s4."
-msgstr "歪み係数。係数の順序は: a1, a2, k1, k2, k3, k4, k5, k6, p1, p2, s1, s2, s3, s4。"
-
-#: ../../alproj.project.rst alproj.project.to_geotiff of
-msgid "Returns"
-msgstr "戻り値"
-
-#: alproj.project.distort:9 of
-msgid "**img_distorted** -- Distorted image."
-msgstr "**img_distorted** -- 歪んだ画像。"
-
-#: ../../alproj.project.rst alproj.project.to_geotiff of
-msgid "Return type"
-msgstr "戻り値の型"
-
 #: alproj.project.modelview_mat:1 of
 msgid ""
 "Makes an OpenGL-style modelview matrix from euler angles and camera "
@@ -61,38 +31,77 @@ msgstr ""
 "/Getting-started/Coordinate-Systems を参照してください。"
 
 #: alproj.project.modelview_mat:4 of
+msgid ""
+"Derived from :func:`alproj.optimize.extrinsic_mat` with coordinate "
+"permutation so that the OpenGL renderer and the forward projection use "
+"identical rotation logic."
+msgstr ""
+
+#: alproj.project.modelview_mat:8 of
+msgid ""
+"OpenGL vertices are stored as ``(x_geo, z_geo, y_geo)`` while "
+"``extrinsic_mat`` works in geographic ``(x, y, z)`` order.  The "
+"conversion is::"
+msgstr ""
+
+#: alproj.project.modelview_mat:14 of
+msgid ""
+"where *E* is the 4x4 extrinsic matrix, *P* swaps indices 1 and 2 (y <-> "
+"z) to convert vertex order to geographic order, and *N* negates the "
+"camera-space Z row so that objects in front of the camera have *positive*"
+" Z -- matching the projection matrix convention used by "
+":func:`projection_mat` (``w_clip = Z``)."
+msgstr ""
+
+#: ../../alproj.project.rst alproj.project.to_geotiff of
+msgid "Parameters"
+msgstr "パラメータ"
+
+#: alproj.project.modelview_mat:20 of
 msgid "Pan angle in degrees"
 msgstr "パン角度（度）"
 
-#: alproj.project.modelview_mat:6 of
-msgid "Tilt angle n degrees"
+#: alproj.project.modelview_mat:22 of
+#, fuzzy
+msgid "Tilt angle in degrees"
 msgstr "チルト角度（度）"
 
-#: alproj.project.modelview_mat:8 of
+#: alproj.project.modelview_mat:24 of
 msgid "Roll angle in degrees"
 msgstr "ロール角度（度）"
 
-#: alproj.project.modelview_mat:10 of
+#: alproj.project.modelview_mat:26 of
 msgid ""
 "X-axis (latitudinal) coordinate of the camera location in a (planar) "
 "geographic coordinate system."
 msgstr "（平面）地理座標系におけるカメラ位置のX軸（緯度方向）座標。"
 
-#: alproj.project.modelview_mat:12 of
+#: alproj.project.modelview_mat:28 of
 msgid ""
 "Y-axis (longitudinal) coordinate of the camera location in a (planar) "
 "geographic coordinate system."
 msgstr "（平面）地理座標系におけるカメラ位置のY軸（経度方向）座標。"
 
-#: alproj.project.modelview_mat:14 of
+#: alproj.project.modelview_mat:30 of
 msgid ""
 "Z-axis (elevational) coordinate of the camera location in a (planar) "
 "geographic coordinate system."
 msgstr "（平面）地理座標系におけるカメラ位置のZ軸（標高）座標。"
 
-#: alproj.project.modelview_mat:17 of
-msgid "**modelview_mat** -- A modelview matrix."
+#: ../../alproj.project.rst alproj.project.to_geotiff of
+msgid "Returns"
+msgstr "戻り値"
+
+#: alproj.project.modelview_mat:33 of
+#, fuzzy
+msgid ""
+"**modelview_mat** -- A modelview matrix (flattened, column-major for "
+"OpenGL)."
 msgstr "**modelview_mat** -- モデルビュー行列。"
+
+#: ../../alproj.project.rst alproj.project.to_geotiff of
+msgid "Return type"
+msgstr "戻り値の型"
 
 #: alproj.project.persp_proj:1 of
 msgid "3D to 2D perspective projection of vertices, with given camera parameters."
@@ -131,11 +140,17 @@ msgid ""
 "value indicates that camera leans to the right. w : int     An image "
 "width in pixel. h : int     An image height in pixel cx : float     The X"
 " coordinate of the principle point cy : float     The Y coordinate of the"
-" principle point a1, a2 : float     Distortion coefficients that "
-"calibrates non-equal aspect ratio of each pixels. k1, k2, k3, k4, k5, k6 "
-": float     Radial distortion coefficients. p1, p2 : float     Tangental "
-"distortion coefficients. s1, s2, s3, s4 : float     Prism distortion "
-"coefficients."
+" principle point model : str, default None     Camera model. If "
+"``\"fisheye\"``, uses equidistant fisheye projection     via forward "
+"splatting from a wide rectilinear render.     If not specified, uses the "
+"default pinhole model with distortion. a1, a2 : float     Distortion "
+"coefficients that calibrates non-equal aspect ratio of each pixels.     "
+"(pinhole model only) k1, k2, k3, k4, k5, k6 : float     Radial distortion"
+" coefficients.     For pinhole: image-space polynomial distortion.     "
+"For fisheye: angle-space distortion (only k1-k4 used). p1, p2 : float"
+"     Tangential (decentering) distortion coefficients.     Used by both "
+"pinhole and fisheye models. s1, s2, s3, s4 : float     Prism distortion "
+"coefficients. (pinhole model only)"
 msgstr ""
 
 #: alproj.project.persp_proj:9 of
@@ -250,54 +265,75 @@ msgid "The Y coordinate of the principle point"
 msgstr "主点のY座標。"
 
 #: alproj.project.persp_proj:33 of
-msgid "a1, a2"
-msgstr "a1, a2"
+msgid "model"
+msgstr ""
+
+#: alproj.project.persp_proj:-1 of
+msgid "str, default None"
+msgstr ""
 
 #: alproj.project.persp_proj:34 of
 msgid ""
+"Camera model. If ``\"fisheye\"``, uses equidistant fisheye projection via"
+" forward splatting from a wide rectilinear render. If not specified, uses"
+" the default pinhole model with distortion."
+msgstr ""
+
+#: alproj.project.persp_proj:37 of
+msgid "a1, a2"
+msgstr "a1, a2"
+
+#: alproj.project.persp_proj:38 of
+#, fuzzy
+msgid ""
 "Distortion coefficients that calibrates non-equal aspect ratio of each "
-"pixels."
+"pixels. (pinhole model only)"
 msgstr "各ピクセルの不均等なアスペクト比を補正する歪み係数。"
 
-#: alproj.project.persp_proj:35 of
+#: alproj.project.persp_proj:40 of
 msgid "k1, k2, k3, k4, k5, k6"
 msgstr "k1, k2, k3, k4, k5, k6"
 
-#: alproj.project.persp_proj:36 of
-msgid "Radial distortion coefficients."
-msgstr "放射歪み係数。"
+#: alproj.project.persp_proj:41 of
+msgid ""
+"Radial distortion coefficients. For pinhole: image-space polynomial "
+"distortion. For fisheye: angle-space distortion (only k1-k4 used)."
+msgstr ""
 
-#: alproj.project.persp_proj:37 of
+#: alproj.project.persp_proj:44 of
 msgid "p1, p2"
 msgstr "p1, p2"
 
-#: alproj.project.persp_proj:38 of
-msgid "Tangental distortion coefficients."
-msgstr "接線歪み係数。"
+#: alproj.project.persp_proj:45 of
+msgid ""
+"Tangential (decentering) distortion coefficients. Used by both pinhole "
+"and fisheye models."
+msgstr ""
 
-#: alproj.project.persp_proj:39 of
+#: alproj.project.persp_proj:47 of
 msgid "s1, s2, s3, s4"
 msgstr "s1, s2, s3, s4"
 
-#: alproj.project.persp_proj:40 of
-msgid "Prism distortion coefficients."
+#: alproj.project.persp_proj:48 of
+#, fuzzy
+msgid "Prism distortion coefficients. (pinhole model only)"
 msgstr "プリズム歪み係数。"
 
-#: alproj.project.persp_proj:42 alproj.project.reverse_proj:13
+#: alproj.project.persp_proj:50 alproj.project.reverse_proj:13
 #: alproj.project.sim_image:11 of
 msgid ""
 "Offset for vertex coordinates. Usually returned by "
 "alproj.surface.get_colored_surface()."
 msgstr "頂点座標のオフセット。通常はalproj.surface.get_colored_surface()から返されます。"
 
-#: alproj.project.persp_proj:44 alproj.project.sim_image:13 of
+#: alproj.project.persp_proj:52 alproj.project.sim_image:13 of
 msgid ""
 "Minimum distance from camera in coordinate units (e.g., meters). Pixels "
 "closer than this distance will be rendered as black. Useful for masking "
 "near-field objects that may cause matching errors."
 msgstr "カメラからの最小距離（座標単位、例：メートル）。この距離より近いピクセルは黒としてレンダリングされます。マッチングエラーを引き起こす可能性のある近距離オブジェクトをマスキングするのに便利です。"
 
-#: alproj.project.persp_proj:49 of
+#: alproj.project.persp_proj:57 of
 msgid "**raw** -- Projected result."
 msgstr "**raw** -- 投影結果。"
 
@@ -432,37 +468,37 @@ msgstr "座標系と同じ単位のピクセル解像度。"
 
 #: alproj.project.to_geotiff:9 of
 msgid ""
-"Coordinate Reference System. Default is JGD2011 / Japan Plane Rectangular"
-" CS II."
-msgstr "座標参照系。デフォルトはJGD2011 / 日本測地系2011 平面直角座標系II系。"
+"Coordinate Reference System (e.g., \"EPSG:6690\"). Must match the CRS of "
+"the DSM and aerial photograph used for surface generation."
+msgstr ""
 
-#: alproj.project.to_geotiff:11 of
+#: alproj.project.to_geotiff:12 of
 msgid "Column names in df to use as raster bands."
 msgstr "ラスターバンドとして使用するdfの列名。"
 
-#: alproj.project.to_geotiff:13 of
+#: alproj.project.to_geotiff:14 of
 msgid "Whether to interpolate missing values using focal statistics."
 msgstr "フォーカル統計を使用して欠損値を補間するかどうか。"
 
-#: alproj.project.to_geotiff:15 of
+#: alproj.project.to_geotiff:16 of
 msgid "Maximum distance (in coordinate units) for interpolation."
 msgstr "補間の最大距離（座標単位）。"
 
-#: alproj.project.to_geotiff:17 of
+#: alproj.project.to_geotiff:18 of
 msgid ""
 "Aggregation function for rasterization and interpolation. Options: "
 "\"mean\", \"median\", \"max\", \"min\"."
 msgstr "ラスタライズと補間のための集約関数。オプション: \"mean\"、\"median\"、\"max\"、\"min\"。"
 
-#: alproj.project.to_geotiff:20 of
+#: alproj.project.to_geotiff:21 of
 msgid "NoData value for occluded/missing pixels."
 msgstr "遮蔽/欠損ピクセルのNoData値。"
 
-#: alproj.project.to_geotiff:23 of
+#: alproj.project.to_geotiff:24 of
 msgid "Writes GeoTIFF to output_path."
 msgstr "output_pathにGeoTIFFを書き込みます。"
 
-#: alproj.project.to_geotiff:27 of
+#: alproj.project.to_geotiff:28 of
 msgid "Examples"
 msgstr "使用例"
 
@@ -479,4 +515,71 @@ msgstr "使用例"
 #~ "vert, ind, params_optim, offsets)\n"
 #~ ">>> to_geotiff(georectified, \"output.tif\", "
 #~ "resolution=1.0, crs=\"EPSG:6690\")"
+
+#~ msgid "Distorts an image with given distortion coefficients."
+#~ msgstr "与えられた歪み係数で画像を歪ませます。"
+
+#~ msgid "An image to be distorted."
+#~ msgstr "歪ませる画像。"
+
+#~ msgid ""
+#~ "Distortion coefficients. The order of "
+#~ "the coefficients must be: a1, a2, "
+#~ "k1, k2, k3, k4, k5, k6, p1, "
+#~ "p2, s1, s2, s3, s4."
+#~ msgstr "歪み係数。係数の順序は: a1, a2, k1, k2, k3, k4, k5, k6, p1, p2, s1, s2, s3, s4。"
+
+#~ msgid "**img_distorted** -- Distorted image."
+#~ msgstr "**img_distorted** -- 歪んだ画像。"
+
+#~ msgid ""
+#~ "Camera parameters.  x : float     The"
+#~ " latitudinal coordinate of the shooting "
+#~ "point in planar (e.g. UTM) coordinate"
+#~ " reference systems. y : float     The"
+#~ " longitudinal coordinate of the shooting"
+#~ " point. z : float     The vertical"
+#~ " coordinate of the shooting point, "
+#~ "the unit of z must be the "
+#~ "same as x and y (e.g. m). "
+#~ "fov : float     A Field of View"
+#~ " in degree. pan : float     A "
+#~ "pan angle in degree. North is 0"
+#~ " degree and East is 90 degree. "
+#~ "The rotation angles (pan, tilt, roll)"
+#~ " follows the OpenCV's left-handed "
+#~ "coordinate system. tilt : float     A"
+#~ " tilt angle in degree. 0 indicates"
+#~ " that the camera is horizontal. A "
+#~ "positive value indicates that the camera"
+#~ " looks up. roll : float     A "
+#~ "roll angle in degree. A positive "
+#~ "value indicates that camera leans to "
+#~ "the right. w : int     An image"
+#~ " width in pixel. h : int     An"
+#~ " image height in pixel cx : "
+#~ "float     The X coordinate of the "
+#~ "principle point cy : float     The "
+#~ "Y coordinate of the principle point "
+#~ "a1, a2 : float     Distortion "
+#~ "coefficients that calibrates non-equal "
+#~ "aspect ratio of each pixels. k1, "
+#~ "k2, k3, k4, k5, k6 : float     "
+#~ "Radial distortion coefficients. p1, p2 :"
+#~ " float     Tangental distortion coefficients. "
+#~ "s1, s2, s3, s4 : float     Prism"
+#~ " distortion coefficients."
+#~ msgstr ""
+
+#~ msgid "Radial distortion coefficients."
+#~ msgstr "放射歪み係数。"
+
+#~ msgid "Tangental distortion coefficients."
+#~ msgstr "接線歪み係数。"
+
+#~ msgid ""
+#~ "Coordinate Reference System. Default is "
+#~ "JGD2011 / Japan Plane Rectangular CS "
+#~ "II."
+#~ msgstr "座標参照系。デフォルトはJGD2011 / 日本測地系2011 平面直角座標系II系。"
 

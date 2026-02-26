@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: alproj \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-26 17:18+0900\n"
+"POT-Creation-Date: 2026-02-25 19:08+0900\n"
 "PO-Revision-Date: 2026-01-26 12:00+0900\n"
 "Last-Translator: \n"
 "Language: ja\n"
@@ -137,30 +137,43 @@ msgstr ""
 "100）。サンプリングされたすべてのパラメータが実行不可能な場合、最後にサンプリングされたものが上下限でクリップされます。"
 
 #: alproj.optimize.CMAOptimizer.optimize:22 of
+#, fuzzy
 msgid ""
-"Threshold for Huber loss in pixels. If None, uses L2 loss (RMSE). If "
-"specified (e.g., 10.0), uses Huber loss which is more robust to outliers."
+"Threshold for Huber loss in pixels. If None, uses mean reprojection "
+"error. If specified (e.g., 10.0), uses Huber loss which is more robust to"
+" outliers."
 msgstr "ピクセル単位のHuber損失の閾値。Noneの場合、L2損失（RMSE）を使用。指定した場合（例：10.0）、外れ値に対してよりロバストなHuber損失を使用"
+
+#: alproj.optimize.CMAOptimizer.optimize:25 of
+msgid ""
+"Per-GCP weights for the loss function. Higher weights increase the "
+"importance of the corresponding GCPs. Useful for balancing center and "
+"edge region accuracy."
+msgstr ""
 
 #: ../../alproj.optimize.rst
 msgid "Returns"
 msgstr "戻り値"
 
-#: alproj.optimize.CMAOptimizer.optimize:26 of
+#: alproj.optimize.CMAOptimizer.optimize:30
+#: alproj.optimize.LsqOptimizer.optimize:27 of
+#, fuzzy
 msgid ""
 "* **params** (*dict*) -- Optimized camera parameters. * **error** "
-"(*float*) -- A reprojection error in pixel."
+"(*float*) -- Mean reprojection error in pixels (unweighted)."
 msgstr ""
-"* **params** (*dict*) -- 最適化されたカメラパラメータ。"
-"* **error** (*float*) -- ピクセル単位の再投影誤差。"
+"* **params** (*dict*) -- 最適化されたカメラパラメータ。* **error** (*float*) -- "
+"ピクセル単位の再投影誤差。"
 
-#: alproj.optimize.CMAOptimizer.optimize:26
-#: alproj.optimize.LsqOptimizer.optimize:24 of
+#: alproj.optimize.CMAOptimizer.optimize:30
+#: alproj.optimize.LsqOptimizer.optimize:27 of
 msgid "**params** (*dict*) -- Optimized camera parameters."
 msgstr "**params** (*dict*) -- 最適化されたカメラパラメータ。"
 
-#: alproj.optimize.CMAOptimizer.optimize:27 of
-msgid "**error** (*float*) -- A reprojection error in pixel."
+#: alproj.optimize.CMAOptimizer.optimize:31
+#: alproj.optimize.LsqOptimizer.optimize:28 of
+#, fuzzy
+msgid "**error** (*float*) -- Mean reprojection error in pixels (unweighted)."
 msgstr "**error** (*float*) -- ピクセル単位の再投影誤差。"
 
 # LsqOptimizer class
@@ -216,20 +229,14 @@ msgid ""
 msgstr "インライア残差のソフト閾値（ピクセル単位）。f_scale以下の残差は通常通り扱われ、それ以上の残差は損失関数に従って重みが下げられます。loss=\"linear\"の場合は効果なし。典型的な値：予想される外れ値の大きさに応じて1.0〜20.0ピクセル"
 
 #: alproj.optimize.LsqOptimizer.optimize:22 of
-msgid "Additional arguments passed to scipy.optimize.least_squares."
-msgstr "scipy.optimize.least_squaresに渡される追加引数"
-
-#: alproj.optimize.LsqOptimizer.optimize:24 of
 msgid ""
-"* **params** (*dict*) -- Optimized camera parameters. * **error** "
-"(*float*) -- A reprojection error (RMSE) in pixel."
+"Per-GCP weights for the loss function. Applied as sqrt(weight) scaling to"
+" the residual vector. Useful for region-balanced optimization."
 msgstr ""
-"* **params** (*dict*) -- 最適化されたカメラパラメータ。"
-"* **error** (*float*) -- ピクセル単位の再投影誤差（RMSE）。"
 
 #: alproj.optimize.LsqOptimizer.optimize:25 of
-msgid "**error** (*float*) -- A reprojection error (RMSE) in pixel."
-msgstr "**error** (*float*) -- ピクセル単位の再投影誤差（RMSE）。"
+msgid "Additional arguments passed to scipy.optimize.least_squares."
+msgstr "scipy.optimize.least_squaresに渡される追加引数"
 
 # bounds_to_array function
 #: alproj.optimize.bounds_to_array:1 of
@@ -331,11 +338,11 @@ msgid ""
 " above f_scale, it behaves like L1 (linear) loss."
 msgstr "Huber損失は二乗誤差損失より外れ値に対して鈍感です。f_scale以下の残差に対してはL2（二乗）損失として、f_scale以上の残差に対してはL1（線形）損失として動作します。"
 
-#: alproj.optimize.huber_loss:7 alproj.optimize.rmse:3 of
+#: alproj.optimize.huber_loss:7 alproj.optimize.mean_reprojection_error:3 of
 msgid "Observed image coordinates with columns u, v."
 msgstr "列 u, v を持つ観測画像座標"
 
-#: alproj.optimize.huber_loss:9 alproj.optimize.rmse:5 of
+#: alproj.optimize.huber_loss:9 alproj.optimize.mean_reprojection_error:5 of
 msgid "Projected image coordinates with columns u, v."
 msgstr "列 u, v を持つ投影画像座標"
 
@@ -343,7 +350,11 @@ msgstr "列 u, v を持つ投影画像座標"
 msgid "Threshold in pixels. Residuals below f_scale use L2, above use L1."
 msgstr "ピクセル単位の閾値。f_scale以下の残差はL2、以上はL1を使用"
 
-#: alproj.optimize.huber_loss:14 of
+#: alproj.optimize.huber_loss:13 alproj.optimize.mean_reprojection_error:7 of
+msgid "Per-point weights. If provided, returns weighted average."
+msgstr ""
+
+#: alproj.optimize.huber_loss:16 of
 msgid "**loss** -- Mean Huber loss value."
 msgstr "**loss** -- 平均Huber損失値"
 
@@ -380,6 +391,19 @@ msgstr "主点のY座標。Noneの場合、cy = h/2"
 msgid "**mat** -- Intrinsic matrix."
 msgstr "**mat** -- 内部行列"
 
+# rmse function
+#: alproj.optimize.mean_reprojection_error:1 of
+#, fuzzy
+msgid ""
+"Calculate mean reprojection error (mean Euclidean distance) of the "
+"projection."
+msgstr "投影の二乗平均平方根誤差（RMSE）を計算"
+
+#: alproj.optimize.mean_reprojection_error:10 of
+#, fuzzy
+msgid "**error** -- Mean reprojection error in pixels."
+msgstr "**error** (*float*) -- ピクセル単位の再投影誤差。"
+
 # project function
 #: alproj.optimize.project:1 of
 msgid ""
@@ -396,21 +420,24 @@ msgstr "3D地理座標系における点（通常はGCP）の座標。列名はx
 #: alproj.optimize.project:6 of
 msgid ""
 "Camera parameters. For detailed parameter descriptions, see "
-"alproj.project.persp_proj()."
-msgstr "カメラパラメータ。パラメータの詳細については、alproj.project.persp_proj() を参照"
+"alproj.project.persp_proj(). If params contains ``\"model\": "
+"\"fisheye\"``, uses equidistant fisheye projection. Otherwise uses the "
+"default pinhole projection."
+msgstr ""
 
-#: alproj.optimize.project:9 of
+#: alproj.optimize.project:11 of
 msgid "**uv** -- 2D projected coordinates with columns u, v."
 msgstr "**uv** -- 列 u, v を持つ2D投影座標"
 
-# rmse function
 #: alproj.optimize.rmse:1 of
-msgid "Calculate Root Mean Square Error of the projection."
-msgstr "投影の二乗平均平方根誤差（RMSE）を計算"
+msgid "Deprecated alias for :func:`mean_reprojection_error`."
+msgstr ""
 
-#: alproj.optimize.rmse:8 of
-msgid "**rmse** -- Root mean square error in pixels."
-msgstr "**rmse** -- ピクセル単位の二乗平均平方根誤差"
+#: alproj.optimize.rmse:3 of
+msgid ""
+"Use :func:`mean_reprojection_error` instead. This function computes mean "
+"Euclidean distance, not root-mean-square error."
+msgstr ""
 
 #~ msgid "numpy.ndarray"
 #~ msgstr "numpy.ndarray"
@@ -454,4 +481,24 @@ msgstr "**rmse** -- ピクセル単位の二乗平均平方根誤差"
 
 #~ msgid "callable"
 #~ msgstr "callable"
+
+#~ msgid ""
+#~ "* **params** (*dict*) -- Optimized "
+#~ "camera parameters. * **error** (*float*) "
+#~ "-- A reprojection error (RMSE) in "
+#~ "pixel."
+#~ msgstr ""
+#~ "* **params** (*dict*) -- 最適化されたカメラパラメータ。* "
+#~ "**error** (*float*) -- ピクセル単位の再投影誤差（RMSE）。"
+
+#~ msgid "**error** (*float*) -- A reprojection error (RMSE) in pixel."
+#~ msgstr "**error** (*float*) -- ピクセル単位の再投影誤差（RMSE）。"
+
+#~ msgid ""
+#~ "Camera parameters. For detailed parameter "
+#~ "descriptions, see alproj.project.persp_proj()."
+#~ msgstr "カメラパラメータ。パラメータの詳細については、alproj.project.persp_proj() を参照"
+
+#~ msgid "**rmse** -- Root mean square error in pixels."
+#~ msgstr "**rmse** -- ピクセル単位の二乗平均平方根誤差"
 

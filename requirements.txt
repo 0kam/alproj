@@ -1,9 +1,9 @@
 # Pinned dependencies for reproducible development environment
 # Requires Python 3.9-3.12
-# For installation as a library, use: pip install git+https://github.com/0kam/alproj
+# For installation as a library, use: pip install alproj
 #
 # Optional: For advanced image matching methods (RoMa, LoFTR, LightGlue, etc.),
-# install with: pip install "alproj[vismatch] @ git+https://github.com/0kam/alproj"
+# install with: pip install "alproj[vismatch]"
 
 numpy==2.4.1
 pandas==3.0.0

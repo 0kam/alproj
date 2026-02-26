@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: alproj \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-26 17:18+0900\n"
+"POT-Creation-Date: 2026-02-25 19:08+0900\n"
 "PO-Revision-Date: 2026-01-26 12:00+0900\n"
 "Last-Translator: \n"
 "Language: ja\n"
@@ -30,32 +30,34 @@ msgid "Parameters"
 msgstr "パラメータ"
 
 #: alproj.surface.get_colored_surface:3 of
+#, fuzzy
 msgid ""
 "An aerial photograph opend by rasterio.open(), should be in a CRS that "
-"has units of meters, and have values of 0-255."
+"has units of meters. Supports uint8, uint16, and float32 dtypes "
+"(normalization is automatic)."
 msgstr "rasterio.open()で開いた航空写真。メートル単位のCRSで、値は0-255である必要があります。"
 
-#: alproj.surface.get_colored_surface:5 of
+#: alproj.surface.get_colored_surface:6 of
 msgid ""
 "A Digital SurfaceModel opend by rasterio.open(), should be in the same "
 "CRS as the aerial."
 msgstr "rasterio.open()で開いた数値表層モデル。航空写真と同じCRSである必要があります。"
 
-#: alproj.surface.get_colored_surface:7 of
+#: alproj.surface.get_colored_surface:8 of
 msgid ""
 "Shooting point. Must contain keys \"x\" and \"y\". Should be in the same "
 "coordinate reference system as the DSM."
 msgstr "撮影地点。キー\"x\"と\"y\"を含む必要があります。DSMと同じ座標参照系である必要があります。"
 
-#: alproj.surface.get_colored_surface:9 of
+#: alproj.surface.get_colored_surface:10 of
 msgid "Distance from shooting point to the edge of the rectangle."
 msgstr "撮影地点から矩形の端までの距離"
 
-#: alproj.surface.get_colored_surface:11 of
+#: alproj.surface.get_colored_surface:12 of
 msgid "Resolution of the output raster in m."
 msgstr "出力ラスターの解像度（m）"
 
-#: alproj.surface.get_colored_surface:13 of
+#: alproj.surface.get_colored_surface:14 of
 msgid ""
 "Resampling method. See "
 "https://rasterio.readthedocs.io/en/latest/api/rasterio.enums.html#rasterio.enums.Resampling"
@@ -63,15 +65,21 @@ msgstr ""
 "リサンプリング方法。https://rasterio.readthedocs.io/en/latest/api/rasterio.enums.html#rasterio.enums.Resampling"
 " を参照"
 
-#: alproj.surface.get_colored_surface:15 of
+#: alproj.surface.get_colored_surface:16 of
 msgid "Distance in m for filling nodata in DSM."
 msgstr "DSMのnodata補間距離（m）"
+
+#: alproj.surface.get_colored_surface:18 of
+msgid ""
+"Explicit maximum color value for normalization. If None, determined "
+"automatically from the aerial dtype."
+msgstr ""
 
 #: ../../alproj.surface.rst
 msgid "Returns"
 msgstr "戻り値"
 
-#: alproj.surface.get_colored_surface:18 of
+#: alproj.surface.get_colored_surface:21 of
 msgid ""
 "* **vert** (*numpy.ndarray*) -- Vertex coordinates. * **col** "
 "(*numpy.ndarray*) -- Vertex color. * **ind** (*numpy.ndarray*) -- Index "
@@ -82,19 +90,19 @@ msgstr ""
 " * **ind** (*numpy.ndarray*) -- 各三角形のインデックス * **offset** "
 "(*numpy.ndarray*) -- 頂点座標のオフセット。正しい座標を得るにはvertに加算する必要があります。"
 
-#: alproj.surface.get_colored_surface:18 of
+#: alproj.surface.get_colored_surface:21 of
 msgid "**vert** (*numpy.ndarray*) -- Vertex coordinates."
 msgstr "**vert** (*numpy.ndarray*) -- 頂点座標"
 
-#: alproj.surface.get_colored_surface:19 of
+#: alproj.surface.get_colored_surface:22 of
 msgid "**col** (*numpy.ndarray*) -- Vertex color."
 msgstr "**col** (*numpy.ndarray*) -- 頂点カラー"
 
-#: alproj.surface.get_colored_surface:20 of
+#: alproj.surface.get_colored_surface:23 of
 msgid "**ind** (*numpy.ndarray*) -- Index for each triangle."
 msgstr "**ind** (*numpy.ndarray*) -- 各三角形のインデックス"
 
-#: alproj.surface.get_colored_surface:21 of
+#: alproj.surface.get_colored_surface:24 of
 msgid ""
 "**offset** (*numpy.ndarray*) -- Offset for vertex coordinates. You need "
 "to add this to vert to get the correct coordinates."

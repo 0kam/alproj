@@ -30,6 +30,7 @@ This project aims to revive alpine landscape photographs in your photo albams, a
    overview
    usage
    matching_gallery
+   camera_model_comparison
 
 .. toctree::
    :maxdepth: 2

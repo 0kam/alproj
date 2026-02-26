@@ -8,7 +8,7 @@ If you prefer a graphical interface, try [alproj-gui](https://github.com/0kam/al
 
 ## Basic Installation
 ```bash
-pip install git+https://github.com/0kam/alproj
+pip install alproj
 ```
 
 ## Optional Dependencies
@@ -17,7 +17,7 @@ pip install git+https://github.com/0kam/alproj
 For advanced deep learning-based image matching methods (RoMa, LoFTR, LightGlue, etc.), install with the vismatch option:
 
 ```bash
-pip install "alproj[vismatch] @ git+https://github.com/0kam/alproj"
+pip install "alproj[vismatch]"
 ```
 
 This installs the [vismatch](https://github.com/gmberton/vismatch) package along with PyTorch and other dependencies.

@@ -1,0 +1,293 @@
+# Japanese translations for alproj package.
+# Copyright (C) 2021, Ryotaro Okamoto
+# This file is distributed under the same license as the alproj package.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: alproj \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-02-25 21:35+0900\n"
+"PO-Revision-Date: 2026-02-25 21:30+0900\n"
+"Last-Translator: \n"
+"Language: ja\n"
+"Language-Team: ja <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../camera_model_comparison.md:1
+msgid "Camera Model Comparison"
+msgstr "カメラモデルの比較"
+
+#: ../../camera_model_comparison.md:3
+msgid ""
+"`alproj` supports two camera projection models: **Pinhole** and "
+"**Fisheye**. This page compares their performance on a wide-angle "
+"monitoring camera image. Choosing the right model for your camera is key "
+"to accurate georectification."
+msgstr ""
+"`alproj` は2つのカメラ投影モデルをサポートしています: **ピンホール** と "
+"**フィッシュアイ**（等距離射影）。このページでは、広角監視カメラの画像を用いて両モデルの性能を比較します。カメラに適したモデルを選ぶことが、正確な幾何補正の鍵です。"
+
+#: ../../camera_model_comparison.md:5
+msgid ""
+"The example images on this page are from [NIES alpine monitoring at Mt. "
+"Maehotaka](https://db.cger.nies.go.jp/gem/ja/mountain/station.html?id=33)."
+msgstr "このページの画像は、[国立環境研究所（NIES）高山帯モニタリング（前穂高岳）](https://db.cger.nies.go.jp/gem/ja/mountain/station.html?id=33)のデータです。"
+
+#: ../../camera_model_comparison.md:7
+msgid "When to Use Which Model"
+msgstr "モデルの使い分け"
+
+#: ../../camera_model_comparison.md
+msgid "Pinhole"
+msgstr "ピンホール"
+
+#: ../../camera_model_comparison.md
+msgid "Fisheye"
+msgstr "フィッシュアイ"
+
+#: ../../camera_model_comparison.md
+msgid "**Projection**"
+msgstr "**投影方式**"
+
+#: ../../camera_model_comparison.md
+msgid "Rectilinear"
+msgstr "直線投影"
+
+#: ../../camera_model_comparison.md
+msgid "Equidistant"
+msgstr "等距離射影"
+
+#: ../../camera_model_comparison.md
+msgid "**Best for**"
+msgstr "**適したカメラ**"
+
+#: ../../camera_model_comparison.md
+msgid "Standard lenses (FOV < ~90°)"
+msgstr "標準レンズ（FOV < 約90°）"
+
+#: ../../camera_model_comparison.md
+msgid "Wide-angle / monitoring cameras (FOV ~75–120°)"
+msgstr "広角・監視カメラ（FOV 約75–120°）"
+
+#: ../../camera_model_comparison.md
+msgid "**Distortion params**"
+msgstr "**歪みパラメータ数**"
+
+#: ../../camera_model_comparison.md
+msgid "14 (k1–k6, p1, p2, s1–s4, a1, a2)"
+msgstr "14個（k1–k6, p1, p2, s1–s4, a1, a2）"
+
+#: ../../camera_model_comparison.md
+msgid "8 (k1–k4, a1, a2, p1, p2)"
+msgstr "8個（k1–k4, a1, a2, p1, p2）"
+
+#: ../../camera_model_comparison.md
+msgid "**Distortion space**"
+msgstr "**歪み空間**"
+
+#: ../../camera_model_comparison.md
+msgid "Image space (pixels)"
+msgstr "画像空間（ピクセル）"
+
+#: ../../camera_model_comparison.md
+msgid "Angle space (radians)"
+msgstr "角度空間（ラジアン）"
+
+#: ../../camera_model_comparison.md
+msgid "**Usage**"
+msgstr "**指定方法**"
+
+#: ../../camera_model_comparison.md
+msgid "Default (no `model` key needed)"
+msgstr "デフォルト（`model` キー不要）"
+
+#: ../../camera_model_comparison.md
+msgid "Set `\"model\": \"fisheye\"` in params"
+msgstr "パラメータに `\"model\": \"fisheye\"` を指定"
+
+#: ../../camera_model_comparison.md:17
+msgid ""
+"**Rule of thumb:** The pinhole model handles barrel distortion well for "
+"most lenses, including typical wide-angle lenses. For cameras with "
+"particularly strong distortion (e.g., surveillance cameras, action "
+"cameras, webcams), the fisheye model provides better accuracy."
+msgstr ""
+"**目安:** ピンホールモデルは樽型歪みの補正機能を備えており、一般的な広角レンズを含む"
+"ほとんどのレンズで良好に動作します。特に歪みが強いカメラ（監視カメラ、アクションカメラ、"
+"ウェブカメラなど）では、フィッシュアイモデルの方が高い精度を発揮します。"
+
+#: ../../camera_model_comparison.md:19
+msgid "Simulation Overlay"
+msgstr "シミュレーション画像の重ね合わせ"
+
+#: ../../camera_model_comparison.md:21
+msgid ""
+"The image below shows a 50% blend of each model's simulated image over "
+"the target photograph. A better-fitting model produces a sharper overlay "
+"with less ghosting."
+msgstr "下の画像は、各モデルのシミュレーション画像をターゲット写真に50%の透過度で重ね合わせたものです。フィットが良いモデルほど、二重像（ゴースト）が少なく鮮明に見えます。"
+
+#: ../../camera_model_comparison.md:23
+msgid "![](_static/camera_model_comparison/overlay_comparison.png)"
+msgstr ""
+
+#: ../../camera_model_comparison.md:25
+msgid ""
+"Since this scene was captured with a surveillance camera that has "
+"particularly strong barrel distortion, the fisheye model produces a "
+"tighter fit, especially near the image edges. For most lenses, including "
+"typical wide-angle lenses, the pinhole model performs well thanks to its "
+"own barrel distortion correction."
+msgstr ""
+"このシーンは特に樽型歪みが強い監視カメラで撮影されているため、フィッシュアイモデルの方が"
+"よりフィットしています。特に画像端部で顕著です。一般的な広角レンズを含むほとんどの"
+"レンズでは、ピンホールモデル自体の樽型歪み補正で十分な性能が得られます。"
+
+#: ../../camera_model_comparison.md:27
+msgid "Matching Results"
+msgstr "マッチング結果"
+
+#: ../../camera_model_comparison.md:29
+msgid ""
+"Feature matching (RoMa) between the target photograph and each model's "
+"simulation:"
+msgstr "ターゲット写真と各モデルのシミュレーション画像間の特徴点マッチング（RoMa）の結果:"
+
+#: ../../camera_model_comparison.md:31
+msgid "**Pinhole (1852 matches):**"
+msgstr "**ピンホール（1852点）:**"
+
+#: ../../camera_model_comparison.md:33
+msgid "![](_static/camera_model_comparison/matched_pinhole.png)"
+msgstr ""
+
+#: ../../camera_model_comparison.md:35
+msgid "**Fisheye (1862 matches):**"
+msgstr "**フィッシュアイ（1862点）:**"
+
+#: ../../camera_model_comparison.md:37
+msgid "![](_static/camera_model_comparison/matched_fisheye.png)"
+msgstr ""
+
+#: ../../camera_model_comparison.md:39
+msgid ""
+"Both models yield a similar number of matches, but the fisheye model's "
+"matches are more spatially uniform because the simulation better "
+"represents the actual geometry of this wide-angle camera."
+msgstr "両モデルのマッチング数はほぼ同等ですが、フィッシュアイモデルの方が対応点の空間分布がより均一です。これは、シミュレーション画像がこの広角カメラの実際の幾何学をより正確に再現しているためです。"
+
+#: ../../camera_model_comparison.md:41
+msgid "Reprojection Error"
+msgstr "再投影誤差"
+
+#: ../../camera_model_comparison.md:43
+msgid ""
+"Reprojection error measures how accurately the optimized camera "
+"parameters project 3D ground control points back onto the image plane. "
+"Lower is better."
+msgstr "再投影誤差は、最適化されたカメラパラメータが3D地上基準点を画像平面上にどれだけ正確に投影できるかを測定する指標です。値が小さいほど良好です。"
+
+#: ../../camera_model_comparison.md
+msgid "Model"
+msgstr "モデル"
+
+#: ../../camera_model_comparison.md
+msgid "Mean (px)"
+msgstr "平均 (px)"
+
+#: ../../camera_model_comparison.md
+msgid "Median (px)"
+msgstr "中央値 (px)"
+
+#: ../../camera_model_comparison.md
+msgid "P90 (px)"
+msgstr "90パーセンタイル (px)"
+
+#: ../../camera_model_comparison.md
+msgid "8.93"
+msgstr ""
+
+#: ../../camera_model_comparison.md
+msgid "8.77"
+msgstr ""
+
+#: ../../camera_model_comparison.md
+msgid "14.27"
+msgstr ""
+
+#: ../../camera_model_comparison.md
+msgid "5.24"
+msgstr ""
+
+#: ../../camera_model_comparison.md
+msgid "3.86"
+msgstr ""
+
+#: ../../camera_model_comparison.md
+msgid "10.18"
+msgstr ""
+
+#: ../../camera_model_comparison.md:50
+msgid ""
+"For this wide-angle camera, the fisheye model reduces mean reprojection "
+"error by **41%** compared to the pinhole model."
+msgstr "この広角カメラでは、フィッシュアイモデルはピンホールモデルと比較して平均再投影誤差を **41%** 削減しています。"
+
+#: ../../camera_model_comparison.md:52
+msgid "![](_static/camera_model_comparison/reprojection_error.png)"
+msgstr ""
+
+#: ../../camera_model_comparison.md:54
+msgid ""
+"The spatial error distribution shows that the pinhole model struggles "
+"with the extreme barrel distortion of this surveillance camera near the "
+"image edges, while the fisheye model maintains low errors across the "
+"entire image. Note that for most lenses, the pinhole model's own "
+"distortion correction is sufficient — the fisheye model's advantage is "
+"specific to cameras with particularly strong distortion like the one used"
+" here."
+msgstr ""
+"空間的な誤差分布を見ると、この監視カメラの極端な樽型歪みに対して、ピンホールモデル"
+"では画像端部で誤差が大きくなる一方、フィッシュアイモデルでは画像全体にわたって"
+"低い誤差を維持しています。なお、ほとんどのレンズではピンホールモデル自体の歪み補正"
+"で十分です。フィッシュアイモデルの優位性は、ここで使用したような特に歪みの強い"
+"カメラに限られます。"
+
+#: ../../camera_model_comparison.md:56
+msgid "Quick Start: Fisheye Model"
+msgstr "クイックスタート: フィッシュアイモデル"
+
+#: ../../camera_model_comparison.md:58
+msgid ""
+"To use the fisheye model, add `\"model\": \"fisheye\"` to your camera "
+"parameters:"
+msgstr "フィッシュアイモデルを使用するには、カメラパラメータに `\"model\": \"fisheye\"` を追加します:"
+
+#: ../../camera_model_comparison.md:71
+msgid ""
+"The rest of the pipeline (`sim_image`, `image_match`, `CMAOptimizer`, "
+"`reverse_proj`, `to_geotiff`) works exactly the same. The optimizer "
+"automatically dispatches to the correct projection function based on the "
+"`model` key."
+msgstr ""
+"それ以降のパイプライン（`sim_image`、`image_match`、`CMAOptimizer`、`reverse_proj`、`to_geotiff`）の使い方はピンホールモデルと全く同じです。オプティマイザは"
+" `model` キーに基づいて適切な投影関数を自動的に選択します。"
+
+
+#~ msgid ""
+#~ "**Rule of thumb:** If the camera "
+#~ "has noticeable barrel distortion (e.g., "
+#~ "surveillance cameras, action cameras, "
+#~ "webcams), use the fisheye model. For "
+#~ "standard photography lenses with little "
+#~ "distortion, the pinhole model is "
+#~ "sufficient and has more distortion "
+#~ "parameters for fine-tuning."
+#~ msgstr ""
+#~ "**目安:** "
+#~ "樽型歪みが目立つカメラ（監視カメラ、アクションカメラ、ウェブカメラなど）にはフィッシュアイモデルを使用してください。歪みの少ない標準的な写真レンズには、ピンホールモデルで十分であり、微調整用の歪みパラメータもより多く用意されています。"
+

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: alproj \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-26 17:18+0900\n"
+"POT-Creation-Date: 2026-02-25 19:08+0900\n"
 "PO-Revision-Date: 2026-01-26 12:00+0900\n"
 "Last-Translator: \n"
 "Language: ja\n"
@@ -30,28 +30,36 @@ msgid ""
 "`alproj` is a simple python package for geo-rectification of alpine "
 "landscape photographs.    `alproj` has 3 steps for geo-rectification of a"
 " landscape photograph."
-msgstr "`alproj` は山岳景観写真の幾何補正のためのシンプルな Python パッケージです。`alproj` は景観写真の幾何補正を3つのステップで行います。"
+msgstr ""
+"`alproj` は山岳景観写真の幾何補正のためのシンプルな Python パッケージです。`alproj` "
+"は景観写真の幾何補正を3つのステップで行います。"
 
 #: ../../overview.md:17
 msgid ""
 "Setting Ground Control Points (GCPs) in a target photograph, using a "
 "simulated landscape image rendered with Digital Surface Model and "
 "airborne photographs. ![](_static/setting_up_gcps.jpg)"
-msgstr "数値表層モデル（DSM）と航空写真からレンダリングされたシミュレーション画像を使用して、対象写真に地上基準点（GCP）を設定します。 ![](_static/setting_up_gcps.jpg)"
+msgstr ""
+"数値表層モデル（DSM）と航空写真からレンダリングされたシミュレーション画像を使用して、対象写真に地上基準点（GCP）を設定します。 "
+"![](_static/setting_up_gcps.jpg)"
 
 #: ../../overview.md:19
 msgid ""
 "Heuristic estimation of camera parameters including the camera angle, "
 "field of view, and lens distortions (shooting point of the photograph is "
 "required). ![](_static/estimation_of_camera_parameters.jpg)"
-msgstr "カメラアングル、視野角、レンズ歪みを含むカメラパラメータのヒューリスティック推定を行います（写真の撮影地点が必要です）。 ![](_static/estimation_of_camera_parameters.jpg)"
+msgstr ""
+"カメラアングル、視野角、レンズ歪みを含むカメラパラメータのヒューリスティック推定を行います（写真の撮影地点が必要です）。 "
+"![](_static/estimation_of_camera_parameters.jpg)"
 
 #: ../../overview.md:21
 msgid ""
 "Reverse perspective projection of the target photograph on Digital "
 "Surface Model, with estimated camera parameters, using OpenGL. "
 "![](_static/georectification.jpg)"
-msgstr "推定されたカメラパラメータを使用し、OpenGLを用いて対象写真を数値表層モデル上に逆透視投影します。 ![](_static/georectification.jpg)"
+msgstr ""
+"推定されたカメラパラメータを使用し、OpenGLを用いて対象写真を数値表層モデル上に逆透視投影します。 "
+"![](_static/georectification.jpg)"
 
 #: ../../overview.md:24
 msgid ""
@@ -127,18 +135,63 @@ msgid "I added `a1` and `a2` to express inequal aspect ratios of image pixels."
 msgstr "画像ピクセルの不均等なアスペクト比を表現するために `a1` と `a2` を追加しました。"
 
 #: ../../overview.md:55
+msgid "Equidistant Fisheye Model"
+msgstr ""
+
+#: ../../overview.md:57
+msgid ""
+"For wide-angle monitoring cameras, `alproj` also supports an equidistant "
+"fisheye projection model. Set `\"model\": \"fisheye\"` in the camera "
+"parameters to use it. The fisheye model projects 3D points using:"
+msgstr ""
+
+#: ../../overview.md:59
+msgid "$$ r = f \\cdot \\theta_d, \\quad f = w / \\mathrm{fov_{rad}} $$"
+msgstr ""
+
+#: ../../overview.md:61
+msgid ""
+"where $\\theta$ is the angle between the ray and the optical axis, and "
+"$\\theta_d$ is the distorted angle:"
+msgstr ""
+
+#: ../../overview.md:63
+msgid ""
+"$$ \\theta_d = \\theta (1 + k_1 \\theta^2 + k_2 \\theta^4 + k_3 \\theta^6"
+" + k_4 \\theta^8) $$"
+msgstr ""
+
+#: ../../overview.md:65
+msgid ""
+"This model uses only 4 distortion coefficients (k1–k4) operating in angle"
+" space, compared to the pinhole model's 14 image-space coefficients. It "
+"typically provides better accuracy for cameras with significant barrel "
+"distortion."
+msgstr ""
+
+#: ../../overview.md:67
+msgid ""
+"**Note:** The fisheye simulation (`sim_image`, `reverse_proj`) internally"
+" renders a wide rectilinear image and remaps it. Because rectilinear "
+"projection cannot exceed ~140° FOV, fisheye simulation works best for FOV"
+" ≤ 120°. Higher FOV values will trigger a warning and edge regions may "
+"use interpolated values. The point projection (`project`) has no such "
+"limitation."
+msgstr ""
+
+#: ../../overview.md:69
 msgid "Future applications in alpine ecology, geology, and glaciology"
 msgstr "山岳生態学、地質学、雪氷学における将来の応用"
 
-#: ../../overview.md:56
+#: ../../overview.md:70
 msgid "Drawing vegetation maps from landscape photographs taken by hikers."
 msgstr "登山者が撮影した景観写真から植生図を作成。"
 
-#: ../../overview.md:57
+#: ../../overview.md:71
 msgid "Analysing snow melting with webcams attached at mountain huts."
 msgstr "山小屋に設置されたウェブカメラによる融雪解析。"
 
-#: ../../overview.md:58
+#: ../../overview.md:72
 msgid ""
 "Estimating the area of glaciers in the past from historical photographs "
 "of glaciers."
