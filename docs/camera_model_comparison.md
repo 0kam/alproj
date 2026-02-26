@@ -11,7 +11,7 @@ The example images on this page are from [NIES alpine monitoring at Mt. Maehotak
 | **Projection** | Rectilinear | Equidistant |
 | **Best for** | Standard lenses (FOV < ~90°) | Wide-angle / monitoring cameras (FOV ~75–120°) |
 | **Distortion params** | 14 (k1–k6, p1, p2, s1–s4, a1, a2) | 8 (k1–k4, a1, a2, p1, p2) |
-| **Distortion space** | Image space (pixels) | Angle space (radians) |
+| **Distortion space** | Image space (pixels) | Angle space (k1–k4) + image space (a1, a2, p1, p2) |
 | **Usage** | Default (no `model` key needed) | Set `"model": "fisheye"` in params |
 
 **Rule of thumb:** The pinhole model handles barrel distortion well for most lenses, including typical wide-angle lenses. For cameras with particularly strong distortion (e.g., surveillance cameras, action cameras, webcams), the fisheye model provides better accuracy.

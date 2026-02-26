@@ -136,7 +136,7 @@ msgstr "画像ピクセルの不均等なアスペクト比を表現するため
 
 #: ../../overview.md:55
 msgid "Equidistant Fisheye Model"
-msgstr ""
+msgstr "等距離射影フィッシュアイモデル"
 
 #: ../../overview.md:57
 msgid ""
@@ -144,30 +144,40 @@ msgid ""
 "fisheye projection model. Set `\"model\": \"fisheye\"` in the camera "
 "parameters to use it. The fisheye model projects 3D points using:"
 msgstr ""
+"広角監視カメラ向けに、`alproj` は等距離射影フィッシュアイモデルもサポートしています。"
+"使用するには、カメラパラメータに `\"model\": \"fisheye\"` を設定してください。"
+"フィッシュアイモデルは以下の式で3D点を投影します："
 
 #: ../../overview.md:59
 msgid "$$ r = f \\cdot \\theta_d, \\quad f = w / \\mathrm{fov_{rad}} $$"
-msgstr ""
+msgstr "$$ r = f \\cdot \\theta_d, \\quad f = w / \\mathrm{fov_{rad}} $$"
 
 #: ../../overview.md:61
 msgid ""
 "where $\\theta$ is the angle between the ray and the optical axis, and "
 "$\\theta_d$ is the distorted angle:"
 msgstr ""
+"ここで $\\theta$ は光線と光軸のなす角度、$\\theta_d$ は歪み後の角度です："
 
 #: ../../overview.md:63
 msgid ""
 "$$ \\theta_d = \\theta (1 + k_1 \\theta^2 + k_2 \\theta^4 + k_3 \\theta^6"
 " + k_4 \\theta^8) $$"
 msgstr ""
+"$$ \\theta_d = \\theta (1 + k_1 \\theta^2 + k_2 \\theta^4 + k_3 \\theta^6"
+" + k_4 \\theta^8) $$"
 
 #: ../../overview.md:65
 msgid ""
-"This model uses only 4 distortion coefficients (k1–k4) operating in angle"
-" space, compared to the pinhole model's 14 image-space coefficients. It "
-"typically provides better accuracy for cameras with significant barrel "
-"distortion."
+"The radial distortion uses 4 coefficients (k1–k4) operating in angle "
+"space. Additionally, the model supports aspect ratio correction (a1, a2) "
+"and tangential distortion (p1, p2) in image space — 8 parameters in "
+"total, compared to the pinhole model's 14. It typically provides better "
+"accuracy for cameras with significant barrel distortion."
 msgstr ""
+"放射歪みは角度空間で動作する4個の係数（k1〜k4）を使用します。さらに、画像空間での"
+"アスペクト比補正（a1, a2）と接線歪み（p1, p2）もサポートしており、合計8個のパラメータです。"
+"ピンホールモデルの14個と比較して少なく、樽型歪みが大きいカメラに対して一般的により高い精度を発揮します。"
 
 #: ../../overview.md:67
 msgid ""
@@ -178,6 +188,10 @@ msgid ""
 "use interpolated values. The point projection (`project`) has no such "
 "limitation."
 msgstr ""
+"**注意:** フィッシュアイのシミュレーション（`sim_image`、`reverse_proj`）は、内部的に広い直線投影画像を"
+"レンダリングしてリマップします。直線投影は約140°を超えるFOVに対応できないため、フィッシュアイシミュレーションは"
+"FOV ≤ 120°で最も良く機能します。それ以上のFOV値では警告が表示され、端部で補間値が使用される場合があります。"
+"点の投影（`project`）にはこの制限はありません。"
 
 #: ../../overview.md:69
 msgid "Future applications in alpine ecology, geology, and glaciology"

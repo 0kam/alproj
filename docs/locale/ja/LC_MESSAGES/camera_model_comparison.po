@@ -94,8 +94,8 @@ msgid "Image space (pixels)"
 msgstr "画像空間（ピクセル）"
 
 #: ../../camera_model_comparison.md
-msgid "Angle space (radians)"
-msgstr "角度空間（ラジアン）"
+msgid "Angle space (k1–k4) + image space (a1, a2, p1, p2)"
+msgstr "角度空間（k1–k4）+ 画像空間（a1, a2, p1, p2）"
 
 #: ../../camera_model_comparison.md
 msgid "**Usage**"

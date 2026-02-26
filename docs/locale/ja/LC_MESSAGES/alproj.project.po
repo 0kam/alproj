@@ -35,14 +35,14 @@ msgid ""
 "Derived from :func:`alproj.optimize.extrinsic_mat` with coordinate "
 "permutation so that the OpenGL renderer and the forward projection use "
 "identical rotation logic."
-msgstr ""
+msgstr ":func:`alproj.optimize.extrinsic_mat` から座標の入れ替えを行い、OpenGLレンダラーと順投影が同一の回転ロジックを使用するようにしたものです。"
 
 #: alproj.project.modelview_mat:8 of
 msgid ""
 "OpenGL vertices are stored as ``(x_geo, z_geo, y_geo)`` while "
 "``extrinsic_mat`` works in geographic ``(x, y, z)`` order.  The "
 "conversion is::"
-msgstr ""
+msgstr "OpenGLの頂点は ``(x_geo, z_geo, y_geo)`` の順で格納されますが、``extrinsic_mat`` は地理座標 ``(x, y, z)`` の順で動作します。変換は以下の通りです::"
 
 #: alproj.project.modelview_mat:14 of
 msgid ""
@@ -52,6 +52,9 @@ msgid ""
 " Z -- matching the projection matrix convention used by "
 ":func:`projection_mat` (``w_clip = Z``)."
 msgstr ""
+"ここで *E* は4x4外部行列、*P* はインデックス1と2（y <-> z）を入れ替えて頂点順序を地理座標順序に変換し、"
+"*N* はカメラ空間のZ行を反転させてカメラの前方にあるオブジェクトが *正* のZを持つようにします。"
+"これは :func:`projection_mat` が使用する投影行列の規約（``w_clip = Z``）に一致します。"
 
 #: ../../alproj.project.rst alproj.project.to_geotiff of
 msgid "Parameters"
@@ -266,11 +269,11 @@ msgstr "主点のY座標。"
 
 #: alproj.project.persp_proj:33 of
 msgid "model"
-msgstr ""
+msgstr "model"
 
 #: alproj.project.persp_proj:-1 of
 msgid "str, default None"
-msgstr ""
+msgstr "str, デフォルト None"
 
 #: alproj.project.persp_proj:34 of
 msgid ""
@@ -278,17 +281,18 @@ msgid ""
 " forward splatting from a wide rectilinear render. If not specified, uses"
 " the default pinhole model with distortion."
 msgstr ""
+"カメラモデル。``\"fisheye\"`` の場合、広い直線投影レンダリングからのフォワードスプラッティングによる"
+"等距離射影フィッシュアイ投影を使用します。指定しない場合、歪み補正付きのデフォルトのピンホールモデルを使用します。"
 
 #: alproj.project.persp_proj:37 of
 msgid "a1, a2"
 msgstr "a1, a2"
 
 #: alproj.project.persp_proj:38 of
-#, fuzzy
 msgid ""
-"Distortion coefficients that calibrates non-equal aspect ratio of each "
-"pixels. (pinhole model only)"
-msgstr "各ピクセルの不均等なアスペクト比を補正する歪み係数。"
+"Distortion coefficients that calibrate non-equal aspect ratio of each "
+"pixel. Used by both pinhole and fisheye models."
+msgstr "各ピクセルの不均等なアスペクト比を補正する歪み係数。ピンホールモデルとフィッシュアイモデルの両方で使用されます。"
 
 #: alproj.project.persp_proj:40 of
 msgid "k1, k2, k3, k4, k5, k6"
@@ -298,7 +302,7 @@ msgstr "k1, k2, k3, k4, k5, k6"
 msgid ""
 "Radial distortion coefficients. For pinhole: image-space polynomial "
 "distortion. For fisheye: angle-space distortion (only k1-k4 used)."
-msgstr ""
+msgstr "放射歪み係数。ピンホール：画像空間の多項式歪み。フィッシュアイ：角度空間の歪み（k1〜k4のみ使用）。"
 
 #: alproj.project.persp_proj:44 of
 msgid "p1, p2"
@@ -308,16 +312,15 @@ msgstr "p1, p2"
 msgid ""
 "Tangential (decentering) distortion coefficients. Used by both pinhole "
 "and fisheye models."
-msgstr ""
+msgstr "接線（偏心）歪み係数。ピンホールモデルとフィッシュアイモデルの両方で使用されます。"
 
 #: alproj.project.persp_proj:47 of
 msgid "s1, s2, s3, s4"
 msgstr "s1, s2, s3, s4"
 
 #: alproj.project.persp_proj:48 of
-#, fuzzy
 msgid "Prism distortion coefficients. (pinhole model only)"
-msgstr "プリズム歪み係数。"
+msgstr "プリズム歪み係数。（ピンホールモデルのみ）"
 
 #: alproj.project.persp_proj:50 alproj.project.reverse_proj:13
 #: alproj.project.sim_image:11 of
@@ -470,7 +473,7 @@ msgstr "座標系と同じ単位のピクセル解像度。"
 msgid ""
 "Coordinate Reference System (e.g., \"EPSG:6690\"). Must match the CRS of "
 "the DSM and aerial photograph used for surface generation."
-msgstr ""
+msgstr "座標参照系（例：\"EPSG:6690\"）。サーフェス生成に使用したDSMおよび航空写真のCRSと一致する必要があります。"
 
 #: alproj.project.to_geotiff:12 of
 msgid "Column names in df to use as raster bands."

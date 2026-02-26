@@ -593,8 +593,8 @@ def persp_proj(vert, value, ind, params, offsets=None, min_distance=None):
             via forward splatting from a wide rectilinear render.
             If not specified, uses the default pinhole model with distortion.
         a1, a2 : float
-            Distortion coefficients that calibrates non-equal aspect ratio of each pixels.
-            (pinhole model only)
+            Distortion coefficients that calibrate non-equal aspect ratio of each pixel.
+            Used by both pinhole and fisheye models.
         k1, k2, k3, k4, k5, k6 : float
             Radial distortion coefficients.
             For pinhole: image-space polynomial distortion.

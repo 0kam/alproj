@@ -47,7 +47,7 @@ pip install alproj
 `alproj` supports two camera models:
 
 - **Pinhole** (default): Rectilinear projection with 14 distortion coefficients (aspect ratio, radial, tangential, and prism). Best for standard lenses.
-- **Fisheye** (`"model": "fisheye"`): Equidistant fisheye projection with 4 angle-space distortion coefficients (k1-k4). Better accuracy for wide-angle monitoring cameras (FOV up to ~120°).
+- **Fisheye** (`"model": "fisheye"`): Equidistant fisheye projection with 4 angle-space radial distortion coefficients (k1-k4), plus aspect ratio (a1, a2) and tangential distortion (p1, p2). Better accuracy for wide-angle monitoring cameras (FOV up to ~120°).
 
 To use the fisheye model, set `"model": "fisheye"` in the camera parameters dict. Omitting the `"model"` key defaults to pinhole for backward compatibility. See [example.py](example.py) for usage of both models.
 

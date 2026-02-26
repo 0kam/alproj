@@ -149,7 +149,7 @@ msgid ""
 "Per-GCP weights for the loss function. Higher weights increase the "
 "importance of the corresponding GCPs. Useful for balancing center and "
 "edge region accuracy."
-msgstr ""
+msgstr "GCPごとの損失関数の重み。重みが大きいほど対応するGCPの重要度が増します。中心部と端部の精度のバランス調整に有用です。"
 
 #: ../../alproj.optimize.rst
 msgid "Returns"
@@ -232,7 +232,7 @@ msgstr "インライア残差のソフト閾値（ピクセル単位）。f_scal
 msgid ""
 "Per-GCP weights for the loss function. Applied as sqrt(weight) scaling to"
 " the residual vector. Useful for region-balanced optimization."
-msgstr ""
+msgstr "GCPごとの損失関数の重み。残差ベクトルにsqrt(weight)のスケーリングとして適用されます。領域バランスの取れた最適化に有用です。"
 
 #: alproj.optimize.LsqOptimizer.optimize:25 of
 msgid "Additional arguments passed to scipy.optimize.least_squares."
@@ -352,7 +352,7 @@ msgstr "ピクセル単位の閾値。f_scale以下の残差はL2、以上はL1�
 
 #: alproj.optimize.huber_loss:13 alproj.optimize.mean_reprojection_error:7 of
 msgid "Per-point weights. If provided, returns weighted average."
-msgstr ""
+msgstr "点ごとの重み。指定した場合、加重平均を返します。"
 
 #: alproj.optimize.huber_loss:16 of
 msgid "**loss** -- Mean Huber loss value."
@@ -424,6 +424,9 @@ msgid ""
 "\"fisheye\"``, uses equidistant fisheye projection. Otherwise uses the "
 "default pinhole projection."
 msgstr ""
+"カメラパラメータ。パラメータの詳細については alproj.project.persp_proj() を参照してください。"
+"``\"model\": \"fisheye\"`` を含む場合、等距離射影フィッシュアイ投影を使用します。"
+"それ以外の場合はデフォルトのピンホール投影を使用します。"
 
 #: alproj.optimize.project:11 of
 msgid "**uv** -- 2D projected coordinates with columns u, v."
@@ -431,13 +434,13 @@ msgstr "**uv** -- 列 u, v を持つ2D投影座標"
 
 #: alproj.optimize.rmse:1 of
 msgid "Deprecated alias for :func:`mean_reprojection_error`."
-msgstr ""
+msgstr ":func:`mean_reprojection_error` の非推奨エイリアス。"
 
 #: alproj.optimize.rmse:3 of
 msgid ""
 "Use :func:`mean_reprojection_error` instead. This function computes mean "
 "Euclidean distance, not root-mean-square error."
-msgstr ""
+msgstr "代わりに :func:`mean_reprojection_error` を使用してください。この関数は二乗平均平方根誤差ではなく、平均ユークリッド距離を計算します。"
 
 #~ msgid "numpy.ndarray"
 #~ msgstr "numpy.ndarray"
